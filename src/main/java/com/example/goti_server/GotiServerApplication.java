@@ -1,13 +1,13 @@
-package com.example.ballX_backend;
+package com.example.goti_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BallXBackendApplication {
+public class GotiServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BallXBackendApplication.class, args);
+		SpringApplication.run(GotiServerApplication.class, args);
 	}
 
 }
