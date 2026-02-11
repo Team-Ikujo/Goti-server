@@ -1,1 +1,10 @@
-spring.application.name=ballX-backend
+server:
+  port: ${SERVER_PORT}
+
+spring:
+  application:
+    name: goti-backend
+  config:
+    import:
+      - optional:file:.env[.properties]
+
