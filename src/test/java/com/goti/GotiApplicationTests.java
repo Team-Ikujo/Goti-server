@@ -1,10 +1,10 @@
-package com.example.goti_server;
+package com.goti;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GotiServerApplicationTests {
+class GotiApplicationTests {
 
 	@Test
 	void contextLoads() {
