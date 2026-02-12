@@ -25,8 +25,11 @@ spring:
           format_sql: true
           show_sql: true
           dialect: org.hibernate.dialect.PostgreSQLDialect
-
   config:
     import:
       - optional:file:.env[.properties]
 
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  access-valid-time: ${JWT_ACCESS_TIME}
+  refresh-valid-time: ${JWT_REFRESH_TIME}
