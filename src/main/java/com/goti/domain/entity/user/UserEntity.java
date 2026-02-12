@@ -52,20 +52,20 @@ public class UserEntity extends ModificationTimestampEntity {
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private UserRole userRole;
+	private UserRole role;
 
 	protected UserEntity(
 		String mobile,
 		String name,
 		Gender gender,
 		LocalDate birthDate,
-		UserRole userRole
+		UserRole role
 	) {
 		this.mobile = mobile;
 		this.name = name;
 		this.gender = gender;
 		this.birthDate = birthDate;
 		this.status = UserStatus.ACTIVATED;
-		this.userRole = userRole;
+		this.role = role;
 	}
 }
