@@ -1,7 +1,7 @@
 ---
 name: "⚙️  Chore"
 about: 개발 환경 설정, 빌드 시스템, CI/CD 등 인프라 및 유지보수 작업을 등록합니다
-title: 'chore: '
+title: '[CHORE] '
 labels: chore
 assignees: ''
 

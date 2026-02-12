@@ -1,7 +1,7 @@
 ---
 name: "\U0001F41B  Bug"
 about: 버그 수정 작업을 등록합니다
-title: 'bug: '
+title: '[BUG]'
 labels: bug
 assignees: ''
 
