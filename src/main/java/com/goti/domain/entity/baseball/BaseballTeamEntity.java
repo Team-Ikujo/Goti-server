@@ -1,24 +1,18 @@
 package com.goti.domain.entity.baseball;
 
+import static lombok.AccessLevel.*;
+
 import com.goti.constants.TeamCode;
-
-import com.goti.domain.base.BaseUuidEntity;
-
 import com.goti.domain.base.ModificationTimestampEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
-
-import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
