@@ -12,6 +12,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +22,15 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
-@Table(name = "baseball_team")
+@Table(
+	name = "baseball_team",
+	uniqueConstraints = {
+		@UniqueConstraint(name = "uk_baseball_team_team_code", columnNames = {"team_code"})
+	})
 @NoArgsConstructor(access = PROTECTED)
 public class BaseballTeamEntity extends ModificationTimestampEntity {
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private TeamCode teamCode;
 
 	@Column(nullable = false)
