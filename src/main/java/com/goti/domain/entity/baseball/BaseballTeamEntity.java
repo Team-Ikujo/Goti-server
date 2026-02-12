@@ -75,7 +75,7 @@ public class BaseballTeamEntity extends ModificationTimestampEntity {
 	@Column
 	private String logoUrl;
 
-	protected BaseballTeamEntity(
+	private BaseballTeamEntity(
 		TeamCode teamCode,
 		String teamName,
 		String teamNameEn,
@@ -107,5 +107,29 @@ public class BaseballTeamEntity extends ModificationTimestampEntity {
 		this.generalManager = generalManager;
 		this.director = director;
 		this.logoUrl = logoUrl;
+	}
+
+	public static BaseballTeamEntity create(
+		TeamCode teamCode,
+		String teamName,
+		String teamNameEn,
+		String sponsor,
+		String homeGround,
+		Integer foundedYear,
+		String officeAddress,
+		String zipCode,
+		String siteAddress,
+		String owner,
+		String generalManager,
+		String director,
+		String ownerAgency,
+		String ceo,
+		String logoUrl
+	) {
+		return new BaseballTeamEntity(
+			teamCode, teamName, teamNameEn, sponsor, homeGround, foundedYear,
+			officeAddress, zipCode, siteAddress, owner,
+			ownerAgency, ceo, generalManager, director, logoUrl
+		);
 	}
 }
