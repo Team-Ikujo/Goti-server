@@ -28,46 +28,46 @@ public class BaseballTeamEntity extends ModificationTimestampEntity {
 	@Column(nullable = false, unique = true)
 	private TeamCode teamCode;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String teamName;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String teamNameEn;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String sponsor;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String homeGround;
 
 	@Column(nullable = false)
 	private Integer foundedYear;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String officeAddress;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String zipCode;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String siteAddress;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String owner;
 
-	@Column(length = 255)
+	@Column
 	private String ownerAgency;
 
-	@Column(length = 255)
+	@Column
 	private String ceo;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String generalManager;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String director;
 
-	@Column(length = 255)
+	@Column
 	private String logoUrl;
 
 	protected BaseballTeamEntity(
