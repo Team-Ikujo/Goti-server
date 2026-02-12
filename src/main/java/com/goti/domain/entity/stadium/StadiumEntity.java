@@ -47,7 +47,7 @@ public class StadiumEntity extends ModificationTimestampEntity {
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(columnDefinition = "jsonb")
 	private String seatMapConfig;
-	
+
 	private StadiumEntity(
 		String stadiumName,
 		String location,
@@ -128,7 +128,7 @@ public class StadiumEntity extends ModificationTimestampEntity {
 		);
 
 		Preconditions.domainValidate(
-			StringUtils.hasText(district), "시/군/구는 비어있을 수 없습니다."
+			StringUtils.hasText(district), "시/군/구는 비어 있을 수 없습니다."
 		);
 
 		Preconditions.domainValidate(
