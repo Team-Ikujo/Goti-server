@@ -1,7 +1,7 @@
 ---
 name: "\U0001F4DD  Docs"
 about: 문서(GitWorkflows, GradleDistribution 등) 수정 또는 추가 작업을 제안합니다.
-title: 'docs: '
+title: '[DOCS] '
 labels: docs
 assignees: ''
 

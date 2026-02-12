@@ -1,7 +1,7 @@
 ---
 name: "\U0001F9EA  Test"
 about: 기능에 대한 테스트 코드 작성, 테스트 보완, 테스트 리팩토링 작업을 등록합니다
-title: 'test: '
+title: '[TEST] '
 labels: test
 assignees: ''
 
