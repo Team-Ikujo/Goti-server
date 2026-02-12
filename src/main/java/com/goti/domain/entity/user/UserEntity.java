@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.goti.constants.Gender;
 import com.goti.constants.UserRole;
 import com.goti.constants.UserStatus;
-import com.goti.domain.base.BaseEntity;
+import com.goti.domain.base.ModificationTimestampEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = PROTECTED)
-public class UserEntity extends BaseEntity {
+public class UserEntity extends ModificationTimestampEntity {
 
 	@Column(nullable = false)
 	private String email;
