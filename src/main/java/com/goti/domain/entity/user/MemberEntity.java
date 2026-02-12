@@ -21,43 +21,32 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 public class MemberEntity extends UserEntity {
 	private MemberEntity(
-		String email,
 		String mobile,
 		String name,
 		Gender gender,
 		LocalDate birthDate
 	) {
 		super(
-			email,
-			mobile,
-			name,
-			gender,
-			birthDate,
-			UserRole.MEMBER
+			mobile, name, gender, birthDate, UserRole.MEMBER
 		);
 	}
 
 	public static MemberEntity create(
-		final String email,
 		final String mobile,
 		final String name,
 		final Gender gender,
 		final LocalDate birthDate
 	) {
-		validate(email, mobile, name, gender, birthDate);
-		return new MemberEntity(email, mobile, name, gender, birthDate);
+		validate(mobile, name, gender, birthDate);
+		return new MemberEntity(mobile, name, gender, birthDate);
 	}
 
 	private static void validate(
-		String email,
 		String mobile,
 		String name,
 		Gender gender,
 		LocalDate birthDate
 	) {
-		Preconditions.domainValidate(
-			StringUtils.hasText(email), "회원 이메일은 비어 있을 수 없습니다."
-		);
 
 		Preconditions.domainValidate(
 			StringUtils.hasText(mobile), "회원 휴대전화 번호는 비어 있을 수 없습니다."

@@ -33,9 +33,6 @@ import lombok.NoArgsConstructor;
 public class UserEntity extends ModificationTimestampEntity {
 
 	@Column(nullable = false)
-	private String email;
-
-	@Column(nullable = false)
 	private String mobile;
 
 	@Column(nullable = false)
@@ -58,14 +55,12 @@ public class UserEntity extends ModificationTimestampEntity {
 	private UserRole userRole;
 
 	protected UserEntity(
-		String email,
 		String mobile,
 		String name,
 		Gender gender,
 		LocalDate birthDate,
 		UserRole userRole
 	) {
-		this.email = email;
 		this.mobile = mobile;
 		this.name = name;
 		this.gender = gender;
