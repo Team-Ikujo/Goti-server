@@ -47,12 +47,7 @@ public class StadiumEntity extends ModificationTimestampEntity {
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(columnDefinition = "jsonb")
 	private String seatMapConfig;
-
-	/*
-	TODO: 기획을 보면 구장명, 주소, 좌석수, 총면적, 규모, 펜스, 특징 | 찾아오는 길 버스정류장 존재 도메인 설계시 변경
-	TODO: seatMapConfig에 알맞는 타입이 무엇인가?
-	 */
-
+	
 	private StadiumEntity(
 		String stadiumName,
 		String location,
@@ -106,7 +101,8 @@ public class StadiumEntity extends ModificationTimestampEntity {
 			latitude,
 			longitude,
 			totalSeats,
-			seatMapConfig);
+			seatMapConfig
+		);
 	}
 
 	private static void validate(
