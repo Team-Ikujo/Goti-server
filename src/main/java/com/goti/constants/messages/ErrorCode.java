@@ -1,4 +1,4 @@
-package com.constants.messages;
+package com.goti.constants.messages;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

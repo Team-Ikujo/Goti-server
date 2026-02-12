@@ -1,6 +1,6 @@
-package com.exception;
+package com.goti.exception;
 
-import com.constants.messages.ErrorCode;
+import com.goti.constants.messages.ErrorCode;
 
 import org.springframework.core.NestedRuntimeException;
 

@@ -1,4 +1,4 @@
-package com.exception.handler.base;
+package com.goti.exception.handler.base;
 
 import lombok.extern.slf4j.Slf4j;
 
