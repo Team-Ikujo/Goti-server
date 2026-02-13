@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,8 @@ import org.springframework.util.StringUtils;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
-@Entity(name = "social_provider")
+@Entity
+@Table(name = "social_providers")
 @NoArgsConstructor(access = PROTECTED)
 public class SocialProviderEntity extends ModificationTimestampEntity {
 

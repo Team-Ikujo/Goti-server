@@ -4,6 +4,8 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Table;
+
 import org.springframework.util.StringUtils;
 
 import com.goti.common.validation.Preconditions;
@@ -16,9 +18,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity(name = "member")
-@DiscriminatorValue("MEMBER")
+@Entity
+@Table(name = "members")
 @NoArgsConstructor(access = PROTECTED)
+@DiscriminatorValue("MEMBER")
 public class MemberEntity extends UserEntity {
 	private MemberEntity(
 		String mobile,
