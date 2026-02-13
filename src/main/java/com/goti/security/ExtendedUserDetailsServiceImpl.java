@@ -40,7 +40,7 @@ public class ExtendedUserDetailsServiceImpl implements ExtendedUserDetailsServic
 		return new ExtendedUserDetails(
 			user.getId(),
 			user.getMobile(),
-			user.getUserRole()
+			user.getRole()
 		);
 	}
 }
