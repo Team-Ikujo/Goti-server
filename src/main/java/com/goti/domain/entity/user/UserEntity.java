@@ -22,12 +22,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Entity
 @Table(name = "users",
 	uniqueConstraints = {
 		@UniqueConstraint(name = "uk_users_mobile", columnNames = {"mobile"}),
 		@UniqueConstraint(name = "uk_users_email", columnNames = {"email"})
 	})
-@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = PROTECTED)
 public class UserEntity extends ModificationTimestampEntity {
