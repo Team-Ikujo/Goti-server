@@ -26,6 +26,8 @@ import static lombok.AccessLevel.*;
 	})
 @NoArgsConstructor(access = PROTECTED)
 public class BaseballWinnerHistoryEntity extends ModificationTimestampEntity {
+	// Todo: 관리자 및 야구매니저 기획 확정 시 createdBy 작성 예정
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "baseball_team_id", nullable = false)
 	private BaseballTeamEntity baseballTeam;
