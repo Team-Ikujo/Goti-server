@@ -1,5 +1,6 @@
 package com.goti.domain.entity.baseball;
 
+import com.goti.common.validation.Preconditions;
 import com.goti.domain.base.ModificationTimestampEntity;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.Year;
 
 import static lombok.AccessLevel.*;
 
@@ -41,6 +44,27 @@ public class BaseballWinnerHistoryEntity extends ModificationTimestampEntity {
 		BaseballTeamEntity baseballTeam,
 		Integer winningYear
 	) {
+		validate(baseballTeam, winningYear);
 		return new BaseballWinnerHistoryEntity(baseballTeam, winningYear);
+	}
+
+	private static void validate(
+		BaseballTeamEntity baseballTeam,
+		Integer winningYear
+	) {
+		Preconditions.domainValidate(
+			baseballTeam != null,
+			"우승 이력은 구단 정보가 반드시 필요합니다."
+		);
+
+		Preconditions.domainValidate(
+			winningYear != null,
+			"우승 연도는 비어 있을 수 없습니다."
+		);
+
+		Preconditions.domainValidate(
+			winningYear >= 1900 && winningYear <= Year.now().getValue(),
+			"우승 연도는 올바른 범위의 값이어야 합니다."
+		);
 	}
 }
