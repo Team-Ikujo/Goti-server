@@ -30,11 +30,17 @@ public class BaseballWinnerHistoryEntity extends ModificationTimestampEntity {
 	@Column(nullable = false)
 	private Integer winningYear;
 
-	private BaseballWinnerHistoryEntity(BaseballTeamEntity baseballTeam, Integer winningYear) {
+	private BaseballWinnerHistoryEntity(
+		BaseballTeamEntity baseballTeam,
+		Integer winningYear
+	) {
 		this.baseballTeam = baseballTeam;
 		this.winningYear = winningYear;
 	}
-	public static BaseballWinnerHistoryEntity create(BaseballTeamEntity baseballTeam, Integer winningYear) {
+	public static BaseballWinnerHistoryEntity create(
+		BaseballTeamEntity baseballTeam,
+		Integer winningYear
+	) {
 		return new BaseballWinnerHistoryEntity(baseballTeam, winningYear);
 	}
 }
