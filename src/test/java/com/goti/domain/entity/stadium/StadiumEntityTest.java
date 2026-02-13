@@ -39,7 +39,7 @@ public class StadiumEntityTest {
 
 	@NullAndEmptySource
 	@ParameterizedTest
-	void 구장_생성_실패_구장명_비어있거나_null(String stadiumName) {
+	void 구장_생성_실패_구장명_null_또는_공백(String stadiumName) {
 		assertThatThrownBy(
 			() -> StadiumEntity.create(
 				stadiumName,
@@ -58,7 +58,7 @@ public class StadiumEntityTest {
 
 	@NullAndEmptySource
 	@ParameterizedTest
-	void 구장_생성_실패_지역_비어있거나_null(String location) {
+	void 구장_생성_실패_지역_null_또는_공백(String location) {
 		assertThatThrownBy(
 			() -> StadiumEntity.create(
 				"광주기아챔피언스필드",
@@ -77,7 +77,7 @@ public class StadiumEntityTest {
 
 	@NullAndEmptySource
 	@ParameterizedTest
-	void 구장_생성_실패_도시_비어있거나_null(String city) {
+	void 구장_생성_실패_도시_null_또는_공백(String city) {
 		assertThatThrownBy(
 			() -> StadiumEntity.create(
 				"광주기아챔피언스필드",
@@ -96,7 +96,7 @@ public class StadiumEntityTest {
 
 	@NullAndEmptySource
 	@ParameterizedTest
-	void 구장_생성_실패_시군구_비어있거나_null(String district) {
+	void 구장_생성_실패_시군구_null_또는_공백(String district) {
 		assertThatThrownBy(
 			() -> StadiumEntity.create(
 				"광주기아챔피언스필드",
@@ -115,7 +115,7 @@ public class StadiumEntityTest {
 
 	@NullAndEmptySource
 	@ParameterizedTest
-	void 구장_생성_실패_도로명주소_비어있거나_null(String roadAddress) {
+	void 구장_생성_실패_도로명주소_null_또는_공백(String roadAddress) {
 		assertThatThrownBy(
 			() -> StadiumEntity.create(
 				"광주기아챔피언스필드",
@@ -133,7 +133,7 @@ public class StadiumEntityTest {
 	}
 
 	@Test
-	void 구장_생성_실패_위도_비어있거나_null() {
+	void 구장_생성_실패_위도_null_또는_공백() {
 		assertThatThrownBy(
 			() -> StadiumEntity.create(
 				"광주기아챔피언스필드",
