@@ -4,6 +4,8 @@ import static lombok.AccessLevel.*;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Table;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.util.StringUtils;
@@ -17,7 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity(name = "stadium")
+@Entity
+@Table(name = "stadiums")
 @NoArgsConstructor(access = PROTECTED)
 public class StadiumEntity extends ModificationTimestampEntity {
 	@Column(nullable = false)

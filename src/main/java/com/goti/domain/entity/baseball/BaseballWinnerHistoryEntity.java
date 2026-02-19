@@ -20,7 +20,7 @@ import static lombok.AccessLevel.*;
 @Getter
 @Entity
 @Table(
-	name = "baseball_winner_history",
+	name = "baseball_winner_histories",
 	uniqueConstraints = {
 		@UniqueConstraint(name = "uk_winner_history_team_year", columnNames = {"baseball_team_id", "winning_year"})
 	})
