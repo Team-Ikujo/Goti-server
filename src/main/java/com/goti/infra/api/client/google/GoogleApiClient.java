@@ -21,7 +21,7 @@ public class GoogleApiClient extends BaseRestClient implements SocialApiClient {
 
 	@Override
 	public ProviderType getProviderType() {
-		return null;
+		return ProviderType.GOOGLE;
 	}
 
 	// todo : accessToken API 구현 2026.02.23 오후 내로 완료 예정
