@@ -1,4 +1,4 @@
-package com.goti.infra.constants;
+package com.goti.constants;
 
 import lombok.RequiredArgsConstructor;
 

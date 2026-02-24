@@ -5,6 +5,7 @@ import static lombok.AccessLevel.*;
 import java.time.Year;
 
 import com.goti.domain.base.ModificationTimestampEntity;
+import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
