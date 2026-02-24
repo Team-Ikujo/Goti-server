@@ -2,7 +2,7 @@ package com.goti.exception.handler;
 
 import java.util.Objects;
 
-import com.goti.common.api.ApiErrorResponse;
+import com.goti.global.api.ApiErrorResponse;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.handler.base.BaseExceptionHandler;
 

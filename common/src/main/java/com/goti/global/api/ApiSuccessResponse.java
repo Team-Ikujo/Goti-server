@@ -1,4 +1,4 @@
-package com.goti.common.api;
+package com.goti.global.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

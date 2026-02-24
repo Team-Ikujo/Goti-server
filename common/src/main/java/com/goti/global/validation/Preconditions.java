@@ -1,4 +1,4 @@
-package com.goti.common.validation;
+package com.goti.global.validation;
 
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.CustomException;

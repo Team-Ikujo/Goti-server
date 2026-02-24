@@ -1,6 +1,6 @@
 package com.goti.exception.handler.base;
 
-import com.goti.common.api.ApiErrorResponse;
+import com.goti.global.api.ApiErrorResponse;
 
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.BaseException;
