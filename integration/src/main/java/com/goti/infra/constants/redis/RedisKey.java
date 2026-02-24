@@ -1,9 +1,9 @@
-package com.goti.constants.redis;
+package com.goti.infra.constants.redis;
+
+import java.time.Duration;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.time.Duration;
 
 @Getter
 @RequiredArgsConstructor

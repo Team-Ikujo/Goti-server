@@ -1,14 +1,14 @@
 package com.goti.infra.cache;
 
-import com.goti.constants.redis.RedisKey;
-
-import lombok.RequiredArgsConstructor;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import com.goti.infra.constants.redis.RedisKey;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

@@ -1,17 +1,16 @@
 package com.goti.infra.api.client;
 
-import com.goti.constants.ProviderType;
-
-import com.goti.constants.messages.ErrorCode;
-import com.goti.exception.CustomException;
-
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
+import com.goti.infra.constants.ProviderType;
 
 @Component
 public class SocialClientProvider {

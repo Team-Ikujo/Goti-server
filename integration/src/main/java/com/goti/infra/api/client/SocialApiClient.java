@@ -1,6 +1,6 @@
 package com.goti.infra.api.client;
 
-import com.goti.constants.ProviderType;
+import com.goti.infra.constants.ProviderType;
 
 public interface SocialApiClient {
 	ProviderType getProviderType();

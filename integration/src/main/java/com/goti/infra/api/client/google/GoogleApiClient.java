@@ -1,21 +1,18 @@
 package com.goti.infra.api.client.google;
 
-import com.goti.config.properties.oauth.GoogleOauthProperties;
-import com.goti.constants.ProviderType;
-import com.goti.infra.api.base.BaseRestClient;
-
-import com.goti.infra.api.client.SocialApiClient;
-
-import com.goti.infra.api.dto.request.google.GoogleTokenRequest;
-
-import com.goti.infra.api.dto.response.common.SocialAccessTokenResponse;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
+import com.goti.config.properties.oauth.GoogleOauthProperties;
+import com.goti.infra.api.base.BaseRestClient;
+import com.goti.infra.api.client.SocialApiClient;
+import com.goti.infra.api.dto.request.google.GoogleTokenRequest;
+import com.goti.infra.api.dto.response.common.SocialAccessTokenResponse;
+import com.goti.infra.constants.ProviderType;
 
 @Component
 public class GoogleApiClient extends BaseRestClient implements SocialApiClient {
