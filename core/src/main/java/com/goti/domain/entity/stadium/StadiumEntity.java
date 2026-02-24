@@ -10,7 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.util.StringUtils;
 
-import com.goti.common.validation.Preconditions;
+import com.goti.global.validation.Preconditions;
 import com.goti.domain.base.ModificationTimestampEntity;
 
 import jakarta.persistence.Column;

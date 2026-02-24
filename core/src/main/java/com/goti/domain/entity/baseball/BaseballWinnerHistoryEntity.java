@@ -1,6 +1,9 @@
 package com.goti.domain.entity.baseball;
 
-import com.goti.common.validation.Preconditions;
+import static lombok.AccessLevel.*;
+
+import java.time.Year;
+
 import com.goti.domain.base.ModificationTimestampEntity;
 
 import jakarta.persistence.Column;
@@ -12,10 +15,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.Year;
-
-import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
@@ -42,6 +41,7 @@ public class BaseballWinnerHistoryEntity extends ModificationTimestampEntity {
 		this.baseballTeam = baseballTeam;
 		this.winningYear = winningYear;
 	}
+
 	public static BaseballWinnerHistoryEntity create(
 		BaseballTeamEntity baseballTeam,
 		Integer winningYear

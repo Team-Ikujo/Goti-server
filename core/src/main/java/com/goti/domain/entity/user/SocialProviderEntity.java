@@ -1,6 +1,6 @@
 package com.goti.domain.entity.user;
 
-import com.goti.common.validation.Preconditions;
+import com.goti.global.validation.Preconditions;
 import com.goti.constants.OAuthProvider;
 import com.goti.domain.base.ModificationTimestampEntity;
 

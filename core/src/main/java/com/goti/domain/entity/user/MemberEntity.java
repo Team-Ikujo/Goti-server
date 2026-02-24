@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 import org.springframework.util.StringUtils;
 
-import com.goti.common.validation.Preconditions;
+import com.goti.global.validation.Preconditions;
 import com.goti.constants.Gender;
 import com.goti.constants.UserRole;
 
