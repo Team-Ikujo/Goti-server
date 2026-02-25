@@ -44,10 +44,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private GameStatus gameStatus;
-
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private LeagueType leagueType;
 
 	@Enumerated(EnumType.STRING)
@@ -66,7 +62,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		UUID stadiumId,
 		LocalDate playDate,
 		LocalTime startAt,
-		GameStatus gameStatus,
 		LeagueType leagueType,
 		ReservationAvailableStatus reservationAvailableStatus,
 		LocalDateTime reservationOpenedAt,
@@ -77,7 +72,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		this.stadiumId = stadiumId;
 		this.playDate = playDate;
 		this.startAt = startAt;
-		this.gameStatus = gameStatus;
 		this.leagueType = leagueType;
 		this.reservationAvailableStatus = reservationAvailableStatus;
 		this.reservationOpenedAt = reservationOpenedAt;
@@ -109,7 +103,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 			stadiumId,
 			playDate,
 			startAt,
-			gameStatus == null ? GameStatus.SCHEDULED : gameStatus,
 			leagueType == null ? LeagueType.REGULAR : leagueType,
 			reservationAvailableStatus == null ? ReservationAvailableStatus.PENDING : reservationAvailableStatus,
 			reservationOpenedAt,
