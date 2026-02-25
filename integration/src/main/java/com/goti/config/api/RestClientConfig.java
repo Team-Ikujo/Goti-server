@@ -5,9 +5,7 @@ import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
-import com.goti.config.api.interceptor.ExternalLoggingInterceptor;
-
-import com.goti.config.api.interceptor.ExternalTraceInterceptor;
+import com.goti.config.properties.RestClientProperties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +15,8 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
-import com.goti.config.properties.RestClientProperties;
+import com.goti.config.api.interceptor.ExternalLoggingInterceptor;
+import com.goti.config.api.interceptor.ExternalTraceInterceptor;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.CustomException;
 

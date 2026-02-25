@@ -1,12 +1,9 @@
-package com.goti.domain.entity.user;
+package user;
 
-import com.goti.constants.Gender;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import com.goti.constants.OAuthProvider;
-
-import com.goti.exception.FieldValidationException;
-
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +11,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
+import com.goti.constants.Gender;
+import com.goti.constants.OAuthProvider;
+import com.goti.domain.entity.user.MemberEntity;
+import com.goti.domain.entity.user.SocialProviderEntity;
+import com.goti.exception.FieldValidationException;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ActiveProfiles("test")

@@ -1,14 +1,16 @@
 package com.goti.service.auth.application;
 
-import com.goti.constants.ProviderType;
 import com.goti.constants.messages.ErrorCode;
-import com.goti.constants.redis.RedisKey;
 import com.goti.exception.CustomException;
 import com.goti.infra.api.client.SocialApiClient;
 import com.goti.infra.api.client.SocialClientProvider;
 
 import com.goti.infra.api.dto.response.common.SocialStateResponse;
 import com.goti.infra.cache.RedisCache;
+
+import com.goti.infra.constants.ProviderType;
+
+import com.goti.infra.constants.redis.RedisKey;
 
 import lombok.RequiredArgsConstructor;
 

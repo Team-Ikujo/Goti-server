@@ -1,16 +1,11 @@
-package com.goti.service.auth.application;
+package com.goti.application;
 
-import com.goti.constants.ProviderType;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import com.goti.constants.messages.ErrorCode;
-import com.goti.constants.redis.RedisKey;
-import com.goti.exception.CustomException;
+import com.goti.infra.constants.ProviderType;
 
-import com.goti.infra.api.dto.response.common.SocialStateResponse;
-
-import com.goti.infra.cache.RedisCache;
-
-import lombok.extern.slf4j.Slf4j;
+import com.goti.infra.constants.redis.RedisKey;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +14,14 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
+import com.goti.infra.api.dto.response.common.SocialStateResponse;
+import com.goti.infra.cache.RedisCache;
+import com.goti.service.auth.application.AuthApplicationService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AuthApplicationServiceTest {
 
 	@Autowired
-	AuthApplicationService authApplicationService;
+    AuthApplicationService authApplicationService;
 
 	@Autowired
 	RedisCache redisCache;
