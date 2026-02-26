@@ -1,5 +1,7 @@
 package com.goti.infra.api.dto.response.common;
 
+import com.goti.constants.Gender;
+
 import java.util.Map;
 
 public record SocialUserInfoResponse(
@@ -8,31 +10,20 @@ public record SocialUserInfoResponse(
 	String email,
 	String mobile,
 	String birthDate,
-	String gender
+	Gender gender
 ) {
 
-	public static SocialUserInfoResponse of(
-		String providerId,
-		String name,
-		String email,
-		String mobile,
-		String birthDate,
-		String gender
-	) {
-		return new SocialUserInfoResponse(
-			providerId, name, email, mobile, birthDate, gender
-		);
-	}
+	// todo : 프론트 개발자들과 협의 후 삭제 및 수정 예정 (fromNaver, fromKakao, fromGoogle)
 
 	public static SocialUserInfoResponse fromNaver(Map<String, Object> response) {
 		var resNode = (Map<String, Object>) response.get("response");
 		return new SocialUserInfoResponse(
-			(String) resNode.get("id"),
-			(String) resNode.get("name"),
-			(String) resNode.get("email"),
-			(String) resNode.get("mobile"),
-			formatDate((String) resNode.get("birthyear"), (String) resNode.get("birthday")),
-			(String) resNode.get("gender")
+			getString(resNode, "id"),
+			getString(resNode, "name"),
+			getString(resNode, "email"),
+			getString(resNode, "mobile"),
+			formatDate(getString(resNode, "birthyear"), getString(resNode, "birthday")),
+			Gender.fromString(getString(resNode, "gender"))
 		);
 	}
 
@@ -40,28 +31,33 @@ public record SocialUserInfoResponse(
 		var account = (Map<String, Object>) response.get("kakao_account");
 		var profile = (Map<String, Object>) account.get("profile");
 		return new SocialUserInfoResponse(
-			String.valueOf(response.get("id")),
-			(String) profile.get("nickname"),
-			(String) account.get("email"),
-			(String) account.get("phone_number"),
-			formatDate((String) account.get("birthyear"), (String) account.get("birthday")),
-			(String) account.get("gender")
+			getString(response, "id"), // 카카오는 최상위 id가 숫자임
+			getString(profile, "nickname"),
+			getString(account, "email"),
+			getString(account, "phone_number"),
+			formatDate(getString(account, "birthyear"), getString(account, "birthday")),
+			Gender.fromString(getString(account, "gender"))
 		);
 	}
 
 	public static SocialUserInfoResponse fromGoogle(Map<String, Object> response) {
 		return new SocialUserInfoResponse(
-			String.valueOf(response.get("sub")),
-			(String) response.get("name"),
-			(String) response.get("email"),
-			(String) response.get("mobile"),
-			(String) response.get("birthday"),
-			(String) response.get("gender")
+			getString(response, "sub"),
+			getString(response, "name"),
+			getString(response, "email"),
+			getString(response, "mobile"),
+			getString(response, "birthday"),
+			Gender.fromString(getString(response, "gender"))
 		);
 	}
 
 	private static String formatDate(String year, String day) {
 		if (year == null || day == null) return null;
 		return year + "-" + day.replace("-", "");
+	}
+
+	private static String getString(Map<String, Object> map, String key) {
+		Object value = map.get(key);
+		return (value != null) ? String.valueOf(value) : null;
 	}
 }
