@@ -1,22 +1,22 @@
 package com.goti.domain.entity.game;
 
+import static lombok.AccessLevel.*;
+
 import com.goti.constants.GameResult;
 import com.goti.constants.GameStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
-
 import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
-
-import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
@@ -24,25 +24,26 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 
-	@Column(name = "baseball_games_id", nullable = false)
-	private UUID baseballGameId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "baseball_game_id", nullable = false)
+	private BaseballGameEntity baseballGameId;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "game_status", nullable = false, length = 50)
+	@Column(nullable = false)
 	private GameStatus gameStatus;
 
-	@Column(name = "home_team_score", nullable = false)
+	@Column(nullable = false)
 	private Integer homeTeamScore;
 
-	@Column(name = "away_team_score", nullable = false)
+	@Column(nullable = false)
 	private Integer awayTeamScore;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "game_result", length = 50)
+	@Column(nullable = false)
 	private GameResult gameResult;
 
 	private BaseballGameStatusEntity(
-		UUID baseballGameId,
+		BaseballGameEntity baseballGameId,
 		GameStatus gameStatus,
 		Integer homeTeamScore,
 		Integer awayTeamScore,
@@ -56,7 +57,7 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 	}
 
 	public static BaseballGameStatusEntity create(
-		UUID baseballGameId,
+		BaseballGameEntity baseballGameId,
 		GameStatus gameStatus,
 		Integer homeTeamScore,
 		Integer awayTeamScore,
@@ -64,7 +65,6 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 	) {
 
 		validate(
-			baseballGameId,
 			gameStatus,
 			homeTeamScore,
 			awayTeamScore
@@ -80,16 +80,10 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 	}
 
 	private static void validate(
-		UUID baseballGameId,
 		GameStatus gameStatus,
 		Integer homeTeamScore,
 		Integer awayTeamScore
 	) {
-
-		Preconditions.domainValidate(
-			baseballGameId != null,
-			"경기 ID는 필수입니다."
-		);
 		Preconditions.domainValidate(
 			gameStatus != null,
 			"경기 상태는 필수입니다."
