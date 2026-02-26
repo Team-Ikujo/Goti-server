@@ -75,7 +75,7 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 			gameStatus == null ? GameStatus.SCHEDULED : gameStatus,
 			homeTeamScore == null ? 0 : homeTeamScore,
 			awayTeamScore == null ? 0 : awayTeamScore,
-			gameResult
+			gameResult == null ? GameResult.PENDING : gameResult
 		);
 	}
 
