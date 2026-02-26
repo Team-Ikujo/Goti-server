@@ -30,8 +30,11 @@ public class AuthApplicationService {
 
 	public void login(OAuthProvider provider, String code, String state) {
 		validateState(provider, state);
-		String accessToken = getAccessToken(provider, code, state);
+		SocialApiClient apiClient = socialClientProvider.getClient(provider);
+		String accessToken = apiClient.getAccessToken(code, state);
 		log.info("accessToken :: {}", accessToken);
+		var socialUserInfo = apiClient.getSocialUserInfo(accessToken);
+		log.info("socialUserInfo : {}", socialUserInfo);
 	}
 
 
@@ -59,13 +62,4 @@ public class AuthApplicationService {
 			throw new CustomException(ErrorCode.INVALID_STATE);
 		}
 	}
-
-	private String getAccessToken(OAuthProvider provider, String code, String state) {
-		SocialApiClient apiClient = socialClientProvider.getClient(provider);
-		return apiClient.getAccessToken(code, state);
-	}
-
-	// todo: proverId 발급 로직 구현 예정
-
-
 }
