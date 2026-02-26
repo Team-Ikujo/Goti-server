@@ -1,5 +1,7 @@
 package com.goti.infra.api.client.kakao;
 
+import com.goti.constants.OAuthProvider;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -9,7 +11,6 @@ import com.goti.infra.api.base.BaseRestClient;
 import com.goti.infra.api.client.SocialApiClient;
 import com.goti.infra.api.dto.request.kakao.KakaoTokenRequest;
 import com.goti.infra.api.dto.response.common.SocialAccessTokenResponse;
-import com.goti.infra.constants.ProviderType;
 
 @Component
 public class KakaoApiClient extends BaseRestClient implements SocialApiClient {
@@ -22,8 +23,8 @@ public class KakaoApiClient extends BaseRestClient implements SocialApiClient {
 	}
 
 	@Override
-	public ProviderType getProviderType() {
-		return ProviderType.KAKAO;
+	public OAuthProvider getProviderType() {
+		return OAuthProvider.KAKAO;
 	}
 
 	@Override

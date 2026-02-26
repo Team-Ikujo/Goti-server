@@ -3,8 +3,8 @@ package com.goti.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.goti.constants.OAuthProvider;
 import com.goti.GotiUserApplication;
-import com.goti.infra.constants.ProviderType;
 
 import com.goti.infra.constants.redis.RedisKey;
 
@@ -40,7 +40,7 @@ public class AuthApplicationServiceTest {
 	@Test
 	@DisplayName("method : issueState()")
 	void state_생성_성공() {
-		ProviderType provider = ProviderType.NAVER;
+		OAuthProvider provider = OAuthProvider.NAVER;
 		SocialStateResponse response = authApplicationService.issueState(provider);
 		assertNotNull(response);
 		String state = response.state();
@@ -54,7 +54,7 @@ public class AuthApplicationServiceTest {
 	@Test
 	@DisplayName("method : issueState()")
 	void state_생성_실패_kakao() {
-		ProviderType provider = ProviderType.KAKAO;
+		OAuthProvider provider = OAuthProvider.KAKAO;
 		assertThatThrownBy(
 			() -> authApplicationService.issueState(provider)
 		).isInstanceOf(CustomException.class)
@@ -65,7 +65,7 @@ public class AuthApplicationServiceTest {
 	@NullAndEmptySource
 	@DisplayName("method : login() (google, naver)")
 	void 엑세스토큰_생성_실패_state_필수_소셜로그_state_null_또는_공백(String code) {
-		ProviderType provider = ProviderType.NAVER; // (or GOOGLE)
+		OAuthProvider provider = OAuthProvider.NAVER; // (or GOOGLE)
 		assertThatThrownBy(
 			() -> authApplicationService.login(provider, code, null)
 		).isInstanceOf(CustomException.class)
@@ -75,7 +75,7 @@ public class AuthApplicationServiceTest {
 	@Test
 	@DisplayName("method : login() (google, naver)")
 	void 엑세스토큰_생성_실패_state_필수_소셜로그_redis_state_미존재() {
-		ProviderType provider = ProviderType.NAVER; // (or GOOGLE)
+		OAuthProvider provider = OAuthProvider.NAVER; // (or GOOGLE)
 		String code = "testCode";
 		String state = "NOT_EXISTS_STATE";
 		assertThatThrownBy(

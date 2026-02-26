@@ -1,5 +1,6 @@
 package com.goti.service.auth.application;
 
+import com.goti.constants.OAuthProvider;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.CustomException;
 import com.goti.infra.api.client.SocialApiClient;
@@ -7,8 +8,6 @@ import com.goti.infra.api.client.SocialClientProvider;
 
 import com.goti.infra.api.dto.response.common.SocialStateResponse;
 import com.goti.infra.cache.RedisCache;
-
-import com.goti.infra.constants.ProviderType;
 
 import com.goti.infra.constants.redis.RedisKey;
 
@@ -29,15 +28,15 @@ public class AuthApplicationService {
 
 	static final String KEY_SEPARATOR = ":";
 
-	public void login(ProviderType provider, String code, String state) {
+	public void login(OAuthProvider provider, String code, String state) {
 		validateState(provider, state);
 		String accessToken = getAccessToken(provider, code, state);
 		log.info("accessToken :: {}", accessToken);
 	}
 
 
-	public SocialStateResponse issueState(ProviderType provider) {
-		if (provider == ProviderType.KAKAO) {
+	public SocialStateResponse issueState(OAuthProvider provider) {
+		if (provider == OAuthProvider.KAKAO) {
 			throw new CustomException(ErrorCode.BAD_REQUEST);
 		}
 		String state = UUID.randomUUID().toString();
@@ -48,8 +47,8 @@ public class AuthApplicationService {
 		return SocialStateResponse.of(state);
 	}
 
-	private void validateState(ProviderType provider, String state) {
-		if (provider == ProviderType.KAKAO) return;
+	private void validateState(OAuthProvider provider, String state) {
+		if (provider == OAuthProvider.KAKAO) return;
 
 		if (state == null || state.isBlank()) {
 			throw new CustomException(ErrorCode.MISSING_PARAMETER, "state");
@@ -61,11 +60,12 @@ public class AuthApplicationService {
 		}
 	}
 
-	private String getAccessToken(ProviderType provider, String code, String state) {
+	private String getAccessToken(OAuthProvider provider, String code, String state) {
 		SocialApiClient apiClient = socialClientProvider.getClient(provider);
 		return apiClient.getAccessToken(code, state);
 	}
 
 	// todo: proverId 발급 로직 구현 예정
+
 
 }
