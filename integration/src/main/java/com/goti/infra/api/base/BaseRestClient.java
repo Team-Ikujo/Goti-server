@@ -106,4 +106,8 @@ public abstract class BaseRestClient {
 			.retrieve()
 			.body(responseType);
 	}
+
+	protected Map<String, String> createBearerHeader(String accessToken) {
+		return Map.of("Authorization", "Bearer " + accessToken);
+	}
 }

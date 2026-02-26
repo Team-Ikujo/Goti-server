@@ -2,6 +2,8 @@ package com.goti.infra.api.client.naver;
 
 import com.goti.constants.OAuthProvider;
 
+import com.goti.infra.api.dto.response.common.SocialUserInfoResponse;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -11,6 +13,8 @@ import com.goti.infra.api.base.BaseRestClient;
 import com.goti.infra.api.client.SocialApiClient;
 import com.goti.infra.api.dto.request.naver.NaverTokenRequest;
 import com.goti.infra.api.dto.response.common.SocialAccessTokenResponse;
+
+import java.util.Map;
 
 @Component
 public class NaverApiClient extends BaseRestClient implements SocialApiClient {
@@ -47,9 +51,16 @@ public class NaverApiClient extends BaseRestClient implements SocialApiClient {
 		return response.accessToken();
 	}
 
-	// todo : getProviderId API 구현 2026.02.23 오후 내로 완료 예정
 	@Override
-	public String getProviderId(String accessToken) {
-		return "";
+	public SocialUserInfoResponse getSocialUserInfo(String accessToken) {
+		Map<String, Object> response = get(
+			properties.userInfoUrl(),
+			createBearerHeader(accessToken),
+			null,
+			Map.class
+		);
+		return SocialUserInfoResponse.fromNaver(response);
 	}
+
+
 }

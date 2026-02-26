@@ -1,11 +1,12 @@
 package com.goti.infra.api.client;
 
 import com.goti.constants.OAuthProvider;
+import com.goti.infra.api.dto.response.common.SocialUserInfoResponse;
 
 public interface SocialApiClient {
 	OAuthProvider getProviderType();
 
 	String getAccessToken(String code, String state);
 
-	String getProviderId(String accessToken);
+	SocialUserInfoResponse getSocialUserInfo(String accessToken);
 }
