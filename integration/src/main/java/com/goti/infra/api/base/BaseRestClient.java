@@ -65,14 +65,11 @@ public abstract class BaseRestClient {
 		Class<T> responseType
 	) {
 		return restClient.post()
-			.uri(uriBuilder -> getActualUriBuilder(uri, uriBuilder).build())
-			.headers(header -> {
-				if (contentType != null)
-					header.setContentType(contentType);
-			})
-			.body(
-				body instanceof Map ? toParams((Map<String, ?>) body) : body
+			.uri(uriBuilder ->
+				getActualUriBuilder(uri, uriBuilder).build()
 			)
+			.contentType(contentType != null ? contentType : MediaType.APPLICATION_JSON)
+			.body(body)
 			.retrieve()
 			.body(responseType);
 	}

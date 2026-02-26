@@ -28,6 +28,7 @@ public class AuthApplicationService {
 
 	static final String KEY_SEPARATOR = ":";
 
+	// todo : socialUserInfo 에서 받은 providerId 로 socialProvider 데이터 유무체크 및 로깅제거
 	public void login(OAuthProvider provider, String code, String state) {
 		validateState(provider, state);
 		SocialApiClient apiClient = socialClientProvider.getClient(provider);
