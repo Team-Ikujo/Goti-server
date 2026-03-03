@@ -61,7 +61,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		UUID stadiumId,
 		LocalDate playDate,
 		LocalTime startAt,
-		LeagueType leagueType,
 		LocalDateTime reservationOpenedAt,
 		LocalDateTime reservationClosedAt
 	) {
@@ -70,7 +69,7 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		this.stadiumId = stadiumId;
 		this.playDate = playDate;
 		this.startAt = startAt;
-		this.leagueType = leagueType;
+		this.leagueType = LeagueType.REGULAR;
 		this.reservationAvailableStatus = ReservationAvailableStatus.PENDING;
 		this.reservationOpenedAt = reservationOpenedAt;
 		this.reservationClosedAt = reservationClosedAt;
@@ -82,7 +81,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		UUID stadiumId,
 		LocalDate playDate,
 		LocalTime startAt,
-		LeagueType leagueType,
 		LocalDateTime reservationOpenedAt,
 		LocalDateTime reservationClosedAt
 	) {
@@ -99,7 +97,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 			stadiumId,
 			playDate,
 			startAt,
-			leagueType == null ? LeagueType.REGULAR : leagueType,
 			reservationOpenedAt,
 			reservationClosedAt
 		);

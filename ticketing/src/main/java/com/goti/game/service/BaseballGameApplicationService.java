@@ -39,7 +39,6 @@ public class BaseballGameApplicationService {
 			cmd.stadiumId(),
 			cmd.playDate(),
 			cmd.startAt(),
-			cmd.leagueType(),
 			cmd.reservationOpenedAt(),
 			cmd.reservationClosedAt()
 		);
