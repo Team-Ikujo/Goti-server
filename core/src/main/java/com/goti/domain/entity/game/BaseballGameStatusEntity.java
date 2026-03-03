@@ -56,31 +56,7 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 		this.gameResult = gameResult;
 	}
 
-	public static BaseballGameStatusEntity create(
-		BaseballGameEntity baseballGameId,
-		GameStatus gameStatus,
-		Integer homeTeamScore,
-		Integer awayTeamScore,
-		GameResult gameResult
-	) {
-
-		validate(gameStatus);
-
-		return new BaseballGameStatusEntity(
-			baseballGameId,
-			gameStatus == null ? GameStatus.SCHEDULED : gameStatus,
-			0,
-			0,
-			gameResult == null ? GameResult.PENDING : gameResult
-		);
-	}
-
-	private static void validate(
-		GameStatus gameStatus
-	) {
-		Preconditions.domainValidate(
-			gameStatus != null,
-			"경기 상태는 필수입니다."
-		);
+	public static BaseballGameStatusEntity init(BaseballGameEntity game) {
+		return new BaseballGameStatusEntity(game, GameStatus.SCHEDULED, 0, 0, GameResult.PENDING);
 	}
 }
