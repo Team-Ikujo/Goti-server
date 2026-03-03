@@ -1,5 +1,6 @@
 package com.goti.dto.request;
 
+import com.goti.config.validator.ValidMobile;
 import com.goti.constants.Gender;
 
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ public record SignupRequest(
 	@NotBlank(message = "이름은 필수 항목입니다.")
 	String name,
 
+	@ValidMobile
 	@NotBlank(message = "휴대전화번호는 필수 항목입니다.")
 	String mobile,
 
