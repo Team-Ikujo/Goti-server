@@ -21,6 +21,6 @@ public interface SocialProviderRepository extends JpaRepository<SocialProviderEn
 		 				"AND s.provider = :provider")
 	Optional<SocialProviderEntity> findByProviderIdAndProviderWithUser(
 		@Param("providerId") String providerId,
-		@Param("providerType") OAuthProvider provider
+		@Param("provider") OAuthProvider provider
 	);
 }
