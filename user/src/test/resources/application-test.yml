@@ -1,10 +1,9 @@
 server:
   port: 8080
 spring:
-  config:
-    import:
-      - application-integration.yml
-      - optional:file:.env.test[.properties]
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
@@ -15,13 +14,14 @@ spring:
       max-lifetime: 420000
       connection-timeout: 5000
       validation-timeout: 3000
-    jpa:
-      hibernate:
-        ddl-auto: create-drop
   data:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+  config:
+    import:
+      - application-integration.yml
+      - optional:file:.env.test[.properties]
 
 jwt:
   secret: ${JWT_SECRET_KEY}
