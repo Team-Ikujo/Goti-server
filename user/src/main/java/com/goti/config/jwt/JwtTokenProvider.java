@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.UUID;
 
@@ -55,9 +56,11 @@ public class JwtTokenProvider {
 			.compact();
 	}
 
+	// todo: Duration.ofMinutes(10) 하드코딩 기입 부분 -> user module application.yml 파일 읽지 못하는 부분 수정 예정
+	// todo: 추가로 create method 도 같은 error 날것으로 예상됨
 	public String createRegistrationToken(OAuthProvider provider, String providerId) {
 		Date issuedAt = new Date();
-		Date expireAt = new Date(issuedAt.getTime() + jwtProperties.registrationValidTime().toMillis());
+		Date expireAt = new Date(issuedAt.getTime() + Duration.ofMinutes(10).toMillis());
 		String jwtId = getJwtId();
 		return Jwts.builder()
 			.subject(REGISTRATION_SUBJECT)
