@@ -1,17 +1,15 @@
 package com.goti.game.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.goti.constants.GameStatus;
-import com.goti.constants.LeagueType;
-import com.goti.constants.ReservationAvailableStatus;
-import com.goti.game.service.command.CreateGameCommand;
-
-import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.goti.constants.LeagueType;
+import com.goti.game.service.command.CreateGameCommand;
+
+import jakarta.validation.constraints.NotNull;
 
 public record CreateGameRequest(
 	@NotNull(message = "홈팀 ID는 필수입니다.")
