@@ -1,6 +1,5 @@
 package com.goti.domain.entity.game;
 
-import com.goti.constants.GameStatus;
 import com.goti.constants.LeagueType;
 import com.goti.constants.ReservationAvailableStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
@@ -63,7 +62,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		LocalDate playDate,
 		LocalTime startAt,
 		LeagueType leagueType,
-		ReservationAvailableStatus reservationAvailableStatus,
 		LocalDateTime reservationOpenedAt,
 		LocalDateTime reservationClosedAt
 	) {
@@ -73,7 +71,7 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		this.playDate = playDate;
 		this.startAt = startAt;
 		this.leagueType = leagueType;
-		this.reservationAvailableStatus = reservationAvailableStatus;
+		this.reservationAvailableStatus = ReservationAvailableStatus.PENDING;
 		this.reservationOpenedAt = reservationOpenedAt;
 		this.reservationClosedAt = reservationClosedAt;
 	}
@@ -84,9 +82,7 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 		UUID stadiumId,
 		LocalDate playDate,
 		LocalTime startAt,
-		GameStatus gameStatus,
 		LeagueType leagueType,
-		ReservationAvailableStatus reservationAvailableStatus,
 		LocalDateTime reservationOpenedAt,
 		LocalDateTime reservationClosedAt
 	) {
@@ -104,7 +100,6 @@ public class BaseballGameEntity extends ModificationTimestampEntity {
 			playDate,
 			startAt,
 			leagueType == null ? LeagueType.REGULAR : leagueType,
-			reservationAvailableStatus == null ? ReservationAvailableStatus.PENDING : reservationAvailableStatus,
 			reservationOpenedAt,
 			reservationClosedAt
 		);
