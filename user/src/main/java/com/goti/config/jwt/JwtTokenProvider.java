@@ -2,6 +2,7 @@ package com.goti.config.jwt;
 
 import com.goti.config.properties.JwtProperties;
 
+import com.goti.constants.OAuthProvider;
 import com.goti.constants.UserRole;
 
 import com.goti.security.ExtendedUserDetailsService;
@@ -34,17 +35,35 @@ public class JwtTokenProvider {
 	private static final String TOKEN_PREFIX = "Bearer ";
 	private static final String ROLE_CLAIM_KEY = "role";
 	private static final String MOBILE_CLAIM_KEY = "mobile";
-	private static final String JWT_ID_KEY = "jti";
+
+	private static final String PROVIDER_TYPE_KEY = "provider_type";
+	private static final String PROVIDER_ID_KEY = "provider_id";
+	static final String REGISTRATION_SUBJECT = "registration";
 
 	public String create(UUID id, String mobile, UserRole role) {
 		Date issuedAt = new Date();
 		Date expireAt = new Date(issuedAt.getTime() + jwtProperties.accessValidTime().toMillis());
-		String randomUUID = UUID.randomUUID().toString();
+		String jwtId = getJwtId();
 		return Jwts.builder()
 			.subject(id.toString())
-			.claim(JWT_ID_KEY, randomUUID)
+			.id(jwtId)
 			.claim(ROLE_CLAIM_KEY, role.name())
 			.claim(MOBILE_CLAIM_KEY, mobile)
+			.issuedAt(issuedAt)
+			.expiration(expireAt)
+			.signWith(jwtProperties.secretKey())
+			.compact();
+	}
+
+	public String createRegistrationToken(OAuthProvider provider, String providerId) {
+		Date issuedAt = new Date();
+		Date expireAt = new Date(issuedAt.getTime() + jwtProperties.registrationValidTime().toMillis());
+		String jwtId = getJwtId();
+		return Jwts.builder()
+			.subject(REGISTRATION_SUBJECT)
+			.id(jwtId)
+			.claim(PROVIDER_TYPE_KEY, provider)
+			.claim(PROVIDER_ID_KEY, providerId)
 			.issuedAt(issuedAt)
 			.expiration(expireAt)
 			.signWith(jwtProperties.secretKey())
@@ -82,5 +101,9 @@ public class JwtTokenProvider {
 			.build()
 			.parseSignedClaims(token)
 			.getPayload();
+	}
+
+	private String getJwtId() {
+		return UUID.randomUUID().toString();
 	}
 }
