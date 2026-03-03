@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.goti.global.api.ApiSuccessResponse.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/games/baseball")
@@ -26,6 +28,6 @@ public class BaseballGameController {
 		@Valid @RequestBody CreateGameRequest request
 	) {
 		GameResponse response = baseballGameApplicationService.create(request.toCommand());
-		return ApiSuccessResponse.wrap(response);
+		return wrap(response);
 	}
 }
