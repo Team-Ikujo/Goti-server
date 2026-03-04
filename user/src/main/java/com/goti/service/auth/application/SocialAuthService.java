@@ -7,6 +7,7 @@ import com.goti.dto.response.SocialVerifyResponse;
 import com.goti.exception.CustomException;
 import com.goti.infra.api.client.SocialApiClient;
 import com.goti.infra.api.client.SocialClientProvider;
+import com.goti.infra.api.dto.response.common.SocialStateResponse;
 import com.goti.infra.api.dto.response.common.SocialUserInfoResponse;
 import com.goti.infra.cache.RedisCache;
 import com.goti.infra.constants.redis.RedisKey;
@@ -15,8 +16,13 @@ import com.goti.service.domain.user.SocialProviderService;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SocialAuthService {
@@ -28,13 +34,24 @@ public class SocialAuthService {
 
 	private static final String KEY_SEPARATOR = ":";
 
+	public SocialStateResponse issueState(OAuthProvider provider) {
+		if (provider == OAuthProvider.KAKAO) {
+			throw new CustomException(ErrorCode.BAD_REQUEST);
+		}
+		String state = UUID.randomUUID().toString();
+		String keyParam = provider + KEY_SEPARATOR + state;
+
+		redisCache.set(RedisKey.OAUTH_STATE, keyParam, true);
+
+		return SocialStateResponse.of(state);
+	}
+
 	public SocialVerifyResponse verify(OAuthProvider provider, String authCode, String state) {
 		validateState(provider, state);
 		SocialApiClient apiClient = socialClientProvider.getClient(provider);
 		String socialAccessToken = apiClient.getAccessToken(authCode, state);
 		SocialUserInfoResponse socialUserInfo = apiClient.getSocialUserInfo(socialAccessToken);
 		String providerId = socialUserInfo.providerId();
-
 		boolean isRegistered = socialProviderService.findByProviderIdAndProvider(
 			providerId, provider
 		).isPresent();
