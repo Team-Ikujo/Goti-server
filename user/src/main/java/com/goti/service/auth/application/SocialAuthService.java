@@ -52,6 +52,7 @@ public class SocialAuthService {
 		String socialAccessToken = apiClient.getAccessToken(authCode, state);
 		SocialUserInfoResponse socialUserInfo = apiClient.getSocialUserInfo(socialAccessToken);
 		String providerId = socialUserInfo.providerId();
+
 		boolean isRegistered = socialProviderService.findByProviderIdAndProvider(
 			providerId, provider
 		).isPresent();
