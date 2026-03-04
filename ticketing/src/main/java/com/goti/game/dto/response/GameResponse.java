@@ -23,35 +23,12 @@ public record GameResponse(
 	ReservationAvailableStatus reservationAvailableStatus,
 	LocalDateTime reservationOpenedAt,
 	LocalDateTime reservationClosedAt,
-
 	GameStatus gameStatus,
 	Integer homeTeamScore,
 	Integer awayTeamScore,
 	GameResult gameResult
 ) {
-	public static GameResponse from(BaseballGameEntity game) {
-		return new GameResponse(
-			game.getId(),
-			game.getHomeTeamId(),
-			game.getAwayTeamId(),
-			game.getStadiumId(),
-			game.getPlayDate(),
-			game.getStartAt(),
-			game.getLeagueType(),
-			game.getReservationAvailableStatus(),
-			game.getReservationOpenedAt(),
-			game.getReservationClosedAt(),
-			GameStatus.SCHEDULED,
-			0,
-			0,
-			GameResult.PENDING
-		);
-	}
-
 	public static GameResponse from(BaseballGameEntity game, BaseballGameStatusEntity status) {
-		if (status == null) {
-			return from(game);
-		}
 		return new GameResponse(
 			game.getId(),
 			game.getHomeTeamId(),

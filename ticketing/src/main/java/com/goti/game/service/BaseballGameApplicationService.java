@@ -59,7 +59,7 @@ public class BaseballGameApplicationService {
 		return baseballGameRepository.findAll(pageable)
 			.map(game -> baseballGameStatusRepository.findByBaseballGame_Id(game.getId())
 				.map(status -> GameResponse.from(game, status))
-				.orElseGet(() -> GameResponse.from(game)));
+				.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND)));
 	}
 
 	@Transactional(readOnly = true)
