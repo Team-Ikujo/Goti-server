@@ -1,5 +1,7 @@
 package com.goti.game.service;
 
+import com.goti.exception.CustomException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import com.goti.game.service.command.CreateGameCommand;
 import com.goti.global.validation.Preconditions;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +58,13 @@ public class BaseballGameApplicationService {
 	public Page<GameResponse> getGames(Pageable pageable) {
 		return baseballGameRepository.findAll(pageable)
 			.map(GameResponse::from);
+	}
+
+	@Transactional(readOnly = true)
+	public GameResponse getGame(UUID gameId) {
+		BaseballGameEntity game = baseballGameRepository.findById(gameId)
+			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
+
+		return GameResponse.from(game);
 	}
 }
