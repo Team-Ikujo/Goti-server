@@ -35,13 +35,12 @@ public class SeatEntity extends ModificationTimestampEntity {
 	private SeatEntity(
 		SeatSectionEntity seatSection,
 		String rowName,
-		Integer seatNum,
-		boolean available
+		Integer seatNum
 	) {
 		this.seatSection = seatSection;
 		this.rowName = rowName;
 		this.seatNum = seatNum;
-		this.available = available;
+		this.available = true;
 	}
 
 	public static SeatEntity create(
@@ -50,7 +49,7 @@ public class SeatEntity extends ModificationTimestampEntity {
 		Integer seatNum
 	) {
 		validate(rowName, seatNum);
-		return new SeatEntity(seatSection, rowName, seatNum, true);
+		return new SeatEntity(seatSection, rowName, seatNum);
 	}
 
 	private static void validate(
