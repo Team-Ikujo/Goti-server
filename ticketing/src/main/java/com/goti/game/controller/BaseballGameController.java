@@ -5,11 +5,15 @@ import com.goti.game.dto.response.GameResponse;
 import com.goti.game.service.BaseballGameApplicationService;
 import com.goti.global.api.ApiSuccessResponse;
 
+import com.goti.global.api.PageResponse;
+
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +33,10 @@ public class BaseballGameController {
 	) {
 		GameResponse response = baseballGameApplicationService.create(request.toCommand());
 		return wrap(response);
+	}
+
+	@GetMapping
+	public ResponseEntity<ApiSuccessResponse<PageResponse<GameResponse>>> getGames(Pageable pageable) {
+		return page(baseballGameApplicationService.getGames(pageable));
 	}
 }
