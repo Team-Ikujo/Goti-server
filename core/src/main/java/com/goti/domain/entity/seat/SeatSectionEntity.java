@@ -30,7 +30,7 @@ public class SeatSectionEntity extends ModificationTimestampEntity {
 	@Column(nullable = false)
 	private UUID stadiumId;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String sectionCode;
 
 	@Column(nullable = false)
