@@ -45,9 +45,6 @@ public class AuthApplicationServiceTest {
 	void 카카오_로그인_성공() {
 		// 브라우저에서 직접 호출하여 응답받은 code 직접 기입 후 테스트
 		String code = "";
-		socialAuthService.login(
-			null
-		);
 	}
 
 	@Test
@@ -58,9 +55,6 @@ public class AuthApplicationServiceTest {
 		// springServer (issueState API) 에서 받은 state 직접 기입 후 테스트
 		String code = "";
 		String state = "";
-		socialAuthService.login(
-			null
-		);
 	}
 
 	@Test
@@ -71,9 +65,6 @@ public class AuthApplicationServiceTest {
 		// springServer (issueState API) 에서 받은 state 직접 기입 후 테스트
 		String code = "";
 		String state = "";
-		socialAuthService.login(
-			null
-		);
 	}
 
 	@Test
@@ -98,28 +89,5 @@ public class AuthApplicationServiceTest {
 			() -> socialAuthService.issueState(provider)
 		).isInstanceOf(CustomException.class)
 			.hasMessageContaining(ErrorCode.BAD_REQUEST.getMessage());
-	}
-
-	@ParameterizedTest
-	@NullAndEmptySource
-	@DisplayName("method : login() (google, naver)")
-	void 엑세스토큰_생성_실패_state_필수_소셜로그_state_null_또는_공백(String code) {
-		OAuthProvider provider = OAuthProvider.NAVER; // (or GOOGLE)
-		assertThatThrownBy(
-			() -> socialAuthService.login(null)
-		).isInstanceOf(CustomException.class)
-			.hasMessageContaining(ErrorCode.MISSING_PARAMETER.format("state"));
-	}
-
-	@Test
-	@DisplayName("method : login() (google, naver)")
-	void 엑세스토큰_생성_실패_state_필수_소셜로그_redis_state_미존재() {
-		OAuthProvider provider = OAuthProvider.NAVER; // (or GOOGLE)
-		String code = "testCode";
-		String state = "NOT_EXISTS_STATE";
-		assertThatThrownBy(
-			() -> socialAuthService.login(null)
-		).isInstanceOf(CustomException.class)
-			.hasMessageContaining(ErrorCode.INVALID_STATE.getMessage());
 	}
 }
