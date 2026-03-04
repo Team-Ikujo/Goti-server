@@ -14,10 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 import static com.goti.global.api.ApiSuccessResponse.*;
 
@@ -36,7 +39,16 @@ public class BaseballGameController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ApiSuccessResponse<PageResponse<GameResponse>>> getGames(Pageable pageable) {
+	public ResponseEntity<ApiSuccessResponse<PageResponse<GameResponse>>> getGames(
+		Pageable pageable
+	) {
 		return page(baseballGameApplicationService.getGames(pageable));
+	}
+
+	@GetMapping("/{gameId}")
+	public ResponseEntity<ApiSuccessResponse<GameResponse>> getGame(
+		@PathVariable UUID gameId
+	) {
+		return wrap(baseballGameApplicationService.getGame(gameId));
 	}
 }
