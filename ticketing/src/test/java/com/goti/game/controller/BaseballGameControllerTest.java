@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goti.constants.GameResult;
+import com.goti.constants.GameStatus;
 import com.goti.constants.LeagueType;
 import com.goti.constants.ReservationAvailableStatus;
 import com.goti.constants.messages.ErrorCode;
@@ -86,7 +88,11 @@ class BaseballGameControllerTest {
 			LeagueType.REGULAR,
 			ReservationAvailableStatus.PENDING,
 			request.reservationOpenedAt(),
-			request.reservationClosedAt()
+			request.reservationClosedAt(),
+			GameStatus.SCHEDULED,
+			0,
+			0,
+			GameResult.PENDING
 		);
 		given(baseballGameApplicationService.create(any())).willReturn(response);
 
@@ -143,7 +149,11 @@ class BaseballGameControllerTest {
 			LeagueType.REGULAR,
 			ReservationAvailableStatus.PENDING,
 			LocalDateTime.of(2026, 4, 1, 14, 0),
-			LocalDateTime.of(2026, 4, 10, 17, 0)
+			LocalDateTime.of(2026, 4, 10, 17, 0),
+			GameStatus.SCHEDULED,
+			0,
+			0,
+			GameResult.PENDING
 		);
 		Page<GameResponse> page = new PageImpl<>(
 			java.util.List.of(response),
@@ -180,7 +190,11 @@ class BaseballGameControllerTest {
 			LeagueType.REGULAR,
 			ReservationAvailableStatus.PENDING,
 			LocalDateTime.of(2026, 4, 1, 14, 0),
-			LocalDateTime.of(2026, 4, 10, 17, 0)
+			LocalDateTime.of(2026, 4, 10, 17, 0),
+			GameStatus.SCHEDULED,
+			0,
+			0,
+			GameResult.PENDING
 		);
 		given(baseballGameApplicationService.getGame(gameId)).willReturn(response);
 
