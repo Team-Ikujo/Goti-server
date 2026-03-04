@@ -48,16 +48,18 @@ public class BaseballGameApplicationService {
 		);
 		BaseballGameEntity savedGame = baseballGameRepository.save(game);
 
-		BaseballGameStatusEntity gameStatusEntity = BaseballGameStatusEntity.init(savedGame);
-		baseballGameStatusRepository.save(gameStatusEntity);
+		BaseballGameStatusEntity gameStatus = BaseballGameStatusEntity.init(savedGame);
+		baseballGameStatusRepository.save(gameStatus);
 
-		return GameResponse.from(savedGame);
+		return GameResponse.from(savedGame, gameStatus);
 	}
 
 	@Transactional(readOnly = true)
 	public Page<GameResponse> getGames(Pageable pageable) {
 		return baseballGameRepository.findAll(pageable)
-			.map(GameResponse::from);
+			.map(game -> baseballGameStatusRepository.findByBaseballGame_Id(game.getId())
+				.map(status -> GameResponse.from(game, status))
+				.orElseGet(() -> GameResponse.from(game)));
 	}
 
 	@Transactional(readOnly = true)
@@ -65,6 +67,10 @@ public class BaseballGameApplicationService {
 		BaseballGameEntity game = baseballGameRepository.findById(gameId)
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
-		return GameResponse.from(game);
+		BaseballGameStatusEntity status = baseballGameStatusRepository
+			.findByBaseballGame_Id(gameId)
+			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
+
+		return GameResponse.from(game, status);
 	}
 }
