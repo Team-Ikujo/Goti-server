@@ -15,8 +15,6 @@ dependencies {
     // OpenTelemetry (metrics + traces + logs 자동 설정)
     implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
 
-    runtimeOnly 'org.postgresql:postgresql'
-
     implementation(project(":common"))
     implementation(project(":core"))
     implementation(project(":integration"))
