@@ -20,7 +20,7 @@ public record SignupRequest(
 	@NotNull(message = "성별은 필수 항목입니다.")
 	Gender gender,
 
-	@NotBlank(message = "생년월일은 필수 항목입니다.")
+	@NotNull(message = "생년월일은 필수 항목입니다.")
 	@Pattern(
 		regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
 		message = "생년월일 형식이 올바르지 않습니다. (yyyy-MM-dd)"
