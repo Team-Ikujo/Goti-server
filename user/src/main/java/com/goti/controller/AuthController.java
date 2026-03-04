@@ -2,9 +2,13 @@ package com.goti.controller;
 
 import com.goti.constants.OAuthProvider;
 import com.goti.dto.request.LoginRequest;
+import com.goti.dto.request.SocialVerifyRequest;
 import com.goti.dto.response.LoginResponse;
+import com.goti.dto.response.SocialVerifyResponse;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.service.auth.application.AuthApplicationService;
+
+import com.goti.service.auth.application.SocialAuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,17 @@ import static com.goti.global.api.ApiSuccessResponse.wrap;
 public class AuthController {
 
 	private final AuthApplicationService authApplicationService;
+	private final SocialAuthService socialAuthService;
+
+	@PostMapping("/{provider}/social/verify")
+	public ResponseEntity<ApiSuccessResponse<SocialVerifyResponse>> verify(
+		@PathVariable OAuthProvider provider,
+		@RequestBody @Valid SocialVerifyRequest request
+	) {
+		return wrap(
+			socialAuthService.verify(provider, request.authCode(), request.state())
+		);
+	}
 
 	@PostMapping("/{provider}/login")
 	public ResponseEntity<ApiSuccessResponse<LoginResponse>> login(
