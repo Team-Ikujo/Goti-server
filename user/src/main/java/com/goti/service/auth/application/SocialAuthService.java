@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -141,9 +142,16 @@ public class SocialAuthService {
 	private MemberEntity getOrCreateMember(
 		String name, String mobile, Gender gender, LocalDate birthDate
 	) {
-		return memberService.findByMobile(mobile).orElseGet(
-			() -> memberService.save(name, mobile, gender, birthDate)
-		);
+		return memberService.findByMobile(mobile)
+			.orElseGet(() -> {
+				try {
+					return memberService.save(name, mobile, gender, birthDate);
+				} catch (DataIntegrityViolationException e) {
+					return memberService.findByMobile(mobile).orElseThrow(
+						() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)
+					);
+				}
+			});
 	}
 
 	private void createSocialProvider(
@@ -155,6 +163,29 @@ public class SocialAuthService {
 			() -> socialProviderService.save(
 				member, socialInfo.provider(), socialInfo.providerId, email
 			)
+			socialInfo.providerId(),
+			socialInfo.provider
+		).ifPresentOrElse(
+			existingProvider -> {
+				if (!existingProvider.getMember().getId().equals(member.getId())) {
+					log.error(
+						"소셜 계정 연동 충돌 발생: 소셜ID: {}, 기존회원ID: {}, 신규요청회원ID: {}",
+						socialInfo.providerId(), existingProvider.getMember().getId(), member.getId()
+					);
+					throw new CustomException(ErrorCode.SOCIAL_PROVIDER_ALREADY_LINKED);
+			},
+			() -> {
+				try {
+					socialProviderService.save(
+						member, socialInfo.provider(), socialInfo.providerId, email
+					);
+				} catch(DataIntegrityViolationException e) {
+					log.warn(
+						"소셜 정보 중복 생성 시도 Skip - 소셜ID: {}",
+						socialInfo.providerId()
+					);
+				}
+			}
 		);
 	}
 }
