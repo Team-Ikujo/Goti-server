@@ -104,4 +104,13 @@ public class SeatHoldEntity extends ModificationTimestampEntity {
 			"만료 시각은 필수입니다."
 		);
 	}
+
+	public void release() {
+		Preconditions.domainValidate(
+			this.status == SeatHoldStatus.HOLDING,
+			"HOLDING 상태에서만 RELEASED 상태로 변경할 수 있습니다."
+		);
+		this.status = SeatHoldStatus.RELEASED;
+		this.releasedAt = Instant.now();
+	}
 }
