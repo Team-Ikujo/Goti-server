@@ -1,6 +1,7 @@
 package com.goti.service.auth.application;
 
 import com.goti.config.jwt.JwtTokenProvider;
+import com.goti.constants.Gender;
 import com.goti.constants.OAuthProvider;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.domain.entity.user.MemberEntity;
@@ -13,6 +14,7 @@ import com.goti.infra.api.dto.response.common.SocialUserInfoResponse;
 import com.goti.infra.cache.RedisCache;
 import com.goti.infra.constants.redis.RedisKey;
 
+import com.goti.service.domain.user.MemberService;
 import com.goti.service.domain.user.SocialProviderService;
 
 import io.jsonwebtoken.Claims;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Slf4j
@@ -34,10 +37,12 @@ public class SocialAuthService {
 	private final SocialProviderService socialProviderService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final RedisCache redisCache;
+	private final MemberService memberService;
 
 	private static final String KEY_SEPARATOR = ":";
 	private static final String PROVIDER_ID_KEY = "provider_id";
 	private static final String PROVIDER_TYPE_KEY = "provider_type";
+	private static final String SOCIAL_VERIFY_SUBJECT = "social_verify";
 
 	public SocialStateResponse issueState(OAuthProvider provider) {
 		if (provider == OAuthProvider.KAKAO) {
@@ -68,18 +73,40 @@ public class SocialAuthService {
 	}
 
 	public Pair<String, String> login(String socialVerifyToken) {
-		Claims claims = jwtTokenProvider.getSocialVerifyClaims(socialVerifyToken);
-		String providerId = claims.get(PROVIDER_ID_KEY, String.class);
-		OAuthProvider provider = OAuthProvider.valueOf(claims.get(PROVIDER_TYPE_KEY, String.class));
-		MemberEntity member = socialProviderService.findMemberBySocialInfo(providerId, provider)
-			.orElseThrow(
-				() ->{
-					log.error(
-						"Member not found after social verify - providerId: {}, provider: {}", providerId, provider
-					);
-					return new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-				}
-			);
+		SocialInfo verifiedSocialInfo = getSocialInfoByToken(socialVerifyToken);
+		MemberEntity member = socialProviderService.findMemberBySocialInfo(
+			verifiedSocialInfo.providerId,
+			verifiedSocialInfo.provider
+		).orElseThrow(
+			() ->{
+				log.error(
+					"Member not found after social verify - providerId: {}, provider: {}",
+					verifiedSocialInfo.providerId, verifiedSocialInfo.provider
+				);
+				return new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+			}
+		);
+		String accessToken = jwtTokenProvider.create(
+			member.getId(),
+			member.getMobile(),
+			member.getRole()
+		);
+		return Pair.of(accessToken, "");
+	}
+
+	public Pair<String, String> signup(
+		String socialVerifyToken,
+		String email,
+		String name,
+		String mobile,
+		Gender gender,
+		LocalDate birthDate
+	) {
+		SocialInfo verifiedSocialInfo = getSocialInfoByToken(socialVerifyToken);
+		MemberEntity member = getOrCreateMember(name, mobile, gender, birthDate);
+
+		createSocialProvider(member, verifiedSocialInfo, email);
+
 		String accessToken = jwtTokenProvider.create(
 			member.getId(),
 			member.getMobile(),
@@ -99,5 +126,36 @@ public class SocialAuthService {
 		if (!redisCache.consume(stateKey)) {
 			throw new CustomException(ErrorCode.INVALID_STATE);
 		}
+	}
+
+	private record SocialInfo(String providerId, OAuthProvider provider) {}
+
+	private SocialInfo getSocialInfoByToken(String socialVerifyToken) {
+		Claims claims = jwtTokenProvider.getSocialVerifyClaims(socialVerifyToken);
+
+		return new SocialInfo(
+			claims.get(PROVIDER_ID_KEY, String.class),
+			OAuthProvider.valueOf(claims.get(PROVIDER_TYPE_KEY, String.class))
+		);
+	}
+
+	private MemberEntity getOrCreateMember(
+		String name, String mobile, Gender gender, LocalDate birthDate
+	) {
+		return memberService.findByMobile(mobile).orElseGet(
+			() -> memberService.save(name, mobile, gender, birthDate)
+		);
+	}
+
+	private void createSocialProvider(
+		MemberEntity member, SocialInfo socialInfo, String email
+	) {
+		socialProviderService.findByProviderIdAndProvider(
+			socialInfo.providerId(), socialInfo.provider
+		).orElseGet(
+			() -> socialProviderService.save(
+				member, socialInfo.provider(), socialInfo.providerId, email
+			)
+		);
 	}
 }
