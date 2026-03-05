@@ -101,6 +101,7 @@ public class SeatHoldEntity extends ModificationTimestampEntity {
 		);
 		Preconditions.domainValidate(
 			expiredAt != null,
-			"만료 시각은 필수입니다.");
+			"만료 시각은 필수입니다."
+		);
 	}
 }
