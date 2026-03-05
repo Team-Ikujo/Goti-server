@@ -158,11 +158,6 @@ public class SocialAuthService {
 		MemberEntity member, SocialInfo socialInfo, String email
 	) {
 		socialProviderService.findByProviderIdAndProvider(
-			socialInfo.providerId(), socialInfo.provider
-		).orElseGet(
-			() -> socialProviderService.save(
-				member, socialInfo.provider(), socialInfo.providerId, email
-			)
 			socialInfo.providerId(),
 			socialInfo.provider
 		).ifPresentOrElse(
@@ -173,6 +168,7 @@ public class SocialAuthService {
 						socialInfo.providerId(), existingProvider.getMember().getId(), member.getId()
 					);
 					throw new CustomException(ErrorCode.SOCIAL_PROVIDER_ALREADY_LINKED);
+				}
 			},
 			() -> {
 				try {
