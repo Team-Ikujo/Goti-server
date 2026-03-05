@@ -42,7 +42,6 @@ public class SocialAuthService {
 	private static final String KEY_SEPARATOR = ":";
 	private static final String PROVIDER_ID_KEY = "provider_id";
 	private static final String PROVIDER_TYPE_KEY = "provider_type";
-	private static final String SOCIAL_VERIFY_SUBJECT = "social_verify";
 
 	public SocialStateResponse issueState(OAuthProvider provider) {
 		if (provider == OAuthProvider.KAKAO) {
