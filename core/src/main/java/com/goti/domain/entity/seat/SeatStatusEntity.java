@@ -5,6 +5,7 @@ import static lombok.AccessLevel.*;
 import com.goti.constants.SeatStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
 import com.goti.domain.entity.game.GameScheduleEntity;
+import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,5 +60,29 @@ public class SeatStatusEntity extends ModificationTimestampEntity {
 		SeatEntity seat
 	) {
 		return new SeatStatusEntity(game, seat);
+	}
+
+	public void hold() {
+		Preconditions.domainValidate(
+			this.status == SeatStatus.AVAILABLE,
+			"AVAILABLE 상태에서만 HELD로 전이할 수 있습니다."
+		);
+		this.status = SeatStatus.HELD;
+	}
+
+	public void release() {
+		Preconditions.domainValidate(
+			this.status == SeatStatus.HELD,
+			"HELD 상태에서만 AVAILABLE로 전이할 수 있습니다."
+		);
+		this.status = SeatStatus.AVAILABLE;
+	}
+
+	public void sell() {
+		Preconditions.domainValidate(
+			this.status == SeatStatus.HELD,
+			"HELD 상태에서만 SOLD로 전이할 수 있습니다."
+		);
+		this.status = SeatStatus.SOLD;
 	}
 }
