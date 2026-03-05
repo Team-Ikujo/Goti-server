@@ -1,4 +1,4 @@
-package com.goti.seat.service;
+package com.goti.seat.service.application;
 
 import java.util.UUID;
 
