@@ -63,7 +63,11 @@ public class SystemExceptionHandler extends BaseExceptionHandler {
 	 */
 	@ExceptionHandler(JwtException.class)
 	public ResponseEntity<ApiErrorResponse> handleJwtException(JwtException ex) {
-		log.warn("[Auth Error] Invalid Token: {}", ex.getClass().getSimpleName());
+		log.warn(
+			"[Auth Error] Invalid Token: {}, message={}",
+			ex.getClass().getSimpleName(),
+			ex.getMessage()
+		);
 		return toResponse(ErrorCode.AUTH_INVALID);
 	}
 }
