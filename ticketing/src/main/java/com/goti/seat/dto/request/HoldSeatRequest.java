@@ -16,15 +16,11 @@ public record HoldSeatRequest(
 	@NotNull(message = "좌석 ID는 필수입니다.")
 	UUID seatId,
 
-	@Schema(description = "유저 ID", example = "33333333-3333-3333-3333-333333333333")
-	@NotNull(message = "유저 ID는 필수입니다.")
-	UUID userId,
-
 	@Schema(description = "대기열 토큰 식별자", example = "queue-token-jti-123")
 	@NotBlank(message = "큐 토큰 식별자는 필수입니다.")
 	String queueTokenJti
 ) {
-	public HoldSeatCommand toCommand() {
+	public HoldSeatCommand toCommand(UUID userId) {
 		return new HoldSeatCommand(
 			gameId,
 			seatId,

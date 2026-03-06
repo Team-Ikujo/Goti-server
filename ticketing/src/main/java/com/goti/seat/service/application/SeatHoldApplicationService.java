@@ -16,7 +16,6 @@ import com.goti.infra.lock.DistributedLockManager;
 import com.goti.seat.repository.SeatHoldRepository;
 import com.goti.seat.repository.SeatStatusRepository;
 import com.goti.seat.service.command.HoldSeatCommand;
-import com.goti.seat.service.command.ReleaseSeatCommand;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,12 +36,12 @@ public class SeatHoldApplicationService {
 	}
 
 	@Transactional
-	public UUID release(ReleaseSeatCommand cmd) {
-		SeatHoldEntity seatHold = seatHoldRepository.findById(cmd.holdId())
+	public UUID release(UUID holdId, UUID userId) {
+		SeatHoldEntity seatHold = seatHoldRepository.findById(holdId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST, "좌석 점유 정보를 찾을 수 없습니다."));
 
 		String lockKey = buildLockKey(seatHold.getGame().getId(), seatHold.getSeat().getId());
-		return distributedLockManager.withLock(lockKey, () -> releaseInLock(cmd, seatHold));
+		return distributedLockManager.withLock(lockKey, () -> releaseInLock(userId, seatHold));
 	}
 
 	private UUID holdInLock(HoldSeatCommand cmd) {
@@ -66,12 +65,9 @@ public class SeatHoldApplicationService {
 		);
 	}
 
-	private UUID releaseInLock(
-		ReleaseSeatCommand cmd,
-		SeatHoldEntity seatHold
-	) {
+	private UUID releaseInLock(UUID userId, SeatHoldEntity seatHold) {
 		Preconditions.validate(
-			seatHold.getUserId().equals(cmd.userId()),
+			seatHold.getUserId().equals(userId),
 			ErrorCode.AUTH_PERMISSION_DENIED
 		);
 

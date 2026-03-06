@@ -2,7 +2,6 @@ package com.goti.seat.controller;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.seat.dto.request.HoldSeatRequest;
-import com.goti.seat.dto.request.ReleaseSeatRequest;
 import com.goti.seat.dto.response.HoldSeatResponse;
 import com.goti.seat.dto.response.ReleaseSeatResponse;
 import com.goti.seat.service.application.SeatHoldApplicationService;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -35,10 +35,11 @@ public class SeatHoldController {
 	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<HoldSeatResponse>> hold(
+		@RequestParam(required = false) UUID userId, // TODO: 로그인 구현 완료 시 인증 컨텍스트에서 조회
 		@Valid @RequestBody HoldSeatRequest request
 	) {
 		HoldSeatResponse response = HoldSeatResponse.from(
-			seatHoldApplicationService.hold(request.toCommand())
+			seatHoldApplicationService.hold(request.toCommand(userId))
 		);
 		return wrap(response);
 	}
@@ -50,10 +51,10 @@ public class SeatHoldController {
 	@DeleteMapping("/{holdId}")
 	public ResponseEntity<ApiSuccessResponse<ReleaseSeatResponse>> release(
 		@PathVariable UUID holdId,
-		@Valid @RequestBody ReleaseSeatRequest request
+		@RequestParam(required = false) UUID userId // TODO: 로그인 구현 완료 시 인증 컨텍스트에서 조회
 	) {
 		ReleaseSeatResponse response = ReleaseSeatResponse.from(
-			seatHoldApplicationService.release(request.toCommand(holdId))
+			seatHoldApplicationService.release(holdId, userId)
 		);
 		return wrap(response);
 	}
