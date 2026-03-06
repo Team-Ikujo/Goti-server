@@ -39,7 +39,12 @@ public class SeatHoldController {
 		@Valid @RequestBody HoldSeatRequest request
 	) {
 		HoldSeatResponse response = HoldSeatResponse.from(
-			seatHoldApplicationService.hold(request.toCommand(userId))
+			seatHoldApplicationService.hold(
+				request.gameId(),
+				request.seatId(),
+				userId,
+				request.queueTokenJti()
+			)
 		);
 		return wrap(response);
 	}

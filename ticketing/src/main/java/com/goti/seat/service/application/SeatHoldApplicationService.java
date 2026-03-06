@@ -9,7 +9,6 @@ import com.goti.domain.entity.seat.SeatHoldEntity;
 import com.goti.exception.CustomException;
 import com.goti.infra.lock.DistributedLockManager;
 import com.goti.seat.repository.SeatHoldRepository;
-import com.goti.seat.service.command.HoldSeatCommand;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +19,12 @@ public class SeatHoldApplicationService {
 	private final DistributedLockManager distributedLockManager;
 	private final SeatHoldTransactionalService seatHoldTransactionalService;
 
-	public UUID hold(HoldSeatCommand cmd) {
-		String lockKey = buildLockKey(cmd.gameId(), cmd.seatId());
-		return distributedLockManager.withLock(lockKey, () -> seatHoldTransactionalService.hold(cmd));
+	public UUID hold(UUID gameId, UUID seatId, UUID userId, String queueTokenJti) {
+		String lockKey = buildLockKey(gameId, seatId);
+		return distributedLockManager.withLock(
+			lockKey,
+			() -> seatHoldTransactionalService.hold(gameId, seatId, userId, queueTokenJti)
+		);
 	}
 
 	public UUID release(UUID holdId, UUID userId) {

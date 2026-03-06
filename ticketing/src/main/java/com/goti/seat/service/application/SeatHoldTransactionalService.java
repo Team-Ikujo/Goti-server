@@ -11,10 +11,9 @@ import com.goti.domain.entity.seat.SeatHoldEntity;
 import com.goti.domain.entity.seat.SeatStatusEntity;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
+import com.goti.seat.config.properties.SeatHoldProperties;
 import com.goti.seat.repository.SeatHoldRepository;
 import com.goti.seat.repository.SeatStatusRepository;
-import com.goti.seat.config.properties.SeatHoldProperties;
-import com.goti.seat.service.command.HoldSeatCommand;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +25,8 @@ public class SeatHoldTransactionalService {
 	private final SeatHoldProperties seatHoldProperties;
 
 	@Transactional
-	public UUID hold(HoldSeatCommand cmd) {
-		SeatStatusEntity seatStatus = seatStatusRepository.findByGame_IdAndSeat_Id(cmd.gameId(), cmd.seatId())
+	public UUID hold(UUID gameId, UUID seatId, UUID userId, String queueTokenJti) {
+		SeatStatusEntity seatStatus = seatStatusRepository.findByGame_IdAndSeat_Id(gameId, seatId)
 			.orElseThrow(() -> new CustomException(ErrorCode.SEAT_STATUS_NOT_FOUND));
 
 		seatStatus.hold();
@@ -36,8 +35,8 @@ public class SeatHoldTransactionalService {
 		SeatHoldEntity seatHold = SeatHoldEntity.create(
 			seatStatus.getSeat(),
 			seatStatus.getGame(),
-			cmd.userId(),
-			cmd.queueTokenJti(),
+			userId,
+			queueTokenJti,
 			Instant.now().plus(seatHoldProperties.ttl())
 		);
 

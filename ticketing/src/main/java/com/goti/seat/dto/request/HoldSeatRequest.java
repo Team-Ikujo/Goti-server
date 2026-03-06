@@ -1,6 +1,5 @@
 package com.goti.seat.dto.request;
 
-import com.goti.seat.service.command.HoldSeatCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,12 +19,4 @@ public record HoldSeatRequest(
 	@NotBlank(message = "큐 토큰 식별자는 필수입니다.")
 	String queueTokenJti
 ) {
-	public HoldSeatCommand toCommand(UUID userId) {
-		return new HoldSeatCommand(
-			gameId,
-			seatId,
-			userId,
-			queueTokenJti
-		);
-	}
 }
