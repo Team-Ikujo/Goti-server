@@ -67,6 +67,8 @@ logging:
     level: "%5p [${spring.application.name:},%X{trace_id:-},%X{span_id:-}]"
 
 seat:
+  hold:
+    ttl-seconds: 600
   lock:
     wait-seconds: 1
     lease-seconds: 3

@@ -1,7 +1,9 @@
 package com.goti.seat.service.application;
 
+import java.time.Instant;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,9 @@ public class SeatHoldApplicationService {
 	private final SeatStatusRepository seatStatusRepository;
 	private final SeatHoldRepository seatHoldRepository;
 	private final DistributedLockManager distributedLockManager;
+
+	@Value("${seat.hold.ttl-seconds}")
+	private long holdTtlSeconds;
 
 	@Transactional
 	public UUID hold(HoldSeatCommand cmd) {
@@ -46,7 +51,7 @@ public class SeatHoldApplicationService {
 			seatStatus.getGame(),
 			cmd.userId(),
 			cmd.queueTokenJti(),
-			cmd.expiredAt()
+			Instant.now().plusSeconds(holdTtlSeconds)
 		);
 	}
 
