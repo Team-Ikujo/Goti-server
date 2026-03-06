@@ -39,4 +39,25 @@ public class DistributedLockManager {
 			}
 		}
 	}
+
+	public boolean withLockIfAvailable(String lockKey, Runnable action) {
+		RLock lock = redissonClient.getLock(lockKey);
+		boolean acquired = false;
+
+		try {
+			acquired = lock.tryLock(WAIT_TIME_SECONDS, LEASE_TIME_SECONDS, TimeUnit.SECONDS);
+			if (!acquired) {
+				return false;
+			}
+			action.run();
+			return true;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, e);
+		} finally {
+			if (acquired && lock.isHeldByCurrentThread()) {
+				lock.unlock();
+			}
+		}
+	}
 }

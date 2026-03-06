@@ -1,5 +1,6 @@
 package com.goti.seat.utils;
 
+import com.goti.infra.lock.DistributedLockManager;
 import com.goti.seat.service.application.SeatHoldExpiryApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +19,29 @@ import org.springframework.stereotype.Component;
 	matchIfMissing = true
 )
 public class SeatHoldExpiryScheduler {
+	private static final String EXPIRY_JOB_LOCK_KEY = "lock:seat-expiry-job";
+
 	private final SeatHoldExpiryApplicationService seatHoldExpiryApplicationService;
+	private final DistributedLockManager distributedLockManager;
 
 	@Value("${seat.hold-expiry.batch-size}")
 	private int batchSize;
 
 	@Scheduled(fixedDelayString = "${seat.hold-expiry.fixed-delay-ms}")
 	public void expireHolds() {
-		int processed = seatHoldExpiryApplicationService.expireHolds(batchSize);
+		boolean acquired = distributedLockManager.withLockIfAvailable(
+			EXPIRY_JOB_LOCK_KEY,
+			() -> {
+				int processed = seatHoldExpiryApplicationService.expireHolds(batchSize);
 
-		if (processed > 0) {
-			log.info("좌석 점유 만료 처리 완료. processed={}", processed);
+				if (processed > 0) {
+					log.info("좌석 점유 만료 처리 완료. processed={}", processed);
+				}
+			}
+		);
+
+		if (!acquired) {
+			log.debug("좌석 만료 스케줄러 락을 획득하지 못해 이번 실행을 건너뜁니다.");
 		}
 	}
 }
