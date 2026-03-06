@@ -3,7 +3,6 @@ package com.goti.seat.service.application;
 import java.time.Instant;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +13,7 @@ import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
 import com.goti.seat.repository.SeatHoldRepository;
 import com.goti.seat.repository.SeatStatusRepository;
+import com.goti.seat.config.properties.SeatHoldProperties;
 import com.goti.seat.service.command.HoldSeatCommand;
 
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class SeatHoldTransactionalService {
 	private final SeatStatusRepository seatStatusRepository;
 	private final SeatHoldRepository seatHoldRepository;
-
-	@Value("${seat.hold.ttl-seconds}")
-	private long holdTtlSeconds;
+	private final SeatHoldProperties seatHoldProperties;
 
 	@Transactional
 	public UUID hold(HoldSeatCommand cmd) {
@@ -40,7 +38,7 @@ public class SeatHoldTransactionalService {
 			seatStatus.getGame(),
 			cmd.userId(),
 			cmd.queueTokenJti(),
-			Instant.now().plusSeconds(holdTtlSeconds)
+			Instant.now().plus(seatHoldProperties.ttl())
 		);
 
 		return seatHoldRepository.save(seatHold).getId();

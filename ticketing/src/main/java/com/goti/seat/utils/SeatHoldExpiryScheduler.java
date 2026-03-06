@@ -1,11 +1,11 @@
 package com.goti.seat.utils;
 
 import com.goti.infra.lock.DistributedLockManager;
+import com.goti.seat.config.properties.SeatHoldExpiryProperties;
 import com.goti.seat.service.application.SeatHoldExpiryApplicationService;
 import com.goti.seat.service.application.SeatHoldExpiryBatchResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,16 +24,16 @@ public class SeatHoldExpiryScheduler {
 
 	private final SeatHoldExpiryApplicationService seatHoldExpiryApplicationService;
 	private final DistributedLockManager distributedLockManager;
-
-	@Value("${seat.hold-expiry.batch-size}")
-	private int batchSize;
+	private final SeatHoldExpiryProperties seatHoldExpiryProperties;
 
 	@Scheduled(fixedDelayString = "${seat.hold-expiry.fixed-delay-ms}")
 	public void expireHolds() {
 		boolean acquired = distributedLockManager.withLockIfAvailable(
 			EXPIRY_JOB_LOCK_KEY,
 			() -> {
-				SeatHoldExpiryBatchResult result = seatHoldExpiryApplicationService.expireHolds(batchSize);
+				SeatHoldExpiryBatchResult result = seatHoldExpiryApplicationService.expireHolds(
+					seatHoldExpiryProperties.batchSize()
+				);
 
 				if (result.attempted() > 0) {
 					log.info(

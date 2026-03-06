@@ -68,7 +68,7 @@ logging:
 
 seat:
   hold:
-    ttl-seconds: 600
+    ttl: 10m
   lock:
     wait-seconds: 1
   hold-expiry:
