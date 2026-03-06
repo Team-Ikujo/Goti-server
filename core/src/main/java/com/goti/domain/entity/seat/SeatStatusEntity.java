@@ -65,7 +65,7 @@ public class SeatStatusEntity extends ModificationTimestampEntity {
 	public void hold() {
 		Preconditions.domainValidate(
 			this.status == SeatStatus.AVAILABLE,
-			"AVAILABLE 상태에서만 HELD로 전이할 수 있습니다."
+			"좌석 점유 가능 상태에서만 점유 상태로 변경할 수 있습니다."
 		);
 		this.status = SeatStatus.HELD;
 	}
@@ -73,7 +73,7 @@ public class SeatStatusEntity extends ModificationTimestampEntity {
 	public void release() {
 		Preconditions.domainValidate(
 			this.status == SeatStatus.HELD,
-			"HELD 상태에서만 AVAILABLE로 전이할 수 있습니다."
+			"점유 상태에서만 좌석 점유 가능 상태로 변경할 수 있습니다."
 		);
 		this.status = SeatStatus.AVAILABLE;
 	}
@@ -81,7 +81,7 @@ public class SeatStatusEntity extends ModificationTimestampEntity {
 	public void sell() {
 		Preconditions.domainValidate(
 			this.status == SeatStatus.HELD,
-			"HELD 상태에서만 SOLD로 전이할 수 있습니다."
+			"점유 상태에서만 판매 완료 상태로 변경할 수 있습니다."
 		);
 		this.status = SeatStatus.SOLD;
 	}
