@@ -1,5 +1,6 @@
 package com.goti.infra.lock;
 
+import com.goti.config.properties.DistributedLockProperties;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
@@ -14,17 +15,19 @@ import java.util.function.Supplier;
 @Component
 @RequiredArgsConstructor
 public class DistributedLockManager {
-	private static final long WAIT_TIME_SECONDS = 1L;
-	private static final long LEASE_TIME_SECONDS = 3L;
-
 	private final RedissonClient redissonClient;
+	private final DistributedLockProperties distributedLockProperties;
 
 	public <T> T withLock(String lockKey, Supplier<T> action) {
 		RLock lock = redissonClient.getLock(lockKey);
 		boolean acquired = false;
 
 		try {
-			acquired = lock.tryLock(WAIT_TIME_SECONDS, LEASE_TIME_SECONDS, TimeUnit.SECONDS);
+			acquired = lock.tryLock(
+				distributedLockProperties.waitSeconds(),
+				distributedLockProperties.leaseSeconds(),
+				TimeUnit.SECONDS
+			);
 			Preconditions.validate(
 				acquired,
 				ErrorCode.SEAT_LOCK_ACQUIRE_FAILED
@@ -45,7 +48,11 @@ public class DistributedLockManager {
 		boolean acquired = false;
 
 		try {
-			acquired = lock.tryLock(WAIT_TIME_SECONDS, LEASE_TIME_SECONDS, TimeUnit.SECONDS);
+			acquired = lock.tryLock(
+				distributedLockProperties.waitSeconds(),
+				distributedLockProperties.leaseSeconds(),
+				TimeUnit.SECONDS
+			);
 			if (!acquired) {
 				return false;
 			}
