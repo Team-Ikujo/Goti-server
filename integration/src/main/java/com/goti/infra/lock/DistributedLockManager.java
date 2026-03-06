@@ -23,11 +23,7 @@ public class DistributedLockManager {
 		boolean acquired = false;
 
 		try {
-			acquired = lock.tryLock(
-				distributedLockProperties.waitSeconds(),
-				distributedLockProperties.leaseSeconds(),
-				TimeUnit.SECONDS
-			);
+			acquired = lock.tryLock(distributedLockProperties.waitSeconds(), TimeUnit.SECONDS);
 			Preconditions.validate(
 				acquired,
 				ErrorCode.SEAT_LOCK_ACQUIRE_FAILED
@@ -48,11 +44,7 @@ public class DistributedLockManager {
 		boolean acquired = false;
 
 		try {
-			acquired = lock.tryLock(
-				distributedLockProperties.waitSeconds(),
-				distributedLockProperties.leaseSeconds(),
-				TimeUnit.SECONDS
-			);
+			acquired = lock.tryLock(distributedLockProperties.waitSeconds(), TimeUnit.SECONDS);
 			if (!acquired) {
 				return false;
 			}

@@ -71,7 +71,6 @@ seat:
     ttl-seconds: 600
   lock:
     wait-seconds: 1
-    lease-seconds: 3
   hold-expiry:
     enabled: true
     fixed-delay-ms: 1000
