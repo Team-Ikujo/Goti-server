@@ -27,7 +27,7 @@ public class SeatHoldApplicationService {
 
 	public UUID release(UUID holdId, UUID userId) {
 		SeatHoldEntity seatHold = seatHoldRepository.findById(holdId)
-			.orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST, "좌석 점유 정보를 찾을 수 없습니다."));
+			.orElseThrow(() -> new CustomException(ErrorCode.SEAT_HOLD_NOT_FOUND));
 
 		String lockKey = buildLockKey(seatHold.getGame().getId(), seatHold.getSeat().getId());
 		return distributedLockManager.withLock(lockKey, () -> seatHoldTransactionalService.release(holdId, userId));
