@@ -6,6 +6,8 @@ import com.goti.seat.dto.request.ReleaseSeatRequest;
 import com.goti.seat.dto.response.HoldSeatResponse;
 import com.goti.seat.dto.response.ReleaseSeatResponse;
 import com.goti.seat.service.application.SeatHoldApplicationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,17 @@ import java.util.UUID;
 
 import static com.goti.global.api.ApiSuccessResponse.wrap;
 
+@Tag(name = "Seat Hold", description = "좌석 점유 및 해제 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/seats/holds")
 public class SeatHoldController {
 	private final SeatHoldApplicationService seatHoldApplicationService;
 
+	@Operation(
+		summary = "좌석 점유",
+		description = "좌석을 임시 점유(HOLD)하고 holdId를 반환하는 API"
+	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<HoldSeatResponse>> hold(
 		@Valid @RequestBody HoldSeatRequest request
@@ -36,6 +43,10 @@ public class SeatHoldController {
 		return wrap(response);
 	}
 
+	@Operation(
+		summary = "좌석 점유 해제",
+		description = "holdId 기준으로 좌석 점유를 해제하는 API"
+	)
 	@DeleteMapping("/{holdId}")
 	public ResponseEntity<ApiSuccessResponse<ReleaseSeatResponse>> release(
 		@PathVariable UUID holdId,
