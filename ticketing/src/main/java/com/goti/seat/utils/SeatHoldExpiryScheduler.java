@@ -2,6 +2,7 @@ package com.goti.seat.utils;
 
 import com.goti.infra.lock.DistributedLockManager;
 import com.goti.seat.service.application.SeatHoldExpiryApplicationService;
+import com.goti.seat.service.application.SeatHoldExpiryBatchResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,10 +33,15 @@ public class SeatHoldExpiryScheduler {
 		boolean acquired = distributedLockManager.withLockIfAvailable(
 			EXPIRY_JOB_LOCK_KEY,
 			() -> {
-				int processed = seatHoldExpiryApplicationService.expireHolds(batchSize);
+				SeatHoldExpiryBatchResult result = seatHoldExpiryApplicationService.expireHolds(batchSize);
 
-				if (processed > 0) {
-					log.info("좌석 점유 만료 처리 완료. processed={}", processed);
+				if (result.attempted() > 0) {
+					log.info(
+						"좌석 점유 만료 처리 완료. attempted={}, succeeded={}, failed={}",
+						result.attempted(),
+						result.succeeded(),
+						result.failed()
+					);
 				}
 			}
 		);

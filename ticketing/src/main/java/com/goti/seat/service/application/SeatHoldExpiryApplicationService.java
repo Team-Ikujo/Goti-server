@@ -9,6 +9,7 @@ import com.goti.seat.repository.SeatHoldRepository;
 import com.goti.seat.repository.SeatStatusRepository;
 import com.goti.seat.service.domain.SeatHoldExpiryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SeatHoldExpiryApplicationService {
 	private final SeatHoldRepository seatHoldRepository;
@@ -25,7 +27,7 @@ public class SeatHoldExpiryApplicationService {
 	private final SeatHoldExpiryService seatHoldExpiryService;
 
 	@Transactional
-	public int expireHolds(int batchSize) {
+	public SeatHoldExpiryBatchResult expireHolds(int batchSize) {
 		Instant now = Instant.now();
 		List<SeatHoldEntity> expiredHolds = seatHoldRepository.findByStatusAndExpiredAtBeforeOrderByExpiredAtAsc(
 			SeatHoldStatus.HOLDING,
@@ -33,11 +35,25 @@ public class SeatHoldExpiryApplicationService {
 			PageRequest.of(0, batchSize)
 		);
 
+		int succeeded = 0;
+		int failed = 0;
 		for (SeatHoldEntity seatHold : expiredHolds) {
-			expireOne(seatHold, now);
+			try {
+				expireOne(seatHold, now);
+				succeeded++;
+			} catch (Exception e) {
+				failed++;
+				log.warn(
+					"좌석 점유 만료 처리 실패. holdId={}, gameId={}, seatId={}, reason={}",
+					seatHold.getId(),
+					seatHold.getGame().getId(),
+					seatHold.getSeat().getId(),
+					e.getMessage()
+				);
+			}
 		}
 
-		return expiredHolds.size();
+		return new SeatHoldExpiryBatchResult(expiredHolds.size(), succeeded, failed);
 	}
 
 	private void expireOne(
