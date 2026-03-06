@@ -100,6 +100,7 @@ public class AuthController {
 		summary = "회원가입 휴대폰 인증번호 발송",
 		description = "회원가입 시도 전 요청 휴대폰번호 기반 인증번호 발송 API"
 	)
+	@PostMapping("/signup/sms/send")
 	public ResponseEntity<ApiSuccessResponse<Void>> sendSmsCode(
 		@RequestBody @Valid SendSmsRequest request
 	) {
