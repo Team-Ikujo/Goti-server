@@ -86,7 +86,7 @@ public class SeatStatusEntityTest {
 
 		assertThatThrownBy(seatStatus::hold)
 			.isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("AVAILABLE 상태에서만 HELD로 전이할 수 있습니다.");
+			.hasMessageContaining("좌석 점유 가능 상태에서만 점유 상태로 변경할 수 있습니다.");
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class SeatStatusEntityTest {
 
 		assertThatThrownBy(seatStatus::sell)
 			.isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("HELD 상태에서만 SOLD로 전이할 수 있습니다.");
+			.hasMessageContaining("점유 상태에서만 판매 완료 상태로 변경할 수 있습니다.");
 	}
 
 	@Test
@@ -106,6 +106,6 @@ public class SeatStatusEntityTest {
 
 		assertThatThrownBy(seatStatus::release)
 			.isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("HELD 상태에서만 AVAILABLE로 전이할 수 있습니다.");
+			.hasMessageContaining("점유 상태에서만 좌석 점유 가능 상태로 변경할 수 있습니다.");
 	}
 }
