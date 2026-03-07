@@ -43,6 +43,15 @@ public class SeatHoldExpiryScheduler {
 						result.failed()
 					);
 				}
+
+				if (result.failed() > 0) {
+					log.warn(
+						"좌석 점유 만료 처리 중 실패 발생. attempted={}, succeeded={}, failed={}",
+						result.attempted(),
+						result.succeeded(),
+						result.failed()
+					);
+				}
 			}
 		);
 
