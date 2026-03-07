@@ -24,4 +24,11 @@ public class SeatGradeService {
 	public List<SeatGradeResponse> get(UUID stadiumId) {
 		return seatGradeService.get(stadiumId);
 	}
+
+	@Transactional(readOnly = true)
+	public List<SeatGradeResponse> getSeatGrades(UUID stadiumId) {
+		return seatGradeRepository.findAllByStadiumId(stadiumId).stream()
+			.map(SeatGradeResponse::from)
+			.toList();
+	}
 }
