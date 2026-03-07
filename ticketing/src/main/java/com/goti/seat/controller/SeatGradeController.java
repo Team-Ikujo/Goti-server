@@ -13,15 +13,22 @@ import com.goti.seat.dto.request.CreateSeatGradeRequest;
 import com.goti.seat.dto.response.SeatGradeResponse;
 import com.goti.seat.service.application.SeatGradeApplicationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Seat Grade", description = "좌석 등급 생성 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/seats/grades")
 public class SeatGradeController {
 	private final SeatGradeApplicationService seatGradeApplicationService;
 
+	@Operation(
+		summary = "좌석 등급 생성",
+		description = "구장별 좌석 등급을 생성하는 API"
+	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<SeatGradeResponse>> create(
 		@Valid @RequestBody CreateSeatGradeRequest request
