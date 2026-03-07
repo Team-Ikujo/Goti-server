@@ -38,6 +38,7 @@ public class SeatHoldController {
 		@RequestParam(required = false) UUID userId, // TODO: 로그인 구현 완료 시 인증 컨텍스트에서 조회
 		@Valid @RequestBody HoldSeatRequest request
 	) {
+		// TODO: 대기열 구현 완료 후 queueTokenJti를 요청값이 아닌 queue token claim(jti)에서 추출하도록 변경
 		HoldSeatResponse response = HoldSeatResponse.from(
 			seatHoldApplicationService.hold(
 				request.gameId(),

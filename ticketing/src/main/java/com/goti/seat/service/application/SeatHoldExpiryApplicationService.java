@@ -21,6 +21,7 @@ public class SeatHoldExpiryApplicationService {
 	private final DistributedLockManager distributedLockManager;
 	private final SeatHoldExpiryTransactionalService seatHoldExpiryTransactionalService;
 
+	// TODO: 동시성 및 hold/release/expire 경합 상황 테스트 추가
 	public SeatHoldExpiryBatchResult expireHolds(int batchSize) {
 		Instant now = Instant.now();
 		List<SeatHoldEntity> expiredHolds = seatHoldRepository.findByStatusAndExpiredAtBeforeOrderByExpiredAtAsc(

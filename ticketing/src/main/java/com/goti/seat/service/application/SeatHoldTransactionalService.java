@@ -32,6 +32,7 @@ public class SeatHoldTransactionalService {
 		seatStatus.hold();
 		seatStatusRepository.save(seatStatus);
 
+		// TODO: 좌석 점유 시 game_seat_inventories 카운트 반영
 		SeatHoldEntity seatHold = SeatHoldEntity.create(
 			seatStatus.getSeat(),
 			seatStatus.getGame(),
@@ -61,6 +62,7 @@ public class SeatHoldTransactionalService {
 		seatStatus.release();
 		seatHold.release();
 
+		// TODO: 좌석 해제 시 game_seat_inventories 카운트 반영
 		seatStatusRepository.save(seatStatus);
 		seatHoldRepository.save(seatHold);
 
