@@ -24,8 +24,10 @@ public class SeatGradeApplicationService {
 		String name,
 		String displayColorHex
 	) {
-		boolean exists = seatGradeRepository.existsByStadiumIdAndName(stadiumId, name);
-		Preconditions.validate(!exists, ErrorCode.SEAT_GRADE_ALREADY_EXISTS);
+		Preconditions.validate(
+			!seatGradeRepository.existsByStadiumIdAndName(stadiumId, name),
+			ErrorCode.SEAT_GRADE_ALREADY_EXISTS
+		);
 
 		SeatGradeEntity seatGrade = SeatGradeEntity.create(stadiumId, name, displayColorHex);
 		SeatGradeEntity savedSeatGrade = seatGradeRepository.save(seatGrade);
