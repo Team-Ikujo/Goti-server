@@ -5,6 +5,7 @@ import java.util.UUID;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public record CreateSeatGradeRequest(
 	@Schema(description = "구장 ID", example = "11111111-1111-1111-1111-111111111111")
@@ -16,6 +17,7 @@ public record CreateSeatGradeRequest(
 	String name,
 
 	@Schema(description = "좌석 등급 표시 색상 HEX", example = "#FFAA00")
+	@Pattern(regexp = "^#[A-Fa-f0-9]{6}$", message = "유효하지 않은 HEX 색상 코드 형식입니다.")
 	String displayColorHex
 ) {
 }
