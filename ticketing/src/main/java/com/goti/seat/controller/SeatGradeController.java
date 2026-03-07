@@ -5,6 +5,10 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.Operation;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +22,6 @@ import com.goti.seat.dto.request.CreateSeatGradeRequest;
 import com.goti.seat.dto.response.SeatGradeResponse;
 import com.goti.seat.service.application.SeatGradeService;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
