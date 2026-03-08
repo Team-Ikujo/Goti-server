@@ -40,7 +40,8 @@ public class AuthServiceImpl implements AuthService {
 		if (!cachedAuthCode.equals(authCode))
 			throw new CustomException(ErrorCode.AUTH_CODE_INVALID);
 
-		redisCache.consume(redisKey);
+		if (!redisCache.consume(redisKey))
+			throw new CustomException(ErrorCode.AUTH_CODE_NOT_FOUND);
 	}
 
 	private String createAuthCode() {
