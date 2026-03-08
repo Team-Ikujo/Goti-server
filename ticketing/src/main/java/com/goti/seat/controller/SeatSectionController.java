@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.seat.dto.request.CreateSeatSectionRequest;
 import com.goti.seat.dto.response.SeatSectionResponse;
-import com.goti.seat.service.application.SeatSectionApplicationService;
+import com.goti.seat.service.application.SeatSectionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/seat-sections")
 public class SeatSectionController {
-	private final SeatSectionApplicationService seatSectionApplicationService;
+	private final SeatSectionService seatSectionApplicationService;
 
 	@Operation(
 		summary = "좌석 구역 생성",

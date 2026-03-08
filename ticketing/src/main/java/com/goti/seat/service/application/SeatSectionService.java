@@ -5,14 +5,13 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import com.goti.seat.dto.response.SeatSectionResponse;
-import com.goti.seat.service.domain.SeatSectionService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class SeatSectionApplicationService {
-	private final SeatSectionService seatSectionService;
+public class SeatSectionService {
+	private final com.goti.seat.service.domain.SeatSectionService seatSectionService;
 
 	public SeatSectionResponse create(
 		UUID gradeId,
