@@ -2,10 +2,14 @@ package com.goti.seat.controller;
 
 import static com.goti.global.api.ApiSuccessResponse.wrap;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
@@ -40,5 +44,16 @@ public class SeatSectionController {
 			request.capacity()
 		);
 		return wrap(response);
+	}
+
+	@Operation(
+		summary = "좌석 구역 조회",
+		description = "구장별 좌석 구역 목록을 조회하는 API"
+	)
+	@GetMapping
+	public ResponseEntity<ApiSuccessResponse<List<SeatSectionResponse>>> getSeatSections( // TODO: 유저 인증 추가
+		@RequestParam java.util.UUID stadiumId
+	) {
+		return wrap(seatSectionApplicationService.getSeatSections(stadiumId));
 	}
 }
