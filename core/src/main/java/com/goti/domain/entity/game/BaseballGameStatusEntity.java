@@ -5,7 +5,6 @@ import static lombok.AccessLevel.*;
 import com.goti.constants.GameResult;
 import com.goti.constants.GameStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
-import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,8 +24,8 @@ import lombok.NoArgsConstructor;
 public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "baseball_game_id", nullable = false)
-	private BaseballGameEntity baseballGame;
+	@JoinColumn(name = "game_schedule_id", nullable = false)
+	private GameScheduleEntity baseballGame;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -43,7 +42,7 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 	private GameResult gameResult;
 
 	private BaseballGameStatusEntity(
-		BaseballGameEntity baseballGameId,
+		GameScheduleEntity baseballGameId,
 		GameStatus gameStatus,
 		GameResult gameResult
 	) {
@@ -56,7 +55,7 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 
 	// TODO: 추후 점수 변경 시 메서드로 변경
 
-	public static BaseballGameStatusEntity init(BaseballGameEntity game) {
+	public static BaseballGameStatusEntity init(GameScheduleEntity game) {
 		return new BaseballGameStatusEntity(game, GameStatus.SCHEDULED, GameResult.PENDING);
 	}
 }
