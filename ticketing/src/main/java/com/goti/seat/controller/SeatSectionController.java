@@ -1,8 +1,9 @@
 package com.goti.seat.controller;
 
-import static com.goti.global.api.ApiSuccessResponse.wrap;
+import static com.goti.global.api.ApiSuccessResponse.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ public class SeatSectionController {
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<List<SeatSectionResponse>>> get( // TODO: 유저 인증 추가
-		@RequestParam java.util.UUID stadiumId
+		@RequestParam UUID stadiumId
 	) {
 		return wrap(seatSectionApplicationService.get(stadiumId));
 	}
