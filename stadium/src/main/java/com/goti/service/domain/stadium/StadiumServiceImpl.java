@@ -42,7 +42,7 @@ public class StadiumServiceImpl implements StadiumService {
 		);
 		stadiumRepository.save(stadium);
 
-		return StadiumCreateResponse.of(
+		return StadiumCreateResponse.from(
 			stadium.getId(),
 			stadium.getStadiumName(),
 			stadium.getLocation(),

@@ -11,7 +11,7 @@ public record StadiumCreateResponse(
 	String roadAddress,
 	int totalSeats
 ) {
-	public static StadiumCreateResponse of(
+	public static StadiumCreateResponse from(
 		UUID stadiumId,
 		String stadiumName,
 		String location,
