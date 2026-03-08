@@ -55,7 +55,7 @@ public class BaseballGameApplicationService {
 	@Transactional(readOnly = true)
 	public Page<GameResponse> getGames(Pageable pageable) {
 		return baseballGameRepository.findAll(pageable)
-			.map(gameSchedule -> baseballGameStatusRepository.findByGameSchedule(gameSchedule.getId())
+			.map(gameSchedule -> baseballGameStatusRepository.findByGameSchedule(gameSchedule)
 				.map(status -> GameResponse.from(gameSchedule, status))
 				.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND)));
 	}
@@ -66,7 +66,7 @@ public class BaseballGameApplicationService {
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
 		BaseballGameStatusEntity status = baseballGameStatusRepository
-			.findByGameSchedule(gameScheduleId)
+			.findByGameSchedule(gameSchedule)
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
 		return GameResponse.from(gameSchedule, status);

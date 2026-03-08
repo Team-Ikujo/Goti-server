@@ -40,7 +40,7 @@ public class BaseballGameStatusEntityTest {
 		BaseballGameStatusEntity gameStatus = BaseballGameStatusEntity.init(baseballGame);
 
 		assertNotNull(gameStatus);
-		assertThat(gameStatus.getBaseballGame()).isEqualTo(baseballGame);
+		assertThat(gameStatus.getGameSchedule()).isEqualTo(baseballGame);
 		assertThat(gameStatus.getGameStatus()).isEqualTo(GameStatus.SCHEDULED);
 		assertThat(gameStatus.getHomeTeamScore()).isEqualTo(0);
 		assertThat(gameStatus.getAwayTeamScore()).isEqualTo(0);
