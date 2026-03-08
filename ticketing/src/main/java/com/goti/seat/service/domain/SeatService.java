@@ -5,6 +5,6 @@ import java.util.UUID;
 
 import com.goti.domain.entity.seat.SeatEntity;
 
-public interface BulkCreateSeatsService {
+public interface SeatService {
 	List<SeatEntity> create(UUID sectionId, String rowName, Integer startSeatNumber, Integer endSeatNumber);
 }

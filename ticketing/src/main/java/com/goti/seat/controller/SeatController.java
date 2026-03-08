@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.seat.dto.request.BulkCreateSeatsRequest;
 import com.goti.seat.dto.response.BulkCreateSeatsResponse;
-import com.goti.seat.service.application.BulkCreateSeatsUseCase;
+import com.goti.seat.service.application.SeatApplicationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/seats")
 public class SeatController {
-	private final BulkCreateSeatsUseCase bulkCreateSeatsUseCase;
+	private final SeatApplicationService seatApplicationService;
 
 	@Operation(
 		summary = "좌석 일괄 생성",
@@ -33,7 +33,7 @@ public class SeatController {
 	public ResponseEntity<ApiSuccessResponse<BulkCreateSeatsResponse>> bulkCreate(
 		@Valid @RequestBody BulkCreateSeatsRequest request
 	) {
-		BulkCreateSeatsResponse response = bulkCreateSeatsUseCase.create(
+		BulkCreateSeatsResponse response = seatApplicationService.create(
 			request.sectionId(),
 			request.rowName(),
 			request.startSeatNumber(),

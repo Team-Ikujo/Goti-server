@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class BulkCreateSeatsServiceImpl implements BulkCreateSeatsService {
+public class SeatServiceImpl implements SeatService {
 	private static final long MAX_BULK_CREATE_SEAT_COUNT = 1000;
 
 	private final SeatSectionRepository seatSectionRepository;
