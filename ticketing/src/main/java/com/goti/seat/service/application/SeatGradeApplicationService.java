@@ -25,14 +25,4 @@ public class SeatGradeApplicationService {
 	public List<SeatGradeResponse> get(UUID stadiumId) {
 		return seatGradeService.get(stadiumId);
 	}
-
-	@Transactional(readOnly = true)
-	public List<SeatGradeResponse> getSeatGrades(UUID stadiumId) {
-		// TODO: 유저 인증 여부 확인
-		// Preconditions.validate(userId != null, ErrorCode.AUTH_INVALID);
-
-		return seatGradeRepository.findAllByStadiumId(stadiumId).stream()
-			.map(SeatGradeResponse::from)
-			.toList();
-	}
 }
