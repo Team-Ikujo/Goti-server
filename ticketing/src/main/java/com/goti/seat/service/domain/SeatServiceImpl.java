@@ -12,6 +12,7 @@ import com.goti.domain.entity.seat.SeatEntity;
 import com.goti.domain.entity.seat.SeatSectionEntity;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
+import com.goti.seat.dto.response.BulkCreateSeatsResponse;
 import com.goti.seat.repository.SeatRepository;
 import com.goti.seat.repository.SeatSectionRepository;
 
@@ -27,7 +28,7 @@ public class SeatServiceImpl implements SeatService {
 
 	@Override
 	@Transactional
-	public List<SeatEntity> create(
+	public BulkCreateSeatsResponse create(
 		UUID sectionId,
 		String rowName,
 		Integer startSeatNumber,
@@ -75,6 +76,11 @@ public class SeatServiceImpl implements SeatService {
 			.toList();
 
 		seatRepository.saveAll(seats);
-		return seats;
+		return BulkCreateSeatsResponse.of(
+			sectionId,
+			rowName,
+			startSeatNumber,
+			endSeatNumber
+		);
 	}
 }
