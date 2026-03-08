@@ -1,5 +1,6 @@
 package com.goti.seat.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,6 @@ import com.goti.domain.entity.seat.SeatSectionEntity;
 @Repository
 public interface SeatSectionRepository extends JpaRepository<SeatSectionEntity, UUID> {
 	boolean existsByStadiumIdAndSectionCode(UUID stadiumId, String sectionCode);
+
+	List<SeatSectionEntity> findAllByStadiumId(UUID stadiumId);
 }
