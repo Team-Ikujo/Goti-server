@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class BulkCreateSeatsServiceImpl implements BulkCreateSeatsService {
+	private static final long MAX_BULK_CREATE_SEAT_COUNT = 1000;
+
 	private final SeatSectionRepository seatSectionRepository;
 	private final SeatRepository seatRepository;
 
@@ -34,6 +36,12 @@ public class BulkCreateSeatsServiceImpl implements BulkCreateSeatsService {
 		Preconditions.validate(
 			startSeatNumber <= endSeatNumber,
 			ErrorCode.INVALID_SEAT_NUMBER_RANGE
+		);
+		long rangeSize = (long) endSeatNumber - startSeatNumber + 1;
+
+		Preconditions.validate(
+			rangeSize <= MAX_BULK_CREATE_SEAT_COUNT,
+			ErrorCode.SEAT_BULK_CREATE_LIMIT_EXCEEDED
 		);
 
 		SeatSectionEntity seatSection = seatSectionRepository.findById(sectionId)
