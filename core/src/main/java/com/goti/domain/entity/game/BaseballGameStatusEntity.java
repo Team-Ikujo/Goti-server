@@ -25,7 +25,7 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "game_schedule_id", nullable = false)
-	private GameScheduleEntity baseballGame;
+	private GameScheduleEntity gameSchedule;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -42,11 +42,11 @@ public class BaseballGameStatusEntity extends ModificationTimestampEntity {
 	private GameResult gameResult;
 
 	private BaseballGameStatusEntity(
-		GameScheduleEntity baseballGameId,
+		GameScheduleEntity gameSchedule,
 		GameStatus gameStatus,
 		GameResult gameResult
 	) {
-		this.baseballGame = baseballGameId;
+		this.gameSchedule = gameSchedule;
 		this.gameStatus = gameStatus;
 		this.homeTeamScore = 0;
 		this.awayTeamScore = 0;
