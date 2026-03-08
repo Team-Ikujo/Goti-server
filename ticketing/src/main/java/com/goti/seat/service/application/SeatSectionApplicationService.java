@@ -33,6 +33,11 @@ public class SeatSectionApplicationService {
 			.orElseThrow(() -> new CustomException(ErrorCode.SEAT_GRADE_NOT_FOUND));
 
 		Preconditions.validate(
+			seatGrade.getStadiumId().equals(stadiumId),
+			ErrorCode.SEAT_GRADE_STADIUM_MISMATCH
+		);
+
+		Preconditions.validate(
 			!seatSectionRepository.existsByStadiumIdAndSectionCode(stadiumId, sectionCode),
 			ErrorCode.SEAT_SECTION_ALREADY_EXISTS
 		);
