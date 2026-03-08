@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.seat.dto.request.CreateSeatGradeRequest;
 import com.goti.seat.dto.response.SeatGradeResponse;
-import com.goti.seat.service.application.SeatGradeService;
+import com.goti.seat.service.domain.SeatGradeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
