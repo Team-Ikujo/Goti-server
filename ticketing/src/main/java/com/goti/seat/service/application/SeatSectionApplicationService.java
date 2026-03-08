@@ -1,5 +1,6 @@
 package com.goti.seat.service.application;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -46,5 +47,12 @@ public class SeatSectionApplicationService {
 		seatSectionRepository.save(seatSection);
 
 		return SeatSectionResponse.from(seatSection);
+	}
+
+	@Transactional(readOnly = true)
+	public List<SeatSectionResponse> getSeatSections(UUID stadiumId) {
+		return seatSectionRepository.findAllByStadiumId(stadiumId).stream()
+			.map(SeatSectionResponse::from)
+			.toList();
 	}
 }
