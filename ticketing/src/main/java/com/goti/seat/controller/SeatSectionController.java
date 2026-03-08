@@ -18,10 +18,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Seat Section", description = "좌석 구역 생성 API")
+@Tag(name = "Seat Section", description = "좌석 구역 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/seats/sections")
+@RequestMapping("/api/v1/seat-sections")
 public class SeatSectionController {
 	private final SeatSectionApplicationService seatSectionApplicationService;
 
