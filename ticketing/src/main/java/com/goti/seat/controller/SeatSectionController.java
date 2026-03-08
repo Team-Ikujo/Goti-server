@@ -55,6 +55,6 @@ public class SeatSectionController {
 	public ResponseEntity<ApiSuccessResponse<List<SeatSectionResponse>>> list( // TODO: 유저 인증 추가
 		@RequestParam UUID stadiumId
 	) {
-		return wrap(seatSectionApplicationService.get(stadiumId));
+		return wrap(seatSectionService.get(stadiumId));
 	}
 }
