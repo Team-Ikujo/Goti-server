@@ -22,11 +22,11 @@ import java.util.UUID;
 
 import static com.goti.global.api.ApiSuccessResponse.wrap;
 
-@Tag(name = "Seat Hold", description = "좌석 점유 및 해제 API")
+@Tag(name = "Seat Reservation", description = "좌석 점유 및 해제 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/seats/holds")
-public class SeatHoldController {
+@RequestMapping("/api/v1/seat-reservations")
+public class SeatReservationController {
 	private final SeatHoldService seatHoldService;
 
 	@Operation(
