@@ -12,7 +12,7 @@ import java.util.Map;
 public record StadiumCreateRequest(
 
 	@NotBlank(message = "구장명은 필수 항목입니다.")
-	String stadium_name,
+	String stadiumName,
 
 	@NotBlank(message = "구장 지역명은 필수 항목입니다.")
 	String location,
