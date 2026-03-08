@@ -44,7 +44,7 @@ public class SeatHoldExpiryService {
 				log.debug(
 					"좌석 점유 만료 처리 락 획득 실패로 건너뜀. holdId={}, gameId={}, seatId={}",
 					seatHold.getId(),
-					seatHold.getGame().getId(),
+					seatHold.getGameSchedule().getId(),
 					seatHold.getSeat().getId()
 				);
 			} catch (Exception e) {
@@ -52,7 +52,7 @@ public class SeatHoldExpiryService {
 				log.warn(
 					"좌석 점유 만료 처리 실패. holdId={}, gameId={}, seatId={}, reason={}",
 					seatHold.getId(),
-					seatHold.getGame().getId(),
+					seatHold.getGameSchedule().getId(),
 					seatHold.getSeat().getId(),
 					e.getMessage()
 				);
@@ -66,7 +66,7 @@ public class SeatHoldExpiryService {
 		SeatHoldEntity seatHold,
 		Instant now
 	) {
-		UUID gameId = seatHold.getGame().getId();
+		UUID gameId = seatHold.getGameSchedule().getId();
 		UUID seatId = seatHold.getSeat().getId();
 		String lockKey = buildLockKey(gameId, seatId);
 

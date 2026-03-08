@@ -28,7 +28,7 @@ public class SeatHoldExpiryTransactionalService {
 		SeatHoldEntity seatHold = seatHoldRepository.findById(holdId)
 			.orElseThrow(() -> new CustomException(ErrorCode.SEAT_HOLD_NOT_FOUND));
 
-		UUID gameId = seatHold.getGame().getId();
+		UUID gameId = seatHold.getGameSchedule().getId();
 		UUID seatId = seatHold.getSeat().getId();
 
 		SeatStatusEntity seatStatus = seatStatusRepository.findByGame_IdAndSeat_Id(gameId, seatId)

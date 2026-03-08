@@ -55,7 +55,7 @@ public class SeatHoldTransactionalService {
 		);
 
 		SeatStatusEntity seatStatus = seatStatusRepository.findByGame_IdAndSeat_Id(
-			seatHold.getGame().getId(),
+			seatHold.getGameSchedule().getId(),
 			seatHold.getSeat().getId()
 		).orElseThrow(() -> new CustomException(ErrorCode.SEAT_STATUS_NOT_FOUND));
 
