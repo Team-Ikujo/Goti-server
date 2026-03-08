@@ -51,7 +51,7 @@ public class SeatGradeController {
 		description = "구장별 좌석 등급을 조회하는 API"
 	)
 	@GetMapping
-	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> get( // TODO: 유저 인증 추가
+	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> list( // TODO: 유저 인증 추가
 		@RequestParam UUID stadiumId
 	) {
 		return wrap(seatGradeApplicationService.get(stadiumId));
