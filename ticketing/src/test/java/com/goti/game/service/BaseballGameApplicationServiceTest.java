@@ -25,7 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -52,9 +51,7 @@ class BaseballGameApplicationServiceTest {
 			UUID.randomUUID(),
 			LocalDate.of(2026, 4, 10),
 			LocalTime.of(18, 30),
-			LeagueType.REGULAR,
-			LocalDateTime.of(2026, 4, 1, 14, 0),
-			LocalDateTime.of(2026, 4, 10, 17, 0)
+			LeagueType.REGULAR
 		);
 	}
 
