@@ -1,6 +1,9 @@
 package com.goti.dto.response;
 
+import java.util.UUID;
+
 public record StadiumCreateResponse(
+	UUID stadiumId,
 	String stadiumName,
 	String location,
 	String city,
@@ -9,6 +12,7 @@ public record StadiumCreateResponse(
 	int totalSeats
 ) {
 	public static StadiumCreateResponse of(
+		UUID stadiumId,
 		String stadiumName,
 		String location,
 		String city,
@@ -17,7 +21,7 @@ public record StadiumCreateResponse(
 		int totalSeats
 	) {
 		return new StadiumCreateResponse(
-			stadiumName, location, city, district, roadAddress, totalSeats
+			stadiumId, stadiumName, location, city, district, roadAddress, totalSeats
 		);
 	}
 }
