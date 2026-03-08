@@ -7,6 +7,7 @@ import com.goti.repository.StadiumRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class StadiumServiceImpl implements StadiumService {
 	private final StadiumRepository stadiumRepository;
 
 	@Override
+	@Transactional
 	public StadiumCreateResponse create(
 		String stadiumName,
 		String location,
@@ -42,14 +44,6 @@ public class StadiumServiceImpl implements StadiumService {
 		);
 		stadiumRepository.save(stadium);
 
-		return StadiumCreateResponse.from(
-			stadium.getId(),
-			stadium.getStadiumName(),
-			stadium.getLocation(),
-			stadium.getCity(),
-			stadium.getDistrict(),
-			stadium.getRoadAddress(),
-			stadium.getTotalSeats()
-		);
+		return StadiumCreateResponse.from(stadium);
 	}
 }
