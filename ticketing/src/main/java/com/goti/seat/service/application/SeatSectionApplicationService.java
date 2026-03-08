@@ -43,8 +43,8 @@ public class SeatSectionApplicationService {
 		);
 
 		SeatSectionEntity seatSection = SeatSectionEntity.create(seatGrade, stadiumId, sectionCode, capacity);
-		SeatSectionEntity savedSeatSection = seatSectionRepository.save(seatSection);
+		seatSectionRepository.save(seatSection);
 
-		return SeatSectionResponse.from(savedSeatSection);
+		return SeatSectionResponse.from(seatSection);
 	}
 }
