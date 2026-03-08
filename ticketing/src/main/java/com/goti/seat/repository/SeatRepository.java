@@ -27,5 +27,7 @@ public interface SeatRepository extends JpaRepository<SeatEntity, UUID> {
 		@Param("seatNums") Collection<Integer> seatNums
 	);
 
+	List<SeatEntity> findAllBySeatSection_IdOrderByRowNameAscSeatNumAsc(UUID sectionId);
+
 	long countBySeatSection_Id(UUID sectionId);
 }
