@@ -1,12 +1,11 @@
 package com.goti.seat.controller;
 
-import static com.goti.global.api.ApiSuccessResponse.wrap;
+import static com.goti.global.api.ApiSuccessResponse.*;
 
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,10 +23,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Seat Grade", description = "좌석 등급 생성 API")
+@Tag(name = "Seat Grade", description = "좌석 등급 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/seats/grades")
+@RequestMapping("/api/v1/seat-grades")
 public class SeatGradeController {
 	private final SeatGradeApplicationService seatGradeApplicationService;
 
@@ -52,9 +51,9 @@ public class SeatGradeController {
 		description = "구장별 좌석 등급을 조회하는 API"
 	)
 	@GetMapping
-	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> getSeatGrades( // TODO: 유저 인증 추가
+	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> get( // TODO: 유저 인증 추가
 		@RequestParam UUID stadiumId
 	) {
-		return wrap(seatGradeApplicationService.getSeatGrades(stadiumId));
+		return wrap(seatGradeApplicationService.get(stadiumId));
 	}
 }
