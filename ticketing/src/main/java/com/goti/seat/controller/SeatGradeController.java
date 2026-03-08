@@ -1,6 +1,9 @@
 package com.goti.seat.controller;
 
-import static com.goti.global.api.ApiSuccessResponse.wrap;
+import static com.goti.global.api.ApiSuccessResponse.*;
+
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,5 +44,16 @@ public class SeatGradeController {
 			request.displayColorHex()
 		);
 		return wrap(response);
+	}
+
+	@Operation(
+		summary = "좌석 등급 조회",
+		description = "구장별 좌석 등급을 조회하는 API"
+	)
+	@GetMapping
+	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> get( // TODO: 유저 인증 추가
+		@RequestParam UUID stadiumId
+	) {
+		return wrap(seatGradeApplicationService.get(stadiumId));
 	}
 }
