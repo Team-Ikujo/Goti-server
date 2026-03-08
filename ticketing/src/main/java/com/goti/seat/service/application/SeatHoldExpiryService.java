@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SeatHoldExpiryApplicationService {
+public class SeatHoldExpiryService {
 	private final SeatHoldRepository seatHoldRepository;
 	private final DistributedLockManager distributedLockManager;
 	private final SeatHoldExpiryTransactionalService seatHoldExpiryTransactionalService;

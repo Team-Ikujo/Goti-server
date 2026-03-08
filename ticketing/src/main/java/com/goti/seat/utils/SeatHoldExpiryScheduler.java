@@ -2,7 +2,7 @@ package com.goti.seat.utils;
 
 import com.goti.infra.lock.DistributedLockManager;
 import com.goti.seat.config.properties.SeatHoldExpiryProperties;
-import com.goti.seat.service.application.SeatHoldExpiryApplicationService;
+import com.goti.seat.service.application.SeatHoldExpiryService;
 import com.goti.seat.service.application.SeatHoldExpiryBatchResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class SeatHoldExpiryScheduler {
 	private static final String EXPIRY_JOB_LOCK_KEY = "lock:seat-expiry-job";
 
-	private final SeatHoldExpiryApplicationService seatHoldExpiryApplicationService;
+	private final SeatHoldExpiryService seatHoldExpiryService;
 	private final DistributedLockManager distributedLockManager;
 	private final SeatHoldExpiryProperties seatHoldExpiryProperties;
 
@@ -31,7 +31,7 @@ public class SeatHoldExpiryScheduler {
 		boolean acquired = distributedLockManager.withLockIfAvailable(
 			EXPIRY_JOB_LOCK_KEY,
 			() -> {
-				SeatHoldExpiryBatchResult result = seatHoldExpiryApplicationService.expireHolds(
+				SeatHoldExpiryBatchResult result = seatHoldExpiryService.expireHolds(
 					seatHoldExpiryProperties.batchSize()
 				);
 

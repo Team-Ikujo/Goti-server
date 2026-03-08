@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class SeatHoldApplicationService {
+public class SeatHoldService {
 	private final SeatHoldRepository seatHoldRepository;
 	private final DistributedLockManager distributedLockManager;
 	private final SeatHoldTransactionalService seatHoldTransactionalService;

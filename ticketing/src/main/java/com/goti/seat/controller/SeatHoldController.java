@@ -4,7 +4,7 @@ import com.goti.global.api.ApiSuccessResponse;
 import com.goti.seat.dto.request.HoldSeatRequest;
 import com.goti.seat.dto.response.HoldSeatResponse;
 import com.goti.seat.dto.response.ReleaseSeatResponse;
-import com.goti.seat.service.application.SeatHoldApplicationService;
+import com.goti.seat.service.application.SeatHoldService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ import static com.goti.global.api.ApiSuccessResponse.wrap;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/seats/holds")
 public class SeatHoldController {
-	private final SeatHoldApplicationService seatHoldApplicationService;
+	private final SeatHoldService seatHoldService;
 
 	@Operation(
 		summary = "좌석 점유",
@@ -40,7 +40,7 @@ public class SeatHoldController {
 	) {
 		// TODO: 대기열 구현 완료 후 queueTokenJti를 요청값이 아닌 queue token claim(jti)에서 추출하도록 변경
 		HoldSeatResponse response = HoldSeatResponse.from(
-			seatHoldApplicationService.hold(
+			seatHoldService.hold(
 				request.gameId(),
 				request.seatId(),
 				userId,
@@ -60,7 +60,7 @@ public class SeatHoldController {
 		@RequestParam(required = false) UUID userId // TODO: 로그인 구현 완료 시 인증 컨텍스트에서 조회
 	) {
 		ReleaseSeatResponse response = ReleaseSeatResponse.from(
-			seatHoldApplicationService.release(holdId, userId)
+			seatHoldService.release(holdId, userId)
 		);
 		return wrap(response);
 	}
