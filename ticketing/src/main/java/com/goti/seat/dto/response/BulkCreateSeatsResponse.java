@@ -6,22 +6,19 @@ public record BulkCreateSeatsResponse(
 	UUID sectionId,
 	String rowName,
 	Integer startSeatNumber,
-	Integer endSeatNumber,
-	Integer createdCount
+	Integer endSeatNumber
 ) {
 	public static BulkCreateSeatsResponse of(
 		UUID sectionId,
 		String rowName,
 		Integer startSeatNumber,
-		Integer endSeatNumber,
-		Integer createdCount
+		Integer endSeatNumber
 	) {
 		return new BulkCreateSeatsResponse(
 			sectionId,
 			rowName,
 			startSeatNumber,
-			endSeatNumber,
-			createdCount
+			endSeatNumber
 		);
 	}
 }
