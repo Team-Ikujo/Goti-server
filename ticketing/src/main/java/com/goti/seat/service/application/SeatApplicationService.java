@@ -5,14 +5,14 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.goti.seat.dto.response.BulkCreateSeatsResponse;
-import com.goti.seat.service.domain.BulkCreateSeatsService;
+import com.goti.seat.service.domain.SeatService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class BulkCreateSeatsUseCase {
-	private final BulkCreateSeatsService bulkCreateSeatsService;
+public class SeatApplicationService {
+	private final SeatService bulkCreateSeatsService;
 
 	public BulkCreateSeatsResponse create(
 		UUID sectionId,
