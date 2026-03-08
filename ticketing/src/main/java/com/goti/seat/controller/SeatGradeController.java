@@ -56,6 +56,6 @@ public class SeatGradeController {
 	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> get( // TODO: 유저 인증 추가
 		@RequestParam UUID stadiumId
 	) {
-		return wrap(seatGradeApplicationService.get(stadiumId));
+		return wrap(seatGradeService.get(stadiumId));
 	}
 }

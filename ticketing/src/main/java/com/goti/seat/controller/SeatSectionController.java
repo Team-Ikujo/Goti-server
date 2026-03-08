@@ -46,15 +46,4 @@ public class SeatSectionController {
 		);
 		return wrap(response);
 	}
-
-	@Operation(
-		summary = "좌석 구역 조회",
-		description = "구장별 좌석 구역 목록을 조회하는 API"
-	)
-	@GetMapping
-	public ResponseEntity<ApiSuccessResponse<List<SeatSectionResponse>>> list( // TODO: 유저 인증 추가
-		@RequestParam UUID stadiumId
-	) {
-		return wrap(seatSectionApplicationService.get(stadiumId));
-	}
 }

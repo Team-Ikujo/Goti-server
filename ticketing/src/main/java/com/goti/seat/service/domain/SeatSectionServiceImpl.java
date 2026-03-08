@@ -49,12 +49,4 @@ public class SeatSectionServiceImpl implements SeatSectionService {
 
 		return SeatSectionResponse.from(seatSection);
 	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public List<SeatSectionResponse> get(UUID stadiumId) {
-		return seatSectionRepository.findAllByStadiumId(stadiumId).stream()
-			.map(SeatSectionResponse::from)
-			.toList();
-	}
 }

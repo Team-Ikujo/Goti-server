@@ -21,8 +21,4 @@ public class SeatSectionService {
 	) {
 		return seatSectionService.create(gradeId, stadiumId, sectionCode, capacity);
 	}
-
-	public List<SeatSectionResponse> get(UUID stadiumId) {
-		return seatSectionService.get(stadiumId);
-	}
 }
