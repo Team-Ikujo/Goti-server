@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SeatServiceImpl implements SeatService {
-	private static final long MAX_BULK_CREATE_SEAT_COUNT = 1000;
+	private static final int MAX_BULK_CREATE_SEAT_COUNT = 1000;
 
 	private final SeatSectionRepository seatSectionRepository;
 	private final SeatRepository seatRepository;
@@ -38,7 +38,7 @@ public class SeatServiceImpl implements SeatService {
 			startSeatNumber <= endSeatNumber,
 			ErrorCode.INVALID_SEAT_NUMBER_RANGE
 		);
-		long rangeSize = (long) endSeatNumber - startSeatNumber + 1;
+		int rangeSize = endSeatNumber - startSeatNumber + 1;
 
 		Preconditions.validate(
 			rangeSize <= MAX_BULK_CREATE_SEAT_COUNT,
