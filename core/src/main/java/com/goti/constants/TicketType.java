@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TicketType {
 
-	ADULT("성인"),
-	YOUTH("청소년"),
-	CHILD("어린이");
+	ADULT("성인");
 
 	private final String description;
 }
