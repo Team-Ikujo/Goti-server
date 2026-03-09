@@ -9,23 +9,23 @@ import jakarta.validation.constraints.NotNull;
 
 public record BaseballTeamCreateRequest(
 
-	@Schema(description = "구단코드", example = "SS, KIA")
+	@Schema(description = "구단코드", example = "SS")
 	@NotNull(message = "구단(팀) 코드는 필수 항목입니다.")
 	TeamCode teamCode,
 
-	@Schema(description = "구단명", example = "삼성라이온즈, 기아타이거즈")
+	@Schema(description = "구단명", example = "삼성라이온즈")
 	@NotBlank(message = "구단(팀)이름은 필수 항목입니다.")
 	String teamName,
 
-	@Schema(description = "구단명(영문)", example = "Samsung Lions, Kia Tigers")
+	@Schema(description = "구단명(영문)", example = "Samsung Lions")
 	@NotBlank(message = "구단(팀)이름은(영문) 필수 항목입니다.")
 	String teamNameEn,
 
-	@Schema(description = "스폰서", example = "삼성, 기아")
+	@Schema(description = "스폰서", example = "삼성")
 	@NotBlank(message = "구단(팀)의 스폰서는 필수 항목입니다.")
 	String sponsor,
 
-	@Schema(description = "연고지", example = "대구, 광주")
+	@Schema(description = "연고지", example = "대구")
 	@NotBlank(message = "구단(팀) 연고지는 필수 항목입니다.")
 	String homeGround,
 
@@ -50,7 +50,10 @@ public record BaseballTeamCreateRequest(
 	@NotBlank(message = "구단주명은 필수 항목입니다.")
 	String owner,
 
+	@Schema(description = "구단주 대행", example = "홍길동")
 	String ownerAgency,
+
+	@Schema(description = "대표이사", example = "홍길동")
 	String ceo,
 
 	@Schema(description = "단장", example = "홍길동")
@@ -61,6 +64,11 @@ public record BaseballTeamCreateRequest(
 	@NotBlank(message = "구단(팀)의 감독명은 필수 항목입니다.")
 	String director,
 
+
+	@Schema(
+		description = "구단 로고 이미지 URL",
+		example = "https://image.goti.com/logos/samsung_lions.png"
+	)
 	String logoUrl
 ) {
 }
