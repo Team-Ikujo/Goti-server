@@ -1,0 +1,14 @@
+package com.goti.payment.service.domain;
+
+import java.util.UUID;
+
+import com.goti.constants.PaymentMethod;
+import com.goti.payment.dto.response.PaymentResponse;
+
+public interface PaymentService {
+	PaymentResponse create(
+		UUID orderId,
+		PaymentMethod paymentMethod,
+		String idempotencyKey
+	);
+}
