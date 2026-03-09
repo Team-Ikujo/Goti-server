@@ -34,14 +34,12 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 		UUID teamId,
 		LocalDate policyStartAt,
 		LocalDate policyEndAt,
-		List<TicketPriceCreateParam> ticketPriceRequest,
-		UUID createdBy
+		List<TicketPriceCreateParam> ticketPriceRequest
 	) {
 		TicketPricingPolicyEntity policy = TicketPricingPolicyEntity.create(
 			teamId,
 			policyStartAt,
-			policyEndAt,
-			createdBy
+			policyEndAt
 		);
 
 		ticketPricingPolicyRepository.save(policy);
@@ -56,8 +54,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 				price.ticketType(),
 				price.dayType(),
 				price.matchType(),
-				price.price(),
-				createdBy
+				price.price()
 			))
 			.toList();
 

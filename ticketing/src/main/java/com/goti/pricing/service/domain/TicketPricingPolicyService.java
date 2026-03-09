@@ -14,8 +14,7 @@ public interface TicketPricingPolicyService {
 		UUID teamId,
 		LocalDate policyStartAt,
 		LocalDate policyEndAt,
-		List<TicketPriceCreateParam> prices,
-		UUID createdBy
+		List<TicketPriceCreateParam> prices
 	);
 
 	record TicketPriceCreateParam(

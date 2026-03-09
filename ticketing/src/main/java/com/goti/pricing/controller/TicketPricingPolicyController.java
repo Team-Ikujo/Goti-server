@@ -37,7 +37,7 @@ public class TicketPricingPolicyController {
 		@PathVariable UUID teamId,
 		@Valid @RequestBody CreateTicketPricingPolicyRequest request
 	) {
-		// TODO: 추후 관리자 전용 API로 분리
+		// TODO: 추후 관리자 인증 도입 후 관리자만 생성 가능하도록 처리
 		TicketPricingPolicyResponse response = ticketPricingPolicyService.create(
 			teamId,
 			request.policyStartAt(),
@@ -50,8 +50,7 @@ public class TicketPricingPolicyController {
 					price.matchType(),
 					price.price()
 				))
-				.toList(),
-			null
+				.toList()
 		);
 		return wrap(response);
 	}
