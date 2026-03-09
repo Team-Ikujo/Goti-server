@@ -54,7 +54,7 @@ class GameScheduleControllerTest {
 	private ObjectMapper objectMapper;
 
 	@MockitoBean
-	private GameScheduleService baseballGameApplicationService;
+	private GameScheduleService gameScheduleService;
 
 	@Test
 	@DisplayName("POST /api/v1/games - 경기 생성 성공")
@@ -87,7 +87,7 @@ class GameScheduleControllerTest {
 			0,
 			GameResult.PENDING
 		);
-		given(baseballGameApplicationService.create(any())).willReturn(response);
+		given(gameScheduleService.create(any())).willReturn(response);
 
 		mockMvc.perform(
 				post("/api/v1/games")
@@ -148,7 +148,7 @@ class GameScheduleControllerTest {
 			PageRequest.of(0, 10),
 			1
 		);
-		given(baseballGameApplicationService.getGames(any())).willReturn(page);
+		given(gameScheduleService.getGames(any())).willReturn(page);
 
 		mockMvc.perform(
 				get("/api/v1/games")
@@ -181,7 +181,7 @@ class GameScheduleControllerTest {
 			0,
 			GameResult.PENDING
 		);
-		given(baseballGameApplicationService.getGame(gameId)).willReturn(response);
+		given(gameScheduleService.getGame(gameId)).willReturn(response);
 
 		mockMvc.perform(get("/api/v1/games/{gameId}", gameId))
 			.andExpect(status().isOk())
@@ -195,7 +195,7 @@ class GameScheduleControllerTest {
 	@WithMockUser
 	void 경기_단건조회_API_실패_미존재() throws Exception {
 		UUID gameId = UUID.randomUUID();
-		given(baseballGameApplicationService.getGame(gameId))
+		given(gameScheduleService.getGame(gameId))
 			.willThrow(new CustomException(ErrorCode.GAME_NOT_FOUND));
 
 		mockMvc.perform(get("/api/v1/games/{gameId}", gameId))
