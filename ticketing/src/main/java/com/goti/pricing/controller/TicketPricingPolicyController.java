@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.pricing.dto.request.TicketPricingPolicyCreateRequest;
-import com.goti.pricing.dto.response.TicketPricingPolicyResponse;
+import com.goti.pricing.dto.response.TicketPricingPolicyCreateResponse;
 import com.goti.pricing.service.domain.TicketPricingPolicyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,12 +33,12 @@ public class TicketPricingPolicyController {
 		description = "관리자가 가격 정책과 티켓 가격 상세를 함께 생성하는 API"
 	)
 	@PostMapping
-	public ResponseEntity<ApiSuccessResponse<TicketPricingPolicyResponse>> create(
+	public ResponseEntity<ApiSuccessResponse<TicketPricingPolicyCreateResponse>> create(
 		@PathVariable UUID teamId,
 		@Valid @RequestBody TicketPricingPolicyCreateRequest request
 	) {
 		// TODO: 추후 관리자 인증 도입 후 관리자만 생성 가능하도록 처리
-		TicketPricingPolicyResponse response = ticketPricingPolicyService.create(
+		TicketPricingPolicyCreateResponse response = ticketPricingPolicyService.create(
 			teamId,
 			request.policyStartAt(),
 			request.policyEndAt(),

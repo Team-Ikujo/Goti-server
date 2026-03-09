@@ -19,7 +19,7 @@ import com.goti.domain.entity.pricing.TicketPriceEntity;
 import com.goti.domain.entity.pricing.TicketPricingPolicyEntity;
 import com.goti.domain.entity.seat.SeatGradeEntity;
 import com.goti.global.validation.Preconditions;
-import com.goti.pricing.dto.response.TicketPricingPolicyResponse;
+import com.goti.pricing.dto.response.TicketPricingPolicyCreateResponse;
 import com.goti.pricing.repository.TicketPriceRepository;
 import com.goti.pricing.repository.TicketPricingPolicyRepository;
 import com.goti.seat.repository.SeatGradeRepository;
@@ -35,7 +35,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 
 	@Override
 	@Transactional
-	public TicketPricingPolicyResponse create(
+	public TicketPricingPolicyCreateResponse create(
 		UUID teamId,
 		LocalDate policyStartAt,
 		LocalDate policyEndAt,
@@ -64,7 +64,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 			.toList();
 
 		ticketPriceRepository.saveAll(ticketPrices);
-		return TicketPricingPolicyResponse.from(policy, ticketPrices);
+		return TicketPricingPolicyCreateResponse.from(policy, ticketPrices);
 	}
 
 	private Map<UUID, SeatGradeEntity> getGrades(List<TicketPriceCreateParam> ticketPriceRequest) {

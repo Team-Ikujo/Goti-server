@@ -7,10 +7,10 @@ import java.util.UUID;
 import com.goti.constants.TicketPricingDayType;
 import com.goti.constants.TicketPricingMatchType;
 import com.goti.constants.TicketType;
-import com.goti.pricing.dto.response.TicketPricingPolicyResponse;
+import com.goti.pricing.dto.response.TicketPricingPolicyCreateResponse;
 
 public interface TicketPricingPolicyService {
-	TicketPricingPolicyResponse create(
+	TicketPricingPolicyCreateResponse create(
 		UUID teamId,
 		LocalDate policyStartAt,
 		LocalDate policyEndAt,

@@ -12,7 +12,7 @@ import com.goti.domain.entity.pricing.TicketPricingPolicyEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record TicketPricingPolicyResponse(
+public record TicketPricingPolicyCreateResponse(
 	@Schema(description = "가격 정책 ID", example = "22222222-2222-2222-2222-222222222222")
 	UUID policyId,
 
@@ -31,11 +31,11 @@ public record TicketPricingPolicyResponse(
 	@Schema(description = "가격 정책 상세 목록")
 	List<TicketPriceResponse> prices
 ) {
-	public static TicketPricingPolicyResponse from(
+	public static TicketPricingPolicyCreateResponse from(
 		TicketPricingPolicyEntity policy,
 		List<TicketPriceEntity> prices
 	) {
-		return new TicketPricingPolicyResponse(
+		return new TicketPricingPolicyCreateResponse(
 			policy.getId(),
 			policy.getTeamId(),
 			policy.getPolicyStartAt(),
