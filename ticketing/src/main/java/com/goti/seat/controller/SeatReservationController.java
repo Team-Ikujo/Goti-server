@@ -31,7 +31,7 @@ public class SeatReservationController {
 
 	@Operation(
 		summary = "좌석 점유",
-		description = "좌석을 임시 점유(HOLD)하고 holdId를 반환하는 API"
+		description = "좌석을 임시 점유(HOLD) API"
 	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<HoldSeatResponse>> hold(
@@ -52,7 +52,7 @@ public class SeatReservationController {
 
 	@Operation(
 		summary = "좌석 점유 해제",
-		description = "holdId 기준으로 좌석 점유를 해제하는 API"
+		description = "좌석 점유 해제 API"
 	)
 	@DeleteMapping("/{holdId}")
 	public ResponseEntity<ApiSuccessResponse<ReleaseSeatResponse>> release(
