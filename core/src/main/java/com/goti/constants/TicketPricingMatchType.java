@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TicketPricingMatchType {
 
-	PRE_SEASON("프리시즌"),
+	EXHIBITION("시범 경기"),
 	REGULAR("정규리그"),
 	POST_SEASON("포스트시즌");
 
