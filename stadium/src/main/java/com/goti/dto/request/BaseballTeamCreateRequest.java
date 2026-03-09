@@ -25,7 +25,7 @@ public record BaseballTeamCreateRequest(
 	@NotBlank(message = "구단(팀)의 스폰서는 필수 항목입니다.")
 	String sponsor,
 
-	@Schema(description = "스폰서", example = "대구, 광주")
+	@Schema(description = "연고지", example = "대구, 광주")
 	@NotBlank(message = "구단(팀) 연고지는 필수 항목입니다.")
 	String homeGround,
 
