@@ -36,6 +36,8 @@ public class SecurityConfig {
 		"/actuator/**",
 		"/swagger-ui/**",
 		"/v3/api-docs/**",
+		"/api/v1/games",
+		"/api/v1/seats"
 	};
 
 	public static final String[] PERMIT_MEMBER_PATH = {
