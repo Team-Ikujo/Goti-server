@@ -3,7 +3,6 @@ package order;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -48,19 +47,16 @@ class OrderCancellationEntityTest {
 		OrderCancellationEntity cancellation = OrderCancellationEntity.create(
 			order,
 			OrderCancellationRequestType.USER_PARTIAL,
-			null,
 			requestedBy,
-			null,
-			null,
 			refundAmountTotal,
 			feeAmountTotal,
-			null,
 			idempotencyKey
 		);
 
 		assertThat(cancellation.getOrder()).isEqualTo(order);
 		assertThat(cancellation.getStatus()).isEqualTo(OrderCancellationStatus.REQUESTED);
 		assertThat(cancellation.getRequestType()).isEqualTo(OrderCancellationRequestType.USER_PARTIAL);
+		assertThat(cancellation.getDenyReasonCode()).isNull();
 		assertThat(cancellation.getRequestedBy()).isEqualTo(requestedBy);
 		assertThat(cancellation.getRefundAmountTotal()).isEqualTo(refundAmountTotal);
 		assertThat(cancellation.getFeeAmountTotal()).isEqualTo(feeAmountTotal);
@@ -76,13 +72,9 @@ class OrderCancellationEntityTest {
 			() -> OrderCancellationEntity.create(
 				order,
 				null,
-				null,
 				requestedBy,
-				null,
-				null,
 				refundAmountTotal,
 				feeAmountTotal,
-				null,
 				idempotencyKey
 			)
 		).isInstanceOf(FieldValidationException.class)
@@ -96,12 +88,8 @@ class OrderCancellationEntityTest {
 				order,
 				OrderCancellationRequestType.USER_PARTIAL,
 				null,
-				null,
-				null,
-				null,
 				refundAmountTotal,
 				feeAmountTotal,
-				null,
 				idempotencyKey
 			)
 		).isInstanceOf(FieldValidationException.class)
@@ -114,13 +102,9 @@ class OrderCancellationEntityTest {
 			() -> OrderCancellationEntity.create(
 				order,
 				OrderCancellationRequestType.USER_PARTIAL,
-				null,
 				requestedBy,
-				null,
-				LocalDateTime.now(),
 				-1,
 				feeAmountTotal,
-				null,
 				idempotencyKey
 			)
 		).isInstanceOf(FieldValidationException.class)
@@ -133,13 +117,9 @@ class OrderCancellationEntityTest {
 			() -> OrderCancellationEntity.create(
 				order,
 				OrderCancellationRequestType.USER_PARTIAL,
-				null,
 				requestedBy,
-				null,
-				null,
 				refundAmountTotal,
 				feeAmountTotal,
-				null,
 				" "
 			)
 		).isInstanceOf(FieldValidationException.class)

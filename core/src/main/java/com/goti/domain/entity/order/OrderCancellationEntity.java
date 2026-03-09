@@ -72,38 +72,30 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	private OrderCancellationEntity(
 		OrderEntity order,
 		OrderCancellationRequestType requestType,
-		OrderCancellationDenyReasonCode denyReasonCode,
 		UUID requestedBy,
-		UUID approvedBy,
-		LocalDateTime approvedAt,
 		Integer refundAmountTotal,
 		Integer feeAmountTotal,
-		LocalDateTime completedAt,
 		String idempotencyKey
 	) {
 		this.order = order;
 		this.status = OrderCancellationStatus.REQUESTED;
 		this.requestType = requestType;
-		this.denyReasonCode = denyReasonCode;
+		this.denyReasonCode = null;
 		this.requestedBy = requestedBy;
-		this.approvedBy = approvedBy;
-		this.approvedAt = approvedAt;
+		this.approvedBy = null;
+		this.approvedAt = null;
 		this.refundAmountTotal = refundAmountTotal;
 		this.feeAmountTotal = feeAmountTotal;
-		this.completedAt = completedAt;
+		this.completedAt = null;
 		this.idempotencyKey = idempotencyKey;
 	}
 
 	public static OrderCancellationEntity create(
 		OrderEntity order,
 		OrderCancellationRequestType requestType,
-		OrderCancellationDenyReasonCode denyReasonCode,
 		UUID requestedBy,
-		UUID approvedBy,
-		LocalDateTime approvedAt,
 		Integer refundAmountTotal,
 		Integer feeAmountTotal,
-		LocalDateTime completedAt,
 		String idempotencyKey
 	) {
 		validate(
@@ -116,13 +108,9 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 		return new OrderCancellationEntity(
 			order,
 			requestType,
-			denyReasonCode,
 			requestedBy,
-			approvedBy,
-			approvedAt,
 			refundAmountTotal,
 			feeAmountTotal,
-			completedAt,
 			idempotencyKey
 		);
 	}

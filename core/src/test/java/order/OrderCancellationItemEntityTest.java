@@ -40,13 +40,9 @@ class OrderCancellationItemEntityTest {
 		cancellation = OrderCancellationEntity.create(
 			order,
 			OrderCancellationRequestType.USER_PARTIAL,
-			null,
 			UUID.randomUUID(),
-			null,
-			null,
 			12000,
 			1000,
-			null,
 			"cancel-idempotency-key"
 		);
 
