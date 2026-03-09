@@ -36,7 +36,7 @@ public class OrdererEntity extends ModificationTimestampEntity {
 	private String name;
 
 	@Column(nullable = false)
-	private String phone;
+	private String mobile;
 
 	@Column(nullable = false)
 	private String email;
@@ -44,28 +44,28 @@ public class OrdererEntity extends ModificationTimestampEntity {
 	private OrdererEntity(
 		OrderEntity order,
 		String name,
-		String phone,
+		String mobile,
 		String email
 	) {
 		this.order = order;
 		this.name = name;
-		this.phone = phone;
+		this.mobile = mobile;
 		this.email = email;
 	}
 
 	public static OrdererEntity create(
 		OrderEntity order,
 		String name,
-		String phone,
+		String mobile,
 		String email
 	) {
-		validate(name, phone, email);
-		return new OrdererEntity(order, name, phone, email);
+		validate(name, mobile, email);
+		return new OrdererEntity(order, name, mobile, email);
 	}
 
 	private static void validate(
 		String name,
-		String phone,
+		String mobile,
 		String email
 	) {
 		Preconditions.domainValidate(
@@ -73,7 +73,7 @@ public class OrdererEntity extends ModificationTimestampEntity {
 			"구매자 이름은 비어 있을 수 없습니다."
 		);
 		Preconditions.domainValidate(
-			StringUtils.hasText(phone),
+			StringUtils.hasText(mobile),
 			"구매자 연락처는 비어 있을 수 없습니다."
 		);
 		Preconditions.domainValidate(

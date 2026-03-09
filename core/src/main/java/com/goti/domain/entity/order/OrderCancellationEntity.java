@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.springframework.util.StringUtils;
 
-import com.goti.constants.OrderCancellationDenyReasonCode;
+import com.goti.constants.OrderCancelDenyReason;
 import com.goti.constants.OrderCancellationRequestType;
 import com.goti.constants.OrderCancellationStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
@@ -49,7 +49,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	private OrderCancellationRequestType requestType;
 
 	@Enumerated(EnumType.STRING)
-	private OrderCancellationDenyReasonCode denyReasonCode;
+	private OrderCancelDenyReason denyReasonCode;
 
 	@Column(nullable = false)
 	private UUID requestedBy;

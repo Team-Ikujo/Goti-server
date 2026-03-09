@@ -88,7 +88,7 @@ public class OrderItemEntity extends ModificationTimestampEntity {
 		);
 		Preconditions.domainValidate(
 			ticketPrice != null && ticketPrice >= 0,
-			"판매 금액은 0 이상이어야 합니다."
+			"티켓 가격은 0원 보다 커야합니다"
 		);
 	}
 }
