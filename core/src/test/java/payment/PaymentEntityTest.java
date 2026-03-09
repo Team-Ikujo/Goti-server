@@ -47,7 +47,6 @@ class PaymentEntityTest {
 	void 결제_생성_성공() {
 		PaymentEntity payment = PaymentEntity.create(
 			order,
-			null,
 			PaymentType.PAYMENT,
 			PaymentMethod.CARD,
 			paymentAmount,
@@ -65,7 +64,47 @@ class PaymentEntityTest {
 		assertThat(payment.getPgTid()).isEqualTo("pg-tid-001");
 		assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.PENDING);
 		assertThat(payment.getPaidAt()).isNull();
+		assertThat(payment.getFailedReason()).isNull();
 		assertThat(payment.getIdempotencyKey()).isEqualTo(idempotencyKey);
+	}
+
+	@Test
+	void 결제_성공_처리() {
+		PaymentEntity payment = PaymentEntity.create(
+			order,
+			PaymentType.PAYMENT,
+			PaymentMethod.CARD,
+			paymentAmount,
+			"MOCK",
+			null,
+			idempotencyKey
+		);
+
+		payment.succeed("mock-tid-001");
+
+		assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.SUCCESS);
+		assertThat(payment.getPgTid()).isEqualTo("mock-tid-001");
+		assertThat(payment.getPaidAt()).isNotNull();
+		assertThat(payment.getFailedReason()).isNull();
+	}
+
+	@Test
+	void 결제_실패_처리() {
+		PaymentEntity payment = PaymentEntity.create(
+			order,
+			PaymentType.PAYMENT,
+			PaymentMethod.CARD,
+			paymentAmount,
+			"MOCK",
+			null,
+			idempotencyKey
+		);
+
+		payment.fail("mock 결제 실패");
+
+		assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.FAILED);
+		assertThat(payment.getPaidAt()).isNull();
+		assertThat(payment.getFailedReason()).isEqualTo("mock 결제 실패");
 	}
 
 	@Test
@@ -73,7 +112,6 @@ class PaymentEntityTest {
 		assertThatThrownBy(
 			() -> PaymentEntity.create(
 				order,
-				null,
 				null,
 				PaymentMethod.CARD,
 				paymentAmount,
@@ -90,7 +128,6 @@ class PaymentEntityTest {
 		assertThatThrownBy(
 			() -> PaymentEntity.create(
 				order,
-				null,
 				PaymentType.PAYMENT,
 				PaymentMethod.CARD,
 				0,
@@ -109,7 +146,6 @@ class PaymentEntityTest {
 		assertThatThrownBy(
 			() -> PaymentEntity.create(
 				order,
-				null,
 				PaymentType.PAYMENT,
 				PaymentMethod.CARD,
 				paymentAmount,
