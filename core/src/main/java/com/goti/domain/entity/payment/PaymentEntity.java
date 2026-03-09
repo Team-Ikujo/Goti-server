@@ -73,7 +73,6 @@ public class PaymentEntity extends ModificationTimestampEntity {
 
 	private PaymentEntity(
 		OrderEntity order,
-		OrderCancellationEntity cancellation,
 		PaymentType paymentType,
 		PaymentMethod paymentMethod,
 		Integer paymentAmount,
@@ -82,7 +81,7 @@ public class PaymentEntity extends ModificationTimestampEntity {
 		String idempotencyKey
 	) {
 		this.order = order;
-		this.cancellation = cancellation;
+		this.cancellation = null;
 		this.paymentType = paymentType;
 		this.paymentMethod = paymentMethod;
 		this.paymentAmount = paymentAmount;
@@ -95,7 +94,6 @@ public class PaymentEntity extends ModificationTimestampEntity {
 
 	public static PaymentEntity create(
 		OrderEntity order,
-		OrderCancellationEntity cancellation,
 		PaymentType paymentType,
 		PaymentMethod paymentMethod,
 		Integer paymentAmount,
@@ -112,7 +110,6 @@ public class PaymentEntity extends ModificationTimestampEntity {
 		);
 		return new PaymentEntity(
 			order,
-			cancellation,
 			paymentType,
 			paymentMethod,
 			paymentAmount,
