@@ -30,7 +30,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@DisplayName("장바구니 상품 추가 - POST /api/v1/stadium")
+@DisplayName("야구 구장 생성 - POST /api/v1/stadiums")
 public class StadiumCreateApiTest {
 
 	@Autowired
@@ -58,7 +58,7 @@ public class StadiumCreateApiTest {
 		);
 
 		mockMvc.perform(
-			post("/api/v1/stadium")
+			post("/api/v1/stadiums")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request))

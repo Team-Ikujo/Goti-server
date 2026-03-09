@@ -20,7 +20,7 @@ import static com.goti.global.api.ApiSuccessResponse.wrap;
 
 @Tag(name = "Stadium", description = "야구구장 관련 API")
 @RestController
-@RequestMapping("/api/v1/stadium")
+@RequestMapping("/api/v1/stadiums")
 @RequiredArgsConstructor
 public class StadiumController {
 	
