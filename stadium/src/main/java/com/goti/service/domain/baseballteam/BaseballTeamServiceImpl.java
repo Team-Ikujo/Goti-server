@@ -9,6 +9,7 @@ import com.goti.repository.BaseballTeamRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class BaseballTeamServiceImpl implements BaseballTeamService {
 	private final BaseballTeamRepository baseballTeamRepository;
 
 	@Override
+	@Transactional
 	public BaseballTeamCreateResponse create(
 		TeamCode teamCode,
 		String teamName,
