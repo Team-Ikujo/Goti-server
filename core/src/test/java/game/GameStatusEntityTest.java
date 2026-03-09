@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import com.goti.exception.FieldValidationException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,11 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles("test")
 public class GameStatusEntityTest {
 
-	GameScheduleEntity baseballGame;
+	GameScheduleEntity gameSchedule;
 
 	@BeforeEach
 	void setup() {
-		baseballGame = GameScheduleEntity.create(
+		gameSchedule = GameScheduleEntity.create(
 			UUID.randomUUID(),
 			UUID.randomUUID(),
 			UUID.randomUUID(),
@@ -36,11 +38,11 @@ public class GameStatusEntityTest {
 	}
 
 	@Test
-	void 경기상태_init_성공() {
-		GameStatusEntity gameStatus = GameStatusEntity.create(baseballGame);
+	void 경기상태_생성_성공() {
+		GameStatusEntity gameStatus = GameStatusEntity.create(gameSchedule);
 
 		assertNotNull(gameStatus);
-		assertThat(gameStatus.getGameSchedule()).isEqualTo(baseballGame);
+		assertThat(gameStatus.getGameSchedule()).isEqualTo(gameSchedule);
 		assertThat(gameStatus.getGameStatus()).isEqualTo(GameStatus.SCHEDULED);
 		assertThat(gameStatus.getHomeTeamScore()).isEqualTo(0);
 		assertThat(gameStatus.getAwayTeamScore()).isEqualTo(0);
@@ -51,12 +53,15 @@ public class GameStatusEntityTest {
 	}
 
 	@Test
-	void 경기상태_init_기본값_적용() {
-		GameStatusEntity gameStatus = GameStatusEntity.create(baseballGame);
+	void 경기상태_생성_실패_gameSchedule_null() {
 
-		assertThat(gameStatus.getGameStatus()).isEqualTo(GameStatus.SCHEDULED);
-		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.NONE);
-		assertThat(gameStatus.getHomeTeamScore()).isEqualTo(0);
-		assertThat(gameStatus.getAwayTeamScore()).isEqualTo(0);
+		assertThatThrownBy(
+			() -> GameStatusEntity.create(gameSchedule)
+		).isInstanceOfSatisfying(
+			FieldValidationException.class, ex -> {
+				log.info("경기상태 엔티티 : {}", ex.getMessage());
+				assertEquals("도메인 필드 오류 : 게임일정 값은 비어있을 수 없습니다.", ex.getMessage());
+			}
+		);
 	}
 }
