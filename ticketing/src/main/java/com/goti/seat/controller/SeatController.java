@@ -50,7 +50,7 @@ public class SeatController {
 
 	@Operation(
 		summary = "좌석 조회",
-		description = "좌석 구역별 좌석 목록을 조회하는 API"
+		description = "좌석 구역별 좌석 목록 조회 API"
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<List<SeatResponse>>> list(
