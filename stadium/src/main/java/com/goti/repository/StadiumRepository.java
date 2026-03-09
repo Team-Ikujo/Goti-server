@@ -15,7 +15,7 @@ public interface StadiumRepository extends JpaRepository<StadiumEntity, UUID> {
 
 	default StadiumEntity findByIdOrThrow(UUID stadiumId) {
 		return findById(stadiumId).orElseThrow(
-			() -> new CustomException(ErrorCode.BASEBALL_TEAM_NOT_FOUND)
+			() -> new CustomException(ErrorCode.STADIUM_NOT_FOUND)
 		);
 	}
 }
