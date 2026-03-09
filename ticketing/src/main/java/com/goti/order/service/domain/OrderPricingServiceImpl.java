@@ -73,7 +73,7 @@ public class OrderPricingServiceImpl implements OrderPricingService {
 
 	private TicketPricingMatchType resolveMatchType(GameScheduleEntity gameSchedule) {
 		return switch (gameSchedule.getLeagueType()) {
-			case PRE_SEASON -> TicketPricingMatchType.PRE_SEASON;
+			case PRE_SEASON -> TicketPricingMatchType.EXHIBITION;
 			case POSTSEASON -> TicketPricingMatchType.POST_SEASON;
 			case REGULAR -> TicketPricingMatchType.REGULAR;
 		};
