@@ -27,7 +27,7 @@ public record CreateOrderResponse(
 	@Schema(description = "총 금액", example = "24000")
 	Integer totalAmount
 ) {
-	public static CreateOrderResponse of(
+	public static CreateOrderResponse from(
 		UUID orderId,
 		String orderNumber,
 		UUID gameId,
