@@ -5,12 +5,14 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.goti.constants.OrderStatus;
 import com.goti.constants.PaymentMethod;
 import com.goti.constants.PaymentType;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.domain.entity.order.OrderEntity;
 import com.goti.domain.entity.payment.PaymentEntity;
 import com.goti.exception.CustomException;
+import com.goti.global.validation.Preconditions;
 import com.goti.order.repository.OrderRepository;
 import com.goti.payment.dto.response.PaymentResponse;
 import com.goti.payment.repository.PaymentRepository;
@@ -32,8 +34,18 @@ public class PaymentServiceImpl implements PaymentService {
 		PaymentMethod paymentMethod,
 		String idempotencyKey
 	) {
+		Preconditions.validate(
+			!paymentRepository.existsByIdempotencyKey(idempotencyKey),
+			ErrorCode.PAYMENT_IDEMPOTENCY_KEY_ALREADY_EXISTS
+		);
+
 		OrderEntity order = orderRepository.findById(orderId)
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+		Preconditions.validate(
+			order.getOrderStatus() == OrderStatus.PENDING,
+			ErrorCode.ORDER_PAYMENT_NOT_ALLOWED
+		);
 
 		PaymentEntity payment = PaymentEntity.create(
 			order,
