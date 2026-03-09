@@ -5,12 +5,24 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.goti.domain.entity.seat.SeatStatusEntity;
 
 @Repository
 public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UUID> {
-	List<SeatStatusEntity> findAllByGame_IdAndSeat_SeatSection_Id(UUID gameId, UUID sectionId);
+
+	@Query("""
+		SELECT ss
+			FROM SeatStatusEntity ss
+		WHERE ss.game.id = :gameId
+  		AND ss.seat.seatSection.id = :sectionId
+	""")
+	List<SeatStatusEntity> findSeatStatuses(
+		@Param("gameId") UUID gameId,
+		@Param("sectionId") UUID sectionId
+	);
 	Optional<SeatStatusEntity> findByGame_IdAndSeat_Id(UUID gameId, UUID seatId);
 }

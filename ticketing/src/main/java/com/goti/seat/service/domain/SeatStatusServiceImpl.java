@@ -22,7 +22,7 @@ public class SeatStatusServiceImpl implements SeatStatusService {
 		UUID gameId,
 		UUID sectionId
 	) {
-		return seatStatusRepository.findAllByGame_IdAndSeat_SeatSection_Id(gameId, sectionId).stream()
+		return seatStatusRepository.findSeatStatuses(gameId, sectionId).stream()
 			.map(GameSeatStatusResponse::from)
 			.toList();
 	}
