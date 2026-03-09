@@ -33,7 +33,7 @@ public class SeatController {
 
 	@Operation(
 		summary = "좌석 일괄 생성",
-		description = "좌석 구역의 특정 행에 대한 좌석 번호 범위 일괄 생성 API"
+		description = "좌석 번호 범위 일괄 생성 API"
 	)
 	@PostMapping("/bulk")
 	public ResponseEntity<ApiSuccessResponse<BulkCreateSeatsResponse>> createBulk(
