@@ -6,14 +6,10 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import com.goti.domain.base.ModificationTimestampEntity;
-import com.goti.domain.entity.team.BaseballTeamEntity;
 import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,7 +54,7 @@ public class TicketPricingPolicyEntity extends ModificationTimestampEntity {
 		LocalDate policyEndAt,
 		UUID createdBy
 	) {
-		validate(policyStartAt, policyEndAt, createdBy);
+		validate(teamId, policyStartAt, policyEndAt, createdBy);
 		return new TicketPricingPolicyEntity(
 			teamId,
 			policyStartAt,
@@ -68,10 +64,15 @@ public class TicketPricingPolicyEntity extends ModificationTimestampEntity {
 	}
 
 	private static void validate(
+		UUID teamId,
 		LocalDate policyStartAt,
 		LocalDate policyEndAt,
 		UUID createdBy
 	) {
+		Preconditions.domainValidate(
+			teamId != null,
+			"팀 ID는 필수입니다."
+		);
 		Preconditions.domainValidate(
 			policyStartAt != null,
 			"정책 시작일은 필수입니다."

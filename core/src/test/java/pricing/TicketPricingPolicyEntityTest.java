@@ -44,6 +44,15 @@ class TicketPricingPolicyEntityTest {
 		assertThat(policy.getCreatedBy()).isEqualTo(createdBy);
 	}
 
+
+	@Test
+	void 가격정책_생성_실패_팀ID_null() {
+		assertThatThrownBy(
+			() -> TicketPricingPolicyEntity.create(null, policyStartAt, policyEndAt, createdBy)
+		).isInstanceOf(FieldValidationException.class)
+			.hasMessageContaining("팀 ID는 필수입니다.");
+	}
+
 	@Test
 	void 가격정책_생성_실패_시작일_null() {
 		assertThatThrownBy(
