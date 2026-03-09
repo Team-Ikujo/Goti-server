@@ -1,5 +1,6 @@
 package com.goti.game.service;
 
+import com.goti.domain.entity.game.GameStatusEntity;
 import com.goti.exception.CustomException;
 
 import com.goti.game.repository.GameScheduleRepository;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.goti.constants.messages.ErrorCode;
 import com.goti.domain.entity.game.GameScheduleEntity;
-import com.goti.domain.entity.game.BaseballGameStatusEntity;
 import com.goti.game.dto.response.GameResponse;
 import com.goti.game.repository.BaseballGameStatusRepository;
 import com.goti.game.service.command.CreateGameCommand;
@@ -47,7 +47,7 @@ public class GameScheduleService {
 		);
 		GameScheduleEntity savedGame = gameScheduleRepository.save(game);
 
-		BaseballGameStatusEntity gameStatus = BaseballGameStatusEntity.init(savedGame);
+		GameStatusEntity gameStatus = GameStatusEntity.create(savedGame);
 		baseballGameStatusRepository.save(gameStatus);
 
 		return GameResponse.from(savedGame, gameStatus);
@@ -66,7 +66,7 @@ public class GameScheduleService {
 		GameScheduleEntity gameSchedule = gameScheduleRepository.findById(gameScheduleId)
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
-		BaseballGameStatusEntity status = baseballGameStatusRepository
+		GameStatusEntity status = baseballGameStatusRepository
 			.findByGameSchedule(gameSchedule)
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 

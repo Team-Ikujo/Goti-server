@@ -14,13 +14,13 @@ import org.springframework.test.context.ActiveProfiles;
 import com.goti.constants.GameResult;
 import com.goti.constants.GameStatus;
 import com.goti.domain.entity.game.GameScheduleEntity;
-import com.goti.domain.entity.game.BaseballGameStatusEntity;
+import com.goti.domain.entity.game.GameStatusEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ActiveProfiles("test")
-public class BaseballGameStatusEntityTest {
+public class GameStatusEntityTest {
 
 	GameScheduleEntity baseballGame;
 
@@ -37,14 +37,14 @@ public class BaseballGameStatusEntityTest {
 
 	@Test
 	void 경기상태_init_성공() {
-		BaseballGameStatusEntity gameStatus = BaseballGameStatusEntity.init(baseballGame);
+		GameStatusEntity gameStatus = GameStatusEntity.create(baseballGame);
 
 		assertNotNull(gameStatus);
 		assertThat(gameStatus.getGameSchedule()).isEqualTo(baseballGame);
 		assertThat(gameStatus.getGameStatus()).isEqualTo(GameStatus.SCHEDULED);
 		assertThat(gameStatus.getHomeTeamScore()).isEqualTo(0);
 		assertThat(gameStatus.getAwayTeamScore()).isEqualTo(0);
-		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.PENDING);
+		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.NONE);
 
 		log.info("gameStatus : {}", gameStatus.getGameStatus());
 		log.info("score : {}:{}", gameStatus.getHomeTeamScore(), gameStatus.getAwayTeamScore());
@@ -52,10 +52,10 @@ public class BaseballGameStatusEntityTest {
 
 	@Test
 	void 경기상태_init_기본값_적용() {
-		BaseballGameStatusEntity gameStatus = BaseballGameStatusEntity.init(baseballGame);
+		GameStatusEntity gameStatus = GameStatusEntity.create(baseballGame);
 
 		assertThat(gameStatus.getGameStatus()).isEqualTo(GameStatus.SCHEDULED);
-		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.PENDING);
+		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.NONE);
 		assertThat(gameStatus.getHomeTeamScore()).isEqualTo(0);
 		assertThat(gameStatus.getAwayTeamScore()).isEqualTo(0);
 	}
