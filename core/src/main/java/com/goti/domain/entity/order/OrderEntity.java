@@ -113,7 +113,7 @@ public class OrderEntity extends ModificationTimestampEntity {
 			"총 수량은 0보다 커야 합니다."
 		);
 		Preconditions.domainValidate(
-			totalAmount != null && totalAmount >= 0,
+			totalAmount != null && totalAmount > 0,
 			"총 금액은 0보다 커야 합니다."
 		);
 	}
