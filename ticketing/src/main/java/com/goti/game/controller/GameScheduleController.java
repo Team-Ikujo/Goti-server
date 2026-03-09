@@ -4,8 +4,10 @@ import com.goti.game.dto.request.CreateGameRequest;
 import com.goti.game.dto.response.GameResponse;
 import com.goti.game.service.GameScheduleService;
 import com.goti.global.api.ApiSuccessResponse;
-
 import com.goti.global.api.PageResponse;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 
@@ -24,12 +26,17 @@ import java.util.UUID;
 
 import static com.goti.global.api.ApiSuccessResponse.*;
 
+@Tag(name = "Game Schedule", description = "경기 일정 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/games")
 public class GameScheduleController {
 	private final GameScheduleService gameScheduleService;
 
+	@Operation(
+		summary = "경기 일정 생성",
+		description = "야구 경기 일정을 생성하는 API"
+	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<GameResponse>> create(
 		@Valid @RequestBody CreateGameRequest request
@@ -38,6 +45,10 @@ public class GameScheduleController {
 		return wrap(response);
 	}
 
+	@Operation(
+		summary = "경기 일정 전체 조회",
+		description = "페이지 기반으로 야구 경기 일정을 조회하는 API"
+	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<PageResponse<GameResponse>>> getGames(
 		Pageable pageable
@@ -45,6 +56,10 @@ public class GameScheduleController {
 		return page(gameScheduleService.getGames(pageable));
 	}
 
+	@Operation(
+		summary = "경기 일정 단건 조회",
+		description = "게임 ID로 야구 경기 일정을 상세 조회하는 API"
+	)
 	@GetMapping("/{gameId}")
 	public ResponseEntity<ApiSuccessResponse<GameResponse>> getGame(
 		@PathVariable UUID gameId
