@@ -76,7 +76,7 @@ public class SeatServiceImpl implements SeatService {
 			.toList();
 
 		seatRepository.saveAll(seats);
-		return BulkCreateSeatsResponse.of(
+		return BulkCreateSeatsResponse.from(
 			sectionId,
 			rowName,
 			startSeatNumber,

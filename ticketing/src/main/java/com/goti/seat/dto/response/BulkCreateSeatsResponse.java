@@ -8,7 +8,7 @@ public record BulkCreateSeatsResponse(
 	Integer startSeatNumber,
 	Integer endSeatNumber
 ) {
-	public static BulkCreateSeatsResponse of(
+	public static BulkCreateSeatsResponse from(
 		UUID sectionId,
 		String rowName,
 		Integer startSeatNumber,
