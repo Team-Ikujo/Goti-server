@@ -183,7 +183,7 @@ public class BaseballTeamEntity extends ModificationTimestampEntity {
 
 		Preconditions.domainValidate(
 			foundedYear != null && foundedYear <= LocalDate.now().getYear(),
-			"창단년도는 비어있거나 현재 혹은 미래일 수 없습니다."
+			"창단년도는 비어있거나 현재연도와 같거나 미래일 수 없습니다."
 		);
 
 		Preconditions.domainValidate(

@@ -217,7 +217,7 @@ public class BaseballTeamEntityTest {
 			)
 		).isInstanceOfSatisfying(FieldValidationException.class, ex -> {
 			log.info("BaseballTeamEntity:Field-foundedYear invalid ErrorMessage : {}", ex.getMessage());
-			assertEquals("도메인 필드 오류 : 창단년도는 비어있거나 현재 혹은 미래일 수 없습니다.", ex.getMessage());
+			assertEquals("도메인 필드 오류 : 창단년도는 비어있거나 현재연도와 같거나 미래일 수 없습니다.", ex.getMessage());
 		});
 	}
 
