@@ -60,7 +60,7 @@ public class SeatServiceImpl implements SeatService {
 			ErrorCode.SEAT_SECTION_CAPACITY_EXCEEDED
 		);
 
-		List<SeatEntity> existingSeats = seatRepository.findExistingSeats(
+		List<SeatEntity> existingSeats = seatRepository.findAllInRow(
 			sectionId,
 			rowName,
 			seatNumbers

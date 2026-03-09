@@ -21,7 +21,7 @@ public interface SeatRepository extends JpaRepository<SeatEntity, UUID> {
 		  AND seat.rowName = :rowName
 		  AND seat.seatNum in :seatNums
 	""")
-	List<SeatEntity> findExistingSeats(
+	List<SeatEntity> findAllInRow(
 		@Param("sectionId") UUID sectionId,
 		@Param("rowName") String rowName,
 		@Param("seatNums") Collection<Integer> seatNums
