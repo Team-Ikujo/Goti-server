@@ -18,7 +18,7 @@ import com.goti.exception.handler.SpringExceptionHandler;
 import com.goti.exception.handler.SystemExceptionHandler;
 import com.goti.game.dto.request.CreateGameRequest;
 import com.goti.game.dto.response.GameResponse;
-import com.goti.game.service.BaseballGameApplicationService;
+import com.goti.game.service.GameScheduleService;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,18 +35,17 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
 @ActiveProfiles("test")
-@WebMvcTest(BaseballGameController.class)
+@WebMvcTest(GameScheduleController.class)
 @ContextConfiguration(classes = {
-	BaseballGameController.class,
+	GameScheduleController.class,
 	SystemExceptionHandler.class,
 	SpringExceptionHandler.class
 })
-class BaseballGameControllerTest {
+class GameScheduleControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -55,10 +54,10 @@ class BaseballGameControllerTest {
 	private ObjectMapper objectMapper;
 
 	@MockitoBean
-	private BaseballGameApplicationService baseballGameApplicationService;
+	private GameScheduleService baseballGameApplicationService;
 
 	@Test
-	@DisplayName("POST /api/v1/games/baseball - 경기 생성 성공")
+	@DisplayName("POST /api/v1/games - 경기 생성 성공")
 	@WithMockUser
 	void 경기_생성_API_성공() throws Exception {
 		UUID gameId = UUID.randomUUID();
@@ -91,7 +90,7 @@ class BaseballGameControllerTest {
 		given(baseballGameApplicationService.create(any())).willReturn(response);
 
 		mockMvc.perform(
-				post("/api/v1/games/baseball")
+				post("/api/v1/games")
 					.with(csrf())
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(request))
@@ -118,7 +117,7 @@ class BaseballGameControllerTest {
 			""".formatted(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
 
 		mockMvc.perform(
-				post("/api/v1/games/baseball")
+				post("/api/v1/games")
 					.with(csrf())
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(invalidBody)
@@ -152,7 +151,7 @@ class BaseballGameControllerTest {
 		given(baseballGameApplicationService.getGames(any())).willReturn(page);
 
 		mockMvc.perform(
-				get("/api/v1/games/baseball")
+				get("/api/v1/games")
 					.param("page", "0")
 					.param("size", "10")
 			)
@@ -165,7 +164,7 @@ class BaseballGameControllerTest {
 	}
 
 	@Test
-	@DisplayName("GET /api/v1/games/baseball/{gameId} - 경기 단건 조회 성공")
+	@DisplayName("GET /api/v1/games/{gameId} - 경기 단건 조회 성공")
 	@WithMockUser
 	void 경기_단건조회_API_성공() throws Exception {
 		UUID gameId = UUID.randomUUID();
@@ -184,7 +183,7 @@ class BaseballGameControllerTest {
 		);
 		given(baseballGameApplicationService.getGame(gameId)).willReturn(response);
 
-		mockMvc.perform(get("/api/v1/games/baseball/{gameId}", gameId))
+		mockMvc.perform(get("/api/v1/games/{gameId}", gameId))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.code").value("ok"))
 			.andExpect(jsonPath("$.message").value("성공"))
@@ -192,14 +191,14 @@ class BaseballGameControllerTest {
 	}
 
 	@Test
-	@DisplayName("GET /api/v1/games/baseball/{gameId} - 경기 미존재 시 404 반환")
+	@DisplayName("GET /api/v1/games/{gameId} - 경기 미존재 시 404 반환")
 	@WithMockUser
 	void 경기_단건조회_API_실패_미존재() throws Exception {
 		UUID gameId = UUID.randomUUID();
 		given(baseballGameApplicationService.getGame(gameId))
 			.willThrow(new CustomException(ErrorCode.GAME_NOT_FOUND));
 
-		mockMvc.perform(get("/api/v1/games/baseball/{gameId}", gameId))
+		mockMvc.perform(get("/api/v1/games/{gameId}", gameId))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.code").value("CLIENT_ERROR"))
 			.andExpect(jsonPath("$.message").value(ErrorCode.GAME_NOT_FOUND.getMessage()));

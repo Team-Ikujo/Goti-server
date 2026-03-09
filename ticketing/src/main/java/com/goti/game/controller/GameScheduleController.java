@@ -2,7 +2,7 @@ package com.goti.game.controller;
 
 import com.goti.game.dto.request.CreateGameRequest;
 import com.goti.game.dto.response.GameResponse;
-import com.goti.game.service.BaseballGameApplicationService;
+import com.goti.game.service.GameScheduleService;
 import com.goti.global.api.ApiSuccessResponse;
 
 import com.goti.global.api.PageResponse;
@@ -26,15 +26,15 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/games/baseball")
-public class BaseballGameController {
-	private final BaseballGameApplicationService baseballGameApplicationService;
+@RequestMapping("/api/v1/games")
+public class GameScheduleController {
+	private final GameScheduleService gameScheduleService;
 
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<GameResponse>> create(
 		@Valid @RequestBody CreateGameRequest request
 	) {
-		GameResponse response = baseballGameApplicationService.create(request.toCommand());
+		GameResponse response = gameScheduleService.create(request.toCommand());
 		return wrap(response);
 	}
 
@@ -42,13 +42,13 @@ public class BaseballGameController {
 	public ResponseEntity<ApiSuccessResponse<PageResponse<GameResponse>>> getGames(
 		Pageable pageable
 	) {
-		return page(baseballGameApplicationService.getGames(pageable));
+		return page(gameScheduleService.getGames(pageable));
 	}
 
 	@GetMapping("/{gameId}")
 	public ResponseEntity<ApiSuccessResponse<GameResponse>> getGame(
 		@PathVariable UUID gameId
 	) {
-		return wrap(baseballGameApplicationService.getGame(gameId));
+		return wrap(gameScheduleService.getGame(gameId));
 	}
 }
