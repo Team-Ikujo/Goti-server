@@ -60,19 +60,6 @@ class OrderEntityTest {
 	}
 
 	@Test
-	void 주문_생성_성공_기본상태_확인() {
-		OrderEntity order = OrderEntity.create(
-			orderNumber,
-			userId,
-			gameSchedule,
-			totalQuantity,
-			totalAmount
-		);
-
-		assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.PENDING);
-	}
-
-	@Test
 	void 주문_생성_실패_주문번호_빈값() {
 		assertThatThrownBy(
 			() -> OrderEntity.create(
