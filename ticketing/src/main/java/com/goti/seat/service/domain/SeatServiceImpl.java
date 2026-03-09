@@ -88,7 +88,7 @@ public class SeatServiceImpl implements SeatService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<SeatResponse> get(UUID sectionId) {
-		return seatRepository.findAllBySeatSection_IdOrderByRowNameAscSeatNumAsc(sectionId).stream()
+		return seatRepository.findAllBySection(sectionId).stream()
 			.map(SeatResponse::from)
 			.toList();
 	}
