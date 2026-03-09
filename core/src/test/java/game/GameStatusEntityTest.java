@@ -56,7 +56,7 @@ public class GameStatusEntityTest {
 	void 경기상태_생성_실패_gameSchedule_null() {
 
 		assertThatThrownBy(
-			() -> GameStatusEntity.create(gameSchedule)
+			() -> GameStatusEntity.create(null)
 		).isInstanceOfSatisfying(
 			FieldValidationException.class, ex -> {
 				log.info("경기상태 엔티티 : {}", ex.getMessage());
