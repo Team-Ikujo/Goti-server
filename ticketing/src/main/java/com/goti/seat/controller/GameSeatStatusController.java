@@ -29,7 +29,7 @@ public class GameSeatStatusController {
 
 	@Operation(
 		summary = "경기별 좌석 상태 조회",
-		description = "특정 경기의 특정 구역 좌석 상태 목록을 조회하는 API"
+		description = "특정 경기의 특정 구역 좌석 상태 목록 조회 API"
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<List<GameSeatStatusResponse>>> list(
