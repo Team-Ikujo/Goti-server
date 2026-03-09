@@ -54,6 +54,8 @@ public enum ErrorCode {
 	GAME_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 경기입니다."),
 
 	ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 주문입니다."),
+	ORDER_PAYMENT_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "결제 가능한 주문 상태가 아닙니다."),
+	PAYMENT_IDEMPOTENCY_KEY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 사용된 결제 멱등 키입니다."),
 
 	SEAT_GRADE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 동일한 좌석 등급이 존재합니다."),
 	SEAT_GRADE_NOT_FOUND(HttpStatus.NOT_FOUND, "좌석 등급 정보를 찾을 수 없습니다."),
