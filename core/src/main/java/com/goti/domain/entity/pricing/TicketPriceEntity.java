@@ -44,7 +44,7 @@ public class TicketPriceEntity extends ModificationTimestampEntity {
 	private TicketPricingPolicyEntity policy;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "age_type", nullable = false)
+	@Column(nullable = false)
 	private TicketType ticketType;
 
 	@Enumerated(EnumType.STRING)
