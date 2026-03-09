@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 	private static final String MOCK_PG_PROVIDER = "MOCK";
+	private static final String MOCK_PAYMENT_FAILED_REASON = "mock 결제 실패";
 
 	private final OrderRepository orderRepository;
 	private final PaymentRepository paymentRepository;
@@ -57,19 +58,33 @@ public class PaymentServiceImpl implements PaymentService {
 			idempotencyKey
 		);
 
-		PaymentEntity savedPayment = paymentRepository.save(payment);
+		if (shouldFail(idempotencyKey)) {
+			payment.fail(MOCK_PAYMENT_FAILED_REASON);
+		} else {
+			payment.succeed(generateMockPgTid());
+		}
+
+		paymentRepository.save(payment);
 
 		return PaymentResponse.from(
-			savedPayment.getId(),
-			savedPayment.getOrder().getId(),
-			savedPayment.getPaymentType(),
-			savedPayment.getPaymentMethod(),
-			savedPayment.getPaymentAmount(),
-			savedPayment.getPgProvider(),
-			savedPayment.getPgTid(),
-			savedPayment.getPaymentStatus(),
-			savedPayment.getPaidAt(),
-			null
+			payment.getId(),
+			payment.getOrder().getId(),
+			payment.getPaymentType(),
+			payment.getPaymentMethod(),
+			payment.getPaymentAmount(),
+			payment.getPgProvider(),
+			payment.getPgTid(),
+			payment.getPaymentStatus(),
+			payment.getPaidAt(),
+			payment.getFailedReason()
 		);
+	}
+
+	private boolean shouldFail(String idempotencyKey) {
+		return idempotencyKey.toLowerCase().contains("fail");
+	}
+
+	private String generateMockPgTid() {
+		return "mock-" + UUID.randomUUID();
 	}
 }
