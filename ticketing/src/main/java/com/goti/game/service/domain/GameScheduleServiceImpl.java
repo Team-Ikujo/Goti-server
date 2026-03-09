@@ -35,7 +35,7 @@ public class GameScheduleServiceImpl implements GameScheduleService {
 			homeTeamId, awayTeamId, startAt
 		);
 
-		Preconditions.validate(isExists, ErrorCode.GAME_ALREADY_EXISTS);
+		Preconditions.validate(!isExists, ErrorCode.GAME_ALREADY_EXISTS);
 		GameScheduleEntity gameSchedule = GameScheduleEntity.create(
 			homeTeamId, awayTeamId, stadiumId, startAt, leagueType
 		);
