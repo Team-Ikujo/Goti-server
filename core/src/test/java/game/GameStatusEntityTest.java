@@ -49,7 +49,7 @@ public class GameStatusEntityTest {
 		assertThat(gameStatus.getGameStatus()).isEqualTo(GameStatus.SCHEDULED);
 		assertThat(gameStatus.getHomeTeamScore()).isEqualTo(0);
 		assertThat(gameStatus.getAwayTeamScore()).isEqualTo(0);
-		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.NONE);
+		assertThat(gameStatus.getGameResult()).isEqualTo(GameResult.PENDING);
 
 		log.info("gameStatus : {}", gameStatus.getGameStatus());
 		log.info("score : {}:{}", gameStatus.getHomeTeamScore(), gameStatus.getAwayTeamScore());
