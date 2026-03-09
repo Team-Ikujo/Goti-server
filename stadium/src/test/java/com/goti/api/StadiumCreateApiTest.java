@@ -65,7 +65,13 @@ public class StadiumCreateApiTest {
 		)
 			.andDo(print())
 			.andExpectAll(
-				status().isOk()
+				status().isOk(),
+				jsonPath("$.code").value("ok"),
+				jsonPath("$.message").value("성공"),
+				jsonPath("$.data").exists(),
+				jsonPath("$.data.stadiumId").exists(),
+				jsonPath("$.data.stadiumName").value(STADIUM_NAME),
+				jsonPath("$.data.roadAddress").value(ROAD_ADDRESS)
 			);
 	}
 }

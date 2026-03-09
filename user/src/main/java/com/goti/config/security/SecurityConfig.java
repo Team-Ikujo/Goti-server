@@ -31,7 +31,7 @@ public class SecurityConfig {
 
 	public static final String[] PERMIT_PUBLIC_PATH = {
 		"/api/v1/auth/**",
-		"/api/v1/stadium/**",
+		"/api/v1/stadiums/**",
 		"/actuator/**",
 		"/swagger-ui/**",
 		"/v3/api-docs/**",
