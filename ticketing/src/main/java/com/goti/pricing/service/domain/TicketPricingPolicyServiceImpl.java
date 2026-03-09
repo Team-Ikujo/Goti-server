@@ -2,13 +2,17 @@ package com.goti.pricing.service.domain;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.goti.constants.TicketPricingDayType;
+import com.goti.constants.TicketPricingMatchType;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.domain.entity.pricing.TicketPriceEntity;
 import com.goti.domain.entity.pricing.TicketPricingPolicyEntity;
@@ -45,7 +49,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 		ticketPricingPolicyRepository.save(policy);
 
 		Map<UUID, SeatGradeEntity> gradesById = getGrades(ticketPriceRequest);
-		validateDuplicateticketPrice(policy, ticketPriceRequest);
+		validateDuplicateticketPrice(ticketPriceRequest);
 
 		List<TicketPriceEntity> ticketPrices = ticketPriceRequest.stream()
 			.map(price -> TicketPriceEntity.create(
@@ -86,19 +90,28 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 	}
 
 	private void validateDuplicateticketPrice(
-		TicketPricingPolicyEntity policy,
 		List<TicketPriceCreateParam> ticketPriceRequest
 	) {
+		Set<TicketPriceCondition> uniqueConditions = new HashSet<>();
+
 		for (TicketPriceCreateParam price : ticketPriceRequest) {
 			Preconditions.validate(
-				!ticketPriceRepository.existsDuplicateTicketPrice(
-					policy,
-					price.gradeId(),
-					price.dayType(),
-					price.matchType()
+				uniqueConditions.add(
+					new TicketPriceCondition(
+						price.gradeId(),
+						price.dayType(),
+						price.matchType()
+					)
 				),
 				ErrorCode.TICKET_PRICE_CONDITION_ALREADY_EXISTS
 			);
 		}
+	}
+
+	private record TicketPriceCondition(
+		UUID gradeId,
+		TicketPricingDayType dayType,
+		TicketPricingMatchType matchType
+	) {
 	}
 }
