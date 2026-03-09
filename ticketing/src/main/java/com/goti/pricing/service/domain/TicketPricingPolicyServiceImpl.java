@@ -1,12 +1,13 @@
 package com.goti.pricing.service.domain;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,20 +74,13 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 			.toList();
 
 		List<SeatGradeEntity> grades = seatGradeRepository.findAllById(gradeIds);
+		Preconditions.validate(
+			grades.size() == gradeIds.size(),
+			ErrorCode.SEAT_GRADE_NOT_FOUND
+		);
 
-		Map<UUID, SeatGradeEntity> gradesById = new HashMap<>();
-		for (SeatGradeEntity grade : grades) {
-			gradesById.put(grade.getId(), grade);
-		}
-
-		for (UUID gradeId : gradeIds) {
-			Preconditions.validate(
-				gradesById.containsKey(gradeId),
-				ErrorCode.SEAT_GRADE_NOT_FOUND
-			);
-		}
-
-		return gradesById;
+		return grades.stream()
+			.collect(Collectors.toMap(SeatGradeEntity::getId, Function.identity()));
 	}
 
 	private void validateDuplicateticketPrice(
