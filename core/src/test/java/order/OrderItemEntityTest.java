@@ -23,8 +23,8 @@ import com.goti.exception.FieldValidationException;
 @ActiveProfiles("test")
 class OrderItemEntityTest {
 
-	private OrderEntity order;
-	private SeatEntity seat;
+	OrderEntity order;
+	SeatEntity seat;
 
 	@BeforeEach
 	void setup() {
