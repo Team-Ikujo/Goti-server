@@ -15,9 +15,9 @@ import com.goti.exception.FieldValidationException;
 @ActiveProfiles("test")
 class TicketPricingPolicyEntityTest {
 
-	private UUID teamId;
-	private LocalDate policyStartAt;
-	private LocalDate policyEndAt;
+	UUID teamId;
+	LocalDate policyStartAt;
+	LocalDate policyEndAt;
 
 	@BeforeEach
 	void setup() {

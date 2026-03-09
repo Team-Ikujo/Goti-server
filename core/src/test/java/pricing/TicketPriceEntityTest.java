@@ -20,8 +20,8 @@ import com.goti.exception.FieldValidationException;
 @ActiveProfiles("test")
 class TicketPriceEntityTest {
 
-	private SeatGradeEntity grade;
-	private TicketPricingPolicyEntity policy;
+	SeatGradeEntity grade;
+	TicketPricingPolicyEntity policy;
 
 	@BeforeEach
 	void setup() {
