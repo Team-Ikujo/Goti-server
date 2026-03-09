@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +28,7 @@ public interface SeatRepository extends JpaRepository<SeatEntity, UUID> {
 		@Param("seatNums") Collection<Integer> seatNums
 	);
 
+	@EntityGraph(attributePaths = "seatSection")
 	List<SeatEntity> findAllBySeatSection_IdOrderByRowNameAscSeatNumAsc(UUID sectionId);
 
 	long countBySeatSection_Id(UUID sectionId);
