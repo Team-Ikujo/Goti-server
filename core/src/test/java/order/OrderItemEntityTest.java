@@ -66,6 +66,6 @@ class OrderItemEntityTest {
 		assertThatThrownBy(
 			() -> OrderItemEntity.create(order, seat, TicketType.ADULT, -1)
 		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("판매 금액은 0 이상이어야 합니다.");
+			.hasMessageContaining("티켓 가격은 0원 보다 커야합니다");
 	}
 }
