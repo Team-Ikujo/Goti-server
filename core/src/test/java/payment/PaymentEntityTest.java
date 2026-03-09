@@ -25,9 +25,9 @@ import com.goti.exception.FieldValidationException;
 @ActiveProfiles("test")
 class PaymentEntityTest {
 
-	private OrderEntity order;
-	private Integer paymentAmount;
-	private String idempotencyKey;
+	OrderEntity order;
+	Integer paymentAmount;
+	String idempotencyKey;
 
 	@BeforeEach
 	void setup() {
