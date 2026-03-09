@@ -1,7 +1,6 @@
 package com.goti.payment.dto.request;
 
 import com.goti.constants.PaymentMethod;
-import com.goti.constants.PaymentStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
