@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goti.domain.entity.game.GameScheduleEntity;
@@ -18,10 +21,10 @@ import com.goti.exception.FieldValidationException;
 @ActiveProfiles("test")
 class OrdererEntityTest {
 
-	private OrderEntity order;
-	private String name;
-	private String mobile;
-	private String email;
+	OrderEntity order;
+	String name;
+	String mobile;
+	String email;
 
 	@BeforeEach
 	void setup() {
@@ -55,26 +58,32 @@ class OrdererEntityTest {
 		assertThat(orderer.getEmail()).isEqualTo(email);
 	}
 
-	@Test
-	void 구매자정보_생성_실패_이름_공백() {
+	@ParameterizedTest
+	@NullAndEmptySource
+	@ValueSource(strings = {" ", "   "})
+	void 구매자정보_생성_실패_이름_빈값(String invalidName) {
 		assertThatThrownBy(
-			() -> OrdererEntity.create(order, " ", mobile, email)
+			() -> OrdererEntity.create(order, invalidName, mobile, email)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("구매자 이름은 비어 있을 수 없습니다.");
 	}
 
-	@Test
-	void 구매자정보_생성_실패_연락처_공백() {
+	@ParameterizedTest
+	@NullAndEmptySource
+	@ValueSource(strings = {" ", "   "})
+	void 구매자정보_생성_실패_연락처_빈값(String invalidMobile) {
 		assertThatThrownBy(
-			() -> OrdererEntity.create(order, name, " ", email)
+			() -> OrdererEntity.create(order, name, invalidMobile, email)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("구매자 연락처는 비어 있을 수 없습니다.");
 	}
 
-	@Test
-	void 구매자정보_생성_실패_이메일_공백() {
+	@ParameterizedTest
+	@NullAndEmptySource
+	@ValueSource(strings = {" ", "   "})
+	void 구매자정보_생성_실패_이메일_빈값(String invalidEmail) {
 		assertThatThrownBy(
-			() -> OrdererEntity.create(order, name, mobile, " ")
+			() -> OrdererEntity.create(order, name, mobile, invalidEmail)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("구매자 이메일은 비어 있을 수 없습니다.");
 	}

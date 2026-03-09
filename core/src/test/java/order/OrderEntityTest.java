@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goti.constants.OrderStatus;
@@ -59,11 +62,13 @@ class OrderEntityTest {
 		assertThat(order.getCanceledAt()).isNull();
 	}
 
-	@Test
-	void 주문_생성_실패_주문번호_빈값() {
+	@ParameterizedTest
+	@NullAndEmptySource
+	@ValueSource(strings = {" ", "   "})
+	void 주문_생성_실패_주문번호_빈값(String invalidOrderNumber) {
 		assertThatThrownBy(
 			() -> OrderEntity.create(
-				" ",
+				invalidOrderNumber,
 				userId,
 				gameSchedule,
 				totalQuantity,

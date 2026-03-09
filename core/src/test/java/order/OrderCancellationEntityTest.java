@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goti.constants.OrderCancellationRequestType;
@@ -111,8 +114,10 @@ class OrderCancellationEntityTest {
 			.hasMessageContaining("총 환불액은 0 이상이어야 합니다.");
 	}
 
-	@Test
-	void 주문취소_생성_실패_멱등키_공백() {
+	@ParameterizedTest
+	@NullAndEmptySource
+	@ValueSource(strings = {" ", "   "})
+	void 주문취소_생성_실패_멱등키_공백(String invalidIdempotencyKey) {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
@@ -120,7 +125,7 @@ class OrderCancellationEntityTest {
 				requestedBy,
 				refundAmountTotal,
 				feeAmountTotal,
-				" "
+				invalidIdempotencyKey
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("멱등 키는 비어 있을 수 없습니다.");
