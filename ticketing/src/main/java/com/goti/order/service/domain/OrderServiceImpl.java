@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.goti.domain.entity.game.GameScheduleEntity;
 import com.goti.domain.entity.order.OrderEntity;
+import com.goti.order.dto.request.CreateOrderRequest;
+import com.goti.order.dto.response.CreateOrderResponse;
 import com.goti.order.repository.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,14 @@ public class OrderServiceImpl implements OrderService {
 	private static final DateTimeFormatter ORDER_NUMBER_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
 	private final OrderRepository orderRepository;
+	private final OrdererService ordererService;
 
 	@Override
 	@Transactional
-	public OrderEntity create(
+	public CreateOrderResponse create(
 		GameScheduleEntity gameSchedule,
 		UUID userId,
+		CreateOrderRequest request,
 		Integer totalQuantity,
 		Integer totalAmount
 	) {
@@ -36,7 +40,23 @@ public class OrderServiceImpl implements OrderService {
 			totalAmount
 		);
 
-		return orderRepository.save(order);
+		orderRepository.save(order);
+
+		ordererService.create(
+			order,
+			request.ordererName(),
+			request.ordererPhone(),
+			request.ordererEmail()
+		);
+
+		return CreateOrderResponse.from(
+			order.getId(),
+			order.getOrderNumber(),
+			order.getGameSchedule().getId(),
+			order.getOrderStatus(),
+			order.getTotalQuantity(),
+			order.getTotalAmount()
+		);
 	}
 
 	private String generateOrderNumber() {
