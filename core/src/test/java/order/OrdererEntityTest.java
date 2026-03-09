@@ -20,7 +20,7 @@ class OrdererEntityTest {
 
 	private OrderEntity order;
 	private String name;
-	private String phone;
+	private String mobile;
 	private String email;
 
 	@BeforeEach
@@ -41,24 +41,24 @@ class OrdererEntityTest {
 			24000
 		);
 		name = "홍길동";
-		phone = "01012345678";
+		mobile = "01012345678";
 		email = "orderer@goti.com";
 	}
 
 	@Test
 	void 구매자정보_생성_성공() {
-		OrdererEntity orderer = OrdererEntity.create(order, name, phone, email);
+		OrdererEntity orderer = OrdererEntity.create(order, name, mobile, email);
 
 		assertThat(orderer.getOrder()).isEqualTo(order);
 		assertThat(orderer.getName()).isEqualTo(name);
-		assertThat(orderer.getPhone()).isEqualTo(phone);
+		assertThat(orderer.getMobile()).isEqualTo(mobile);
 		assertThat(orderer.getEmail()).isEqualTo(email);
 	}
 
 	@Test
 	void 구매자정보_생성_실패_이름_공백() {
 		assertThatThrownBy(
-			() -> OrdererEntity.create(order, " ", phone, email)
+			() -> OrdererEntity.create(order, " ", mobile, email)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("구매자 이름은 비어 있을 수 없습니다.");
 	}
@@ -74,7 +74,7 @@ class OrdererEntityTest {
 	@Test
 	void 구매자정보_생성_실패_이메일_공백() {
 		assertThatThrownBy(
-			() -> OrdererEntity.create(order, name, phone, " ")
+			() -> OrdererEntity.create(order, name, mobile, " ")
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("구매자 이메일은 비어 있을 수 없습니다.");
 	}
