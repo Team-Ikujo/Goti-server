@@ -35,7 +35,7 @@ public class GameScheduleController {
 
 	@Operation(
 		summary = "경기 일정 생성",
-		description = "야구 경기 일정을 생성하는 API"
+		description = "야구 경기 일정 생성 API"
 	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<GameResponse>> create(
@@ -47,7 +47,7 @@ public class GameScheduleController {
 
 	@Operation(
 		summary = "경기 일정 전체 조회",
-		description = "페이지 기반으로 야구 경기 일정을 조회하는 API"
+		description = "페이지 기반 야구 경기 일정 조회 API"
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<PageResponse<GameResponse>>> getGames(
@@ -58,7 +58,7 @@ public class GameScheduleController {
 
 	@Operation(
 		summary = "경기 일정 단건 조회",
-		description = "게임 ID로 야구 경기 일정을 상세 조회하는 API"
+		description = "야구 경기 일정 상세 조회 API"
 	)
 	@GetMapping("/{gameId}")
 	public ResponseEntity<ApiSuccessResponse<GameResponse>> getGame(
