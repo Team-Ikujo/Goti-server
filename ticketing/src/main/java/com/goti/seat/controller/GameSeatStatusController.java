@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Game Seat Status", description = "경기별 좌석 상태 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/games/{gameId}/seat-statuses")
+@RequestMapping("/api/v1/games")
 public class GameSeatStatusController {
 	private final SeatStatusService seatStatusService;
 
@@ -31,10 +31,10 @@ public class GameSeatStatusController {
 		summary = "경기별 좌석 상태 조회",
 		description = "특정 경기의 특정 구역 좌석 상태 목록 조회 API"
 	)
-	@GetMapping
+	@GetMapping("/{gameId}/sections/{sectionId}/seat-statuses")
 	public ResponseEntity<ApiSuccessResponse<List<GameSeatStatusResponse>>> list(
 		@PathVariable UUID gameId,
-		@RequestParam UUID sectionId
+		@PathVariable UUID sectionId
 	) {
 		return wrap(seatStatusService.get(gameId, sectionId));
 	}
