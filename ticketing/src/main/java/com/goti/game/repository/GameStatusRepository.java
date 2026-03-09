@@ -11,6 +11,6 @@ import java.util.UUID;
 import java.util.Optional;
 
 @Repository
-public interface BaseballGameStatusRepository extends JpaRepository<GameStatusEntity, UUID> {
+public interface GameStatusRepository extends JpaRepository<GameStatusEntity, UUID> {
 	Optional<GameStatusEntity> findByGameSchedule(GameScheduleEntity gameSchedule);
 }
