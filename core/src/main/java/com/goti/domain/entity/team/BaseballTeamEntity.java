@@ -163,7 +163,7 @@ public class BaseballTeamEntity extends ModificationTimestampEntity {
 
 		Preconditions.domainValidate(
 			StringUtils.hasText(teamName),
-			"구단(팀)이름은 비어있을 수 없습니다."
+			"구단(팀)명은 비어있을 수 없습니다."
 		);
 
 		Preconditions.domainValidate(
