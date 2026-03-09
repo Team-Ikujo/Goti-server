@@ -15,11 +15,11 @@ import com.goti.domain.entity.seat.SeatEntity;
 public interface SeatRepository extends JpaRepository<SeatEntity, UUID> {
 
 	@Query("""
-		select seat
-		from SeatEntity seat
-		where seat.seatSection.id = :sectionId
-		  and seat.rowName = :rowName
-		  and seat.seatNum in :seatNums
+		SELECT seat
+			FROM SeatEntity seat
+		WHERE seat.seatSection.id = :sectionId
+		  AND seat.rowName = :rowName
+		  AND seat.seatNum in :seatNums
 	""")
 	List<SeatEntity> findExistingSeats(
 		@Param("sectionId") UUID sectionId,
