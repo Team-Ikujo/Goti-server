@@ -64,13 +64,12 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private String generateOrderNumber() {
-		String orderNumber = "ORD-" + LocalDateTime.now().format(ORDER_NUMBER_FORMATTER)
-			+ "-" + UUID.randomUUID().toString().substring(0, 8);
-
-		if (orderRepository.existsByOrderNumber(orderNumber)) {
-			return generateOrderNumber();
-		}
-
+		String orderNumber;
+		do {
+			orderNumber = "ORD-" + LocalDateTime.now().format(ORDER_NUMBER_FORMATTER)
+				+ "-" + UUID.randomUUID().toString().substring(0, 8);
+		} while (orderRepository.existsByOrderNumber(orderNumber));
 		return orderNumber;
 	}
+
 }
