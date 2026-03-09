@@ -68,6 +68,9 @@ public class PaymentEntity extends ModificationTimestampEntity {
 
 	private LocalDateTime paidAt;
 
+	@Column(columnDefinition = "TEXT")
+	private String failedReason;
+
 	@Column(nullable = false, unique = true)
 	private String idempotencyKey;
 
@@ -89,6 +92,7 @@ public class PaymentEntity extends ModificationTimestampEntity {
 		this.pgTid = pgTid;
 		this.paymentStatus = PaymentStatus.PENDING;
 		this.paidAt = null;
+		this.failedReason = null;
 		this.idempotencyKey = idempotencyKey;
 	}
 
@@ -117,6 +121,31 @@ public class PaymentEntity extends ModificationTimestampEntity {
 			pgTid,
 			idempotencyKey
 		);
+	}
+
+	public void succeed(String pgTid) {
+		Preconditions.domainValidate(
+			this.paymentStatus == PaymentStatus.PENDING,
+			"PENDING 상태에서만 결제 성공 처리할 수 있습니다."
+		);
+		this.paymentStatus = PaymentStatus.SUCCESS;
+		this.pgTid = pgTid;
+		this.paidAt = LocalDateTime.now();
+		this.failedReason = null;
+	}
+
+	public void fail(String failedReason) {
+		Preconditions.domainValidate(
+			this.paymentStatus == PaymentStatus.PENDING,
+			"PENDING 상태에서만 결제 실패 처리할 수 있습니다."
+		);
+		Preconditions.domainValidate(
+			StringUtils.hasText(failedReason),
+			"결제 실패 사유는 비어 있을 수 없습니다."
+		);
+		this.paymentStatus = PaymentStatus.FAILED;
+		this.paidAt = null;
+		this.failedReason = failedReason;
 	}
 
 	private static void validate(
