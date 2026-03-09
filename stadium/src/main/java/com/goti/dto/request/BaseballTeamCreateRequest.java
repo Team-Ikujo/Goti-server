@@ -34,11 +34,11 @@ public record BaseballTeamCreateRequest(
 	@NotNull(message = "구단(팀) 창단년도는 필수 항목입니다.")
 	Integer foundedYear,
 
-	@Schema(description = "창단년도", example = "대구광역시 수성구 야구전설로 1")
+	@Schema(description = "도로명주소", example = "대구광역시 수성구 야구전설로 1")
 	@NotBlank(message = "구단(팀) 사무실 도로명 주소는 필수 항목입니다.")
 	String officeAddress,
 
-	@Schema(description = "구단사무실 우편주소", example = "42250")
+	@Schema(description = "구단 사무실 우편주소", example = "42250")
 	@NotBlank(message = "구단(팀) 사무실 우편주소는 필수 항목입니다.")
 	String zipCode,
 
