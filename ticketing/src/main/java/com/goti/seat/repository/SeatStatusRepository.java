@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.goti.domain.entity.game.GameScheduleEntity;
+
+import com.goti.domain.entity.seat.SeatEntity;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,5 +28,5 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 		@Param("gameId") UUID gameId,
 		@Param("sectionId") UUID sectionId
 	);
-	Optional<SeatStatusEntity> findByGame_IdAndSeat_Id(UUID gameId, UUID seatId);
+	Optional<SeatStatusEntity> findByGameAndSeat(GameScheduleEntity game, SeatEntity seat);
 }
