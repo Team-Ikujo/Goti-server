@@ -1,6 +1,6 @@
 package com.goti.seat.service.application;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class SeatHoldTransactionalService {
 			seatStatus.getGame(),
 			userId,
 			queueTokenJti,
-			Instant.now().plus(seatHoldProperties.ttl())
+			LocalDateTime.now().plus(seatHoldProperties.ttl())
 		);
 
 		return seatHoldRepository.save(seatHold).getId();

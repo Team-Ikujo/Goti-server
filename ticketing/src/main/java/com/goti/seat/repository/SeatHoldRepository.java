@@ -1,6 +1,6 @@
 package com.goti.seat.repository;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ import com.goti.domain.entity.seat.SeatHoldEntity;
 public interface SeatHoldRepository extends JpaRepository<SeatHoldEntity, UUID> {
 	List<SeatHoldEntity> findByStatusAndExpiredAtBeforeOrderByExpiredAtAsc(
 		SeatHoldStatus status,
-		Instant now,
+		LocalDateTime now,
 		Pageable pageable
 	);
 }

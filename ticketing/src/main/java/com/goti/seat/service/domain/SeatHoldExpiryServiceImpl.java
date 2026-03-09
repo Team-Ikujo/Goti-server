@@ -5,7 +5,7 @@ import com.goti.domain.entity.seat.SeatStatusEntity;
 import com.goti.global.validation.Preconditions;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Service
 public class SeatHoldExpiryServiceImpl implements SeatHoldExpiryService {
@@ -14,7 +14,7 @@ public class SeatHoldExpiryServiceImpl implements SeatHoldExpiryService {
 	public void expire(
 		SeatStatusEntity seatStatus,
 		SeatHoldEntity seatHold,
-		Instant now
+		LocalDateTime now
 	) {
 		Preconditions.domainValidate(seatStatus != null, "좌석 상태는 필수입니다.");
 		Preconditions.domainValidate(seatHold != null, "좌석 점유 정보는 필수입니다.");

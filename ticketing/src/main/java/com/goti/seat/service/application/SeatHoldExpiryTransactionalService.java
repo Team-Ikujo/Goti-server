@@ -1,6 +1,6 @@
 package com.goti.seat.service.application;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class SeatHoldExpiryTransactionalService {
 	private final SeatHoldExpiryService seatHoldExpiryService;
 
 	@Transactional
-	public void expire(UUID holdId, Instant now) {
+	public void expire(UUID holdId, LocalDateTime now) {
 		SeatHoldEntity seatHold = seatHoldRepository.findById(holdId)
 			.orElseThrow(() -> new CustomException(ErrorCode.SEAT_HOLD_NOT_FOUND));
 

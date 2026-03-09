@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +23,7 @@ public class SeatHoldExpiryService {
 
 	// TODO: 동시성 및 hold/release/expire 경합 상황 테스트 추가
 	public SeatHoldExpiryBatchResult expireHolds(int batchSize) {
-		Instant now = Instant.now();
+		LocalDateTime now = LocalDateTime.now();
 		List<SeatHoldEntity> expiredHolds = seatHoldRepository.findByStatusAndExpiredAtBeforeOrderByExpiredAtAsc(
 			SeatHoldStatus.HOLDING,
 			now,
@@ -64,7 +64,7 @@ public class SeatHoldExpiryService {
 
 	private boolean expireOne(
 		SeatHoldEntity seatHold,
-		Instant now
+		LocalDateTime now
 	) {
 		UUID gameId = seatHold.getGameSchedule().getId();
 		UUID seatId = seatHold.getSeat().getId();
