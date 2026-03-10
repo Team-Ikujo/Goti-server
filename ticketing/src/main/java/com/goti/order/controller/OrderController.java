@@ -4,19 +4,19 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 
 import java.util.UUID;
 
+import com.goti.order.dto.response.OrderCreateResponse;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
-import com.goti.order.dto.request.CreateOrderRequest;
-import com.goti.order.dto.response.CreateOrderResponse;
-import com.goti.order.service.domain.OrderService;
+import com.goti.order.dto.request.OrderCreateRequest;
+import com.goti.order.service.application.OrderCreateService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,18 +28,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/games")
 public class OrderController {
-	private final OrderService orderService;
+	private final OrderCreateService orderCreateService;
 
 	@Operation(
 		summary = "주문 생성",
-		description = "특정 경기의 hold 좌석 기준으로 주문을 생성하는 API"
+		description = "주문 생성 API"
 	)
 	@PostMapping("/{gameId}/orders")
-	public ResponseEntity<ApiSuccessResponse<CreateOrderResponse>> create(
+	public ResponseEntity<ApiSuccessResponse<OrderCreateResponse>> create(
 		@PathVariable UUID gameId,
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@Valid @RequestBody CreateOrderRequest request
+		@Valid @RequestBody OrderCreateRequest request
 	) {
-		return wrap(orderService.create(gameId, userId, request));
+		return wrap(orderCreateService.create(gameId, userId, request));
 	}
 }
