@@ -35,15 +35,15 @@ public class SecurityConfig {
 		"/api/v1/games/**",
 		"/actuator/**",
 		"/swagger-ui/**",
-		"/v3/api-docs/**",
-		"/api/v1/games",
-		"/api/v1/seats"
+		"/v3/api-docs/**"
 	};
 
 	public static final String[] PERMIT_MEMBER_PATH = {
 		"/api/v1/resale/listings/**",
 		"/api/v1/resale/transactions/**",
-		"/api/v1/resale/holds/**"
+		"/api/v1/resale/holds/**",
+		"/api/v1/resale/transactions/**",
+		"/api/v1/games/**"
 	};
 
 	@Bean
