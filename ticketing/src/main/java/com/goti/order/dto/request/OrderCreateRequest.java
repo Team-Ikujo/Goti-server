@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "점유 좌석 기반 주문 생성 요청")
-public record CreateOrderRequest(
+public record OrderCreateRequest(
 	@Schema(description = "경기 ID", example = "11111111-1111-1111-1111-111111111111")
 	@NotNull(message = "경기 ID는 필수입니다.")
 	UUID gameId,

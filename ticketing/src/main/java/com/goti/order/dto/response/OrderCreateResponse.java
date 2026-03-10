@@ -1,6 +1,5 @@
 package com.goti.order.dto.response;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.goti.constants.OrderStatus;
@@ -8,7 +7,7 @@ import com.goti.constants.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "점유 좌석 기반 주문 생성 응답")
-public record CreateOrderResponse(
+public record OrderCreateResponse(
 	@Schema(description = "주문 ID", example = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 	UUID orderId,
 
@@ -27,7 +26,7 @@ public record CreateOrderResponse(
 	@Schema(description = "총 금액", example = "24000")
 	Integer totalAmount
 ) {
-	public static CreateOrderResponse from(
+	public static OrderCreateResponse from(
 		UUID orderId,
 		String orderNumber,
 		UUID gameId,
@@ -35,7 +34,7 @@ public record CreateOrderResponse(
 		Integer totalQuantity,
 		Integer totalAmount
 	) {
-		return new CreateOrderResponse(
+		return new OrderCreateResponse(
 			orderId,
 			orderNumber,
 			gameId,

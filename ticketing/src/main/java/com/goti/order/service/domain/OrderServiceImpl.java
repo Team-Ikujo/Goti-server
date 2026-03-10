@@ -12,8 +12,8 @@ import com.goti.domain.entity.game.GameScheduleEntity;
 import com.goti.domain.entity.order.OrderEntity;
 import com.goti.exception.CustomException;
 import com.goti.game.repository.GameScheduleRepository;
-import com.goti.order.dto.request.CreateOrderRequest;
-import com.goti.order.dto.response.CreateOrderResponse;
+import com.goti.order.dto.request.OrderCreateRequest;
+import com.goti.order.dto.response.OrderCreateResponse;
 import com.goti.order.repository.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public CreateOrderResponse create(
+	public OrderCreateResponse create(
 		UUID userId,
-		CreateOrderRequest request
+		OrderCreateRequest request
 	) {
 		GameScheduleEntity gameSchedule = gameScheduleRepository.findById(request.gameId())
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
 			request.ordererEmail()
 		);
 
-		return CreateOrderResponse.from(
+		return OrderCreateResponse.from(
 			order.getId(),
 			order.getOrderNumber(),
 			order.getGameSchedule().getId(),

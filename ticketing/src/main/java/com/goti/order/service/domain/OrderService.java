@@ -2,12 +2,12 @@ package com.goti.order.service.domain;
 
 import java.util.UUID;
 
-import com.goti.order.dto.request.CreateOrderRequest;
-import com.goti.order.dto.response.CreateOrderResponse;
+import com.goti.order.dto.request.OrderCreateRequest;
+import com.goti.order.dto.response.OrderCreateResponse;
 
 public interface OrderService {
-	CreateOrderResponse create(
+	OrderCreateResponse create(
 		UUID userId,
-		CreateOrderRequest request
+		OrderCreateRequest request
 	);
 }
