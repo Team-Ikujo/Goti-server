@@ -9,5 +9,4 @@ import com.goti.domain.entity.order.OrderEntity;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
-	boolean existsByOrderNumber(String orderNumber);
 }
