@@ -54,7 +54,7 @@ public class OrderCreateService {
 		GameScheduleEntity gameSchedule = gameScheduleRepository.findById(gameId)
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
-		List<SeatHoldEntity> holds = seatHoldRepository.findAllById(request.holdIds());
+		List<SeatHoldEntity> holds = seatHoldRepository.findAllWithDetailsByIdIn(request.holdIds());
 		validateHolds(request.holdIds(), holds, gameId, userId);
 		validateOrderedSeats(gameId, holds);
 
