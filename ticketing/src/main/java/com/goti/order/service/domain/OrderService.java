@@ -2,12 +2,14 @@ package com.goti.order.service.domain;
 
 import java.util.UUID;
 
-import com.goti.order.dto.request.OrderCreateRequest;
-import com.goti.order.dto.response.OrderCreateResponse;
+import com.goti.domain.entity.game.GameScheduleEntity;
+import com.goti.domain.entity.order.OrderEntity;
 
 public interface OrderService {
-	OrderCreateResponse create(
+	OrderEntity create(
 		UUID userId,
-		OrderCreateRequest request
+		GameScheduleEntity gameSchedule,
+		Integer totalQuantity,
+		Integer totalAmount
 	);
 }
