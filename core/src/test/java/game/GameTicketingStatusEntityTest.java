@@ -5,12 +5,15 @@ import com.goti.domain.entity.game.GameScheduleEntity;
 
 import com.goti.domain.entity.game.GameTicketingStatusEntity;
 
+import com.goti.domain.entity.seat.SeatSectionEntity;
 import com.goti.exception.FieldValidationException;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -91,6 +94,9 @@ public class GameTicketingStatusEntityTest {
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("예매 종료 시점은 현재보다 미래여야 합니다.");
+		GameTicketingStatusEntity gameTicketingStatus = GameTicketingStatusEntity.create(
+			gameSchedule, OPENED_AT, CLOSED_AT
+		);
 	}
 
 	@Test
