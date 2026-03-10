@@ -15,7 +15,7 @@ import com.goti.domain.entity.order.OrderItemEntity;
 public interface OrderItemRepository extends JpaRepository<OrderItemEntity, UUID> {
 	@Query("""
 		SELECT COUNT(orderItem) > 0
-		FROM OrderItemEntity orderItem
+			FROM OrderItemEntity orderItem
 		WHERE orderItem.order.gameSchedule.id = :gameId
 		  AND orderItem.seat.id IN :seatIds
 		  AND orderItem.itemStatus IN :statuses
