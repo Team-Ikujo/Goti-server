@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Seat Grade", description = "좌석 등급 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/seat-grades")
+@RequestMapping("/api/v1/stadiums")
 public class SeatGradeController {
 	private final SeatGradeService seatGradeService;
 
@@ -37,7 +38,7 @@ public class SeatGradeController {
 		summary = "좌석 등급 생성",
 		description = "구장별 좌석 등급 생성 API"
 	)
-	@PostMapping
+	@PostMapping("/seat-grades")
 	public ResponseEntity<ApiSuccessResponse<SeatGradeResponse>> create(
 		@Valid @RequestBody CreateSeatGradeRequest request
 	) {
@@ -53,10 +54,10 @@ public class SeatGradeController {
 		summary = "좌석 등급 조회",
 		description = "구장별 좌석 등급 조회 API"
 	)
-	@GetMapping
+	@GetMapping("/{stadiumId}/seat-grades")
 	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> list(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@RequestParam UUID stadiumId
+		@PathVariable UUID stadiumId
 	) {
 		return wrap(seatGradeService.get(stadiumId, userId));
 	}
