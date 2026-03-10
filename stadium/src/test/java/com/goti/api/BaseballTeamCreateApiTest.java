@@ -70,7 +70,11 @@ public class BaseballTeamCreateApiTest {
 				jsonPath("$.data").exists(),
 				jsonPath("$.data.teamId").exists(),
 				jsonPath("$.data.teamCode").value(request.teamCode().toString()),
-				jsonPath("$.data.teamName").value(request.teamName())
+				jsonPath("$.data.teamName").value(request.teamName()),
+				jsonPath("$.data.teamNameEn").value(request.teamNameEn()),
+				jsonPath("$.data.homeGround").value(request.homeGround()),
+				jsonPath("$.data.owner").value(request.owner()),
+				jsonPath("$.data.director").value(request.director())
 			);
 	}
 
