@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TicketSaleStatus {
+public enum TicketingStatus {
 	UPCOMING("판매 예정"),
 	OPEN("판매 중"),
 	SOLD_OUT("매진"),
