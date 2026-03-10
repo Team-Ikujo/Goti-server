@@ -49,6 +49,11 @@ public class OrderCreateService {
 		UUID userId,
 		OrderCreateRequest request
 	) {
+		Preconditions.validate(
+			userId != null,
+			ErrorCode.AUTH_INVALID
+		);
+
 		validateDuplicateHoldIds(request.holdIds());
 
 		GameScheduleEntity gameSchedule = gameScheduleRepository.findById(gameId)
