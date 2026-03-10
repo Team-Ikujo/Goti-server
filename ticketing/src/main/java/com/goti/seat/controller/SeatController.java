@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,8 +55,9 @@ public class SeatController {
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<List<SeatResponse>>> list(
+		@AuthenticationPrincipal(expression = "id") UUID userId,
 		@RequestParam UUID sectionId
 	) {
-		return wrap(seatService.get(sectionId));
+		return wrap(seatService.get(sectionId, userId));
 	}
 }
