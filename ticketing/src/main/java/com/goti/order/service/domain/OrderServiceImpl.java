@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.f4b6a3.tsid.TsidCreator;
 import com.goti.domain.entity.game.GameScheduleEntity;
 import com.goti.domain.entity.order.OrderEntity;
 import com.goti.order.repository.OrderRepository;
@@ -40,12 +41,10 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private String generateOrderNumber() {
-		String orderNumber;
-		do {
-			orderNumber = "ORD-" + LocalDateTime.now().format(ORDER_NUMBER_FORMATTER)
-				+ "-" + UUID.randomUUID().toString().substring(0, 8);
-		} while (orderRepository.existsByOrderNumber(orderNumber));
-		return orderNumber;
+		return "ORD-" +
+			LocalDateTime.now().format(ORDER_NUMBER_FORMATTER) +
+			"-" +
+			TsidCreator.getTsid().toString();
 	}
 
 }
