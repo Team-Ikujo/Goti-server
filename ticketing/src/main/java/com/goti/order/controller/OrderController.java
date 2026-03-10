@@ -5,6 +5,7 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +37,7 @@ public class OrderController {
 	@PostMapping("/{gameId}/orders")
 	public ResponseEntity<ApiSuccessResponse<CreateOrderResponse>> create(
 		@PathVariable UUID gameId,
-		@RequestParam(required = false) UUID userId, // TODO: 인증 컨텍스트에서 조회
+		@AuthenticationPrincipal(expression = "id") UUID userId,
 		@Valid @RequestBody CreateOrderRequest request
 	) {
 		return wrap(orderService.create(gameId, userId, request));
