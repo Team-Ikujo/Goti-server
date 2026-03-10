@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
+@Schema(description = "홈구장 생성")
 public record HomeStadiumCreateRequest(
 
 	@Schema(description = "구단 ID", example = "c2123239-12bb-bded-6113-01cq2bae3ex4")
