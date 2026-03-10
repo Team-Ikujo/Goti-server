@@ -39,6 +39,7 @@ public class SeatSectionController {
 	public ResponseEntity<ApiSuccessResponse<SeatSectionResponse>> create(
 		@Valid @RequestBody CreateSeatSectionRequest request
 	) {
+		// TODO: 관리자용 API 분리 예정
 		SeatSectionResponse response = seatSectionService.create(
 			request.gradeId(),
 			request.stadiumId(),

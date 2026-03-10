@@ -40,6 +40,7 @@ public class SeatController {
 	public ResponseEntity<ApiSuccessResponse<BulkCreateSeatsResponse>> createBulk(
 		@Valid @RequestBody BulkCreateSeatsRequest request
 	) {
+		// TODO: 관리자용 API 분리 예정
 		BulkCreateSeatsResponse response = seatService.create(
 			request.sectionId(),
 			request.rowName(),

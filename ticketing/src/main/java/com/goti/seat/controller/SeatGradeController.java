@@ -39,6 +39,7 @@ public class SeatGradeController {
 	public ResponseEntity<ApiSuccessResponse<SeatGradeResponse>> create(
 		@Valid @RequestBody CreateSeatGradeRequest request
 	) {
+		// TODO: 관리자용 API 분리 예정
 		SeatGradeResponse response = seatGradeService.create(
 			request.stadiumId(),
 			request.name(),
