@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
 
 	private final GameScheduleRepository gameScheduleRepository;
 	private final OrderRepository orderRepository;
-	private final OrdererService ordererService;
+	private final OrderHistoryService orderHistoryService;
 
 	@Override
 	@Transactional
@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
 
 		orderRepository.save(order);
 
-		ordererService.create(
+		orderHistoryService.create(
 			order,
 			request.ordererName(),
 			request.ordererPhone(),
