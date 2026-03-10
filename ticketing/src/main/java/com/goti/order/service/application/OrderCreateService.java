@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.order.dto.response.OrderCreateResponse;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +18,16 @@ import com.goti.domain.entity.order.OrderEntity;
 import com.goti.domain.entity.seat.SeatHoldEntity;
 import com.goti.exception.CustomException;
 import com.goti.game.repository.gameschedule.GameScheduleRepository;
-import com.goti.order.dto.request.OrderCreateRequest;
-import com.goti.order.repository.OrderItemRepository;
-import com.goti.seat.repository.SeatHoldRepository;
 import com.goti.global.validation.Preconditions;
+import com.goti.order.dto.response.OrderCreateResponse;
+import com.goti.order.repository.OrderItemRepository;
+import com.goti.order.service.command.CreateOrderCommand;
 import com.goti.order.service.domain.OrderHistoryService;
 import com.goti.order.service.domain.OrderItemService;
 import com.goti.order.service.domain.OrderPricingResult;
 import com.goti.order.service.domain.OrderPricingService;
 import com.goti.order.service.domain.OrderService;
+import com.goti.seat.repository.SeatHoldRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,29 +43,25 @@ public class OrderCreateService {
 	private final OrderPricingService orderPricingService;
 
 	@Transactional
-	public OrderCreateResponse create(
-		UUID gameId,
-		UUID userId,
-		OrderCreateRequest request
-	) {
+	public OrderCreateResponse create(CreateOrderCommand command) {
 		Preconditions.validate(
-			userId != null,
+			command.userId() != null,
 			ErrorCode.AUTH_INVALID
 		);
 
-		validateDuplicateHoldIds(request.holdIds());
+		validateDuplicateHoldIds(command.holdIds());
 
-		GameScheduleEntity gameSchedule = gameScheduleRepository.findById(gameId)
+		GameScheduleEntity gameSchedule = gameScheduleRepository.findById(command.gameId())
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
-		List<SeatHoldEntity> holds = seatHoldRepository.findAllWithDetailsByIdIn(request.holdIds());
-		validateHolds(request.holdIds(), holds, gameId, userId);
-		validateOrderedSeats(gameId, holds);
+		List<SeatHoldEntity> holds = seatHoldRepository.findAllWithDetailsByIdIn(command.holdIds());
+		validateHolds(command.holdIds(), holds, command.gameId(), command.userId());
+		validateOrderedSeats(command.gameId(), holds);
 
 		OrderPricingResult pricingResult = orderPricingService.calculate(gameSchedule, holds);
 
 		OrderEntity order = orderService.create(
-			userId,
+			command.userId(),
 			gameSchedule,
 			holds.size(),
 			pricingResult.totalAmount()
@@ -74,9 +69,9 @@ public class OrderCreateService {
 
 		orderHistoryService.create(
 			order,
-			request.ordererName(),
-			request.ordererPhone(),
-			request.ordererEmail()
+			command.ordererName(),
+			command.ordererPhone(),
+			command.ordererEmail()
 		);
 
 		createOrderItems(order, pricingResult.pricedHolds());

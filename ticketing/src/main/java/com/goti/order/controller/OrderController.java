@@ -40,6 +40,6 @@ public class OrderController {
 		@AuthenticationPrincipal(expression = "id") UUID userId,
 		@Valid @RequestBody OrderCreateRequest request
 	) {
-		return wrap(orderCreateService.create(gameId, userId, request));
+		return wrap(orderCreateService.create(request.toCommand(gameId, userId)));
 	}
 }
