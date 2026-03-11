@@ -54,7 +54,7 @@ public class OrderPricingServiceImpl implements OrderPricingService {
 	) {
 		return ticketPriceRepository.findApplicableTicketPrice(
 				gameSchedule.getHomeTeamId(),
-				gameSchedule.getPlayDate(),
+				gameSchedule.getStartAt().toLocalDate(),
 				hold.getSeat().getSeatSection().getSeatGrade(),
 				TicketType.ADULT,
 				dayType,
@@ -64,7 +64,7 @@ public class OrderPricingServiceImpl implements OrderPricingService {
 	}
 
 	private TicketPricingDayType resolveDayType(GameScheduleEntity gameSchedule) {
-		DayOfWeek dayOfWeek = gameSchedule.getPlayDate().getDayOfWeek();
+		DayOfWeek dayOfWeek = gameSchedule.getStartAt().getDayOfWeek();
 		return switch (dayOfWeek) {
 			case FRIDAY, SATURDAY, SUNDAY -> TicketPricingDayType.WEEKEND;
 			default -> TicketPricingDayType.WEEKDAY;
