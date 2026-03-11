@@ -172,7 +172,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 			"좌석 정보는 비어 있을 수 없습니다."
 		);
 		Preconditions.domainValidate(
-			ticketPrice != null && ticketPrice >= 0,
+			ticketPrice != null && ticketPrice > 0,
 			"티켓 가격은 0원보다 커야합니다."
 		);
 	}
