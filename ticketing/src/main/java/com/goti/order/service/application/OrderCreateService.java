@@ -45,7 +45,7 @@ public class OrderCreateService {
 	@Transactional
 	public OrderCreateResponse create(CreateOrderCommand command) {
 		Preconditions.validate(
-			command.userId() != null,
+			command.memberId() != null,
 			ErrorCode.AUTH_INVALID
 		);
 
@@ -55,13 +55,13 @@ public class OrderCreateService {
 			.orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
 		List<SeatHoldEntity> holds = seatHoldRepository.findAllWithDetailsByIdIn(command.holdIds());
-		validateHolds(command.holdIds(), holds, command.gameId(), command.userId());
+		validateHolds(command.holdIds(), holds, command.gameId(), command.memberId());
 		validateOrderedSeats(command.gameId(), holds);
 
 		OrderPricingResult pricingResult = orderPricingService.calculate(gameSchedule, holds);
 
 		OrderEntity order = orderService.create(
-			command.userId(),
+			command.memberId(),
 			gameSchedule,
 			holds.size(),
 			pricingResult.totalAmount()

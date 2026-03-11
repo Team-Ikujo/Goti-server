@@ -30,11 +30,11 @@ public record OrderCreateRequest(
 ) {
 	public CreateOrderCommand toCommand(
 		UUID gameId,
-		UUID userId
+		UUID memberId
 	) {
 		return new CreateOrderCommand(
 			gameId,
-			userId,
+			memberId,
 			holdIds,
 			ordererName,
 			ordererPhone,

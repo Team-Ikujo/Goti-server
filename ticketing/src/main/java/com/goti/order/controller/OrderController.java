@@ -37,9 +37,9 @@ public class OrderController {
 	@PostMapping("/{gameId}/orders")
 	public ResponseEntity<ApiSuccessResponse<OrderCreateResponse>> create(
 		@PathVariable UUID gameId,
-		@AuthenticationPrincipal(expression = "id") UUID userId,
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@Valid @RequestBody OrderCreateRequest request
 	) {
-		return wrap(orderCreateService.create(request.toCommand(gameId, userId)));
+		return wrap(orderCreateService.create(request.toCommand(gameId, memberId)));
 	}
 }

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record CreateOrderCommand(
 	UUID gameId,
-	UUID userId,
+	UUID memberId,
 	List<UUID> holdIds,
 	String ordererName,
 	String ordererPhone,
