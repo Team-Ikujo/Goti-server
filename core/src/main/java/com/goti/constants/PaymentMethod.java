@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum PaymentMethod {
 
 	CARD("카드"),
-	BANK("계좌이체");
+	ACCOUNT_TRANSFER("계좌이체");
 
 	private final String description;
 }
