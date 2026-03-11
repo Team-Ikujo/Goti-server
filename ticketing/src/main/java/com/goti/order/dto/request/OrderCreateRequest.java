@@ -3,7 +3,7 @@ package com.goti.order.dto.request;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.order.service.command.CreateOrderCommand;
+import com.goti.order.service.application.command.OrderCreateCommand;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -28,11 +28,11 @@ public record OrderCreateRequest(
 	@NotBlank(message = "구매자 이메일은 필수입니다.")
 	String ordererEmail
 ) {
-	public CreateOrderCommand toCommand(
+	public OrderCreateCommand toCommand(
 		UUID gameId,
 		UUID memberId
 	) {
-		return new CreateOrderCommand(
+		return new OrderCreateCommand(
 			gameId,
 			memberId,
 			holdIds,

@@ -1,9 +1,9 @@
-package com.goti.order.service.command;
+package com.goti.order.service.application.command;
 
 import java.util.List;
 import java.util.UUID;
 
-public record CreateOrderCommand(
+public record OrderCreateCommand(
 	UUID gameId,
 	UUID memberId,
 	List<UUID> holdIds,
