@@ -104,7 +104,9 @@ public class PaymentEntity extends ModificationTimestampEntity {
 		String idempotencyKey
 	) {
 		validate(
+			cancellation,
 			paymentType,
+			paymentMethod,
 			paymentAmount,
 			idempotencyKey
 		);
@@ -121,7 +123,9 @@ public class PaymentEntity extends ModificationTimestampEntity {
 	}
 
 	private static void validate(
+		OrderCancellationEntity cancellation,
 		PaymentType paymentType,
+		PaymentMethod paymentMethod,
 		Integer paymentAmount,
 		String idempotencyKey
 	) {
@@ -137,5 +141,18 @@ public class PaymentEntity extends ModificationTimestampEntity {
 			StringUtils.hasText(idempotencyKey),
 			"멱등 키는 비어 있을 수 없습니다."
 		);
+		if (paymentType == PaymentType.PAYMENT) {
+			Preconditions.domainValidate(
+				paymentMethod != null,
+				"결제 유형이 '결제'인 경우 결제 수단은 필수입니다."
+			);
+		}
+
+		if (paymentType == PaymentType.REFUND) {
+			Preconditions.domainValidate(
+				cancellation != null,
+				"결제 유형이 '환불'인 경우 취소 정보는 필수입니다."
+			);
+		}
 	}
 }
