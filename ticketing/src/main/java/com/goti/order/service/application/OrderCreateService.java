@@ -21,7 +21,7 @@ import com.goti.game.repository.gameschedule.GameScheduleRepository;
 import com.goti.global.validation.Preconditions;
 import com.goti.order.dto.response.OrderCreateResponse;
 import com.goti.order.repository.OrderItemRepository;
-import com.goti.order.service.application.command.OrderCreateCommand;
+import com.goti.order.service.domain.command.OrderCreateCommand;
 import com.goti.order.service.domain.OrderHistoryService;
 import com.goti.order.service.domain.OrderItemService;
 import com.goti.order.service.domain.OrderPricingResult;

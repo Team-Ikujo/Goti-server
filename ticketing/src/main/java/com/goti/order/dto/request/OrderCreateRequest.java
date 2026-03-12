@@ -3,7 +3,7 @@ package com.goti.order.dto.request;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.order.service.application.command.OrderCreateCommand;
+import com.goti.order.service.domain.command.OrderCreateCommand;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

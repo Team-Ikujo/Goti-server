@@ -1,4 +1,4 @@
-package com.goti.order.service.application.command;
+package com.goti.order.service.domain.command;
 
 import java.util.List;
 import java.util.UUID;
