@@ -2,12 +2,10 @@ package payment;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.UUID;
+
+import com.goti.constants.LeagueType;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,68 +31,16 @@ class PaymentEntityTest {
 
 	@BeforeEach
 	void setup() {
-		GameScheduleEntity gameSchedule = createGameSchedule();
+		GameScheduleEntity gameSchedule = GameScheduleEntity.create(
+			UUID.randomUUID(),
+			UUID.randomUUID(),
+			UUID.randomUUID(),
+			LocalDateTime.of(2026, 4, 1, 18, 30),
+			LeagueType.REGULAR
+		);
 		order = OrderEntity.create("ORD-20260310-0001", UUID.randomUUID(), gameSchedule, 2, 24000);
 		paymentAmount = 24000;
 		idempotencyKey = "payment-idempotency-key";
-	}
-
-	private GameScheduleEntity createGameSchedule() {
-		UUID homeTeamId = UUID.randomUUID();
-		UUID awayTeamId = UUID.randomUUID();
-		UUID stadiumId = UUID.randomUUID();
-		LocalDate playDate = LocalDate.of(2026, 4, 1);
-		LocalTime startAt = LocalTime.of(18, 30);
-
-		try {
-			Method createMethod = GameScheduleEntity.class.getMethod(
-				"create",
-				UUID.class,
-				UUID.class,
-				UUID.class,
-				LocalDate.class,
-				LocalTime.class
-			);
-			return (GameScheduleEntity) createMethod.invoke(
-				null,
-				homeTeamId,
-				awayTeamId,
-				stadiumId,
-				playDate,
-				startAt
-			);
-		} catch (NoSuchMethodException ignored) {
-			return createGameScheduleWithDateTime(homeTeamId, awayTeamId, stadiumId, playDate, startAt);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new IllegalStateException("GameScheduleEntity 생성에 실패했습니다.", e);
-		}
-	}
-
-	private GameScheduleEntity createGameScheduleWithDateTime(
-		UUID homeTeamId,
-		UUID awayTeamId,
-		UUID stadiumId,
-		LocalDate playDate,
-		LocalTime startAt
-	) {
-		try {
-			Method createMethod = GameScheduleEntity.class.getMethod(
-				"create",
-				UUID.class,
-				UUID.class,
-				UUID.class,
-				LocalDateTime.class
-			);
-			return (GameScheduleEntity) createMethod.invoke(
-				null,
-				homeTeamId,
-				awayTeamId,
-				stadiumId,
-				LocalDateTime.of(playDate, startAt)
-			);
-		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-			throw new IllegalStateException("지원되는 GameScheduleEntity.create 시그니처를 찾지 못했습니다.", e);
-		}
 	}
 
 	@Test
