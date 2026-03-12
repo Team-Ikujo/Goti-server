@@ -9,7 +9,7 @@ import com.goti.order.dto.response.OrderListResponse;
 
 public interface OrderService {
 	OrderEntity create(
-		UUID userId,
+		UUID memberId,
 		GameScheduleEntity gameSchedule,
 		Integer totalQuantity,
 		Integer totalAmount

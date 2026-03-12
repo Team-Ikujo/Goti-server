@@ -29,14 +29,14 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public OrderEntity create(
-		UUID userId,
+		UUID memberId,
 		GameScheduleEntity gameSchedule,
 		Integer totalQuantity,
 		Integer totalAmount
 	) {
 		OrderEntity order = OrderEntity.create(
 			generateOrderNumber(),
-			userId,
+			memberId,
 			gameSchedule,
 			totalQuantity,
 			totalAmount
