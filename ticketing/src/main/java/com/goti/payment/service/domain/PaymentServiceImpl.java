@@ -35,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Transactional
 	public PaymentResponse create(
 		UUID orderId,
+		UUID userId,
 		PaymentMethod paymentMethod,
 		String idempotencyKey
 	) {
