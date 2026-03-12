@@ -5,6 +5,7 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +36,13 @@ public class PaymentController {
 	@PostMapping("/{orderId}/payments")
 	public ResponseEntity<ApiSuccessResponse<PaymentResponse>> create(
 		@PathVariable UUID orderId,
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@Valid @RequestBody PaymentRequest request
 	) {
 		return wrap(
 			paymentService.create(
 				orderId,
+				memberId,
 				request.paymentMethod(),
 				request.idempotencyKey()
 			)
