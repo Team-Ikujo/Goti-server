@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.domain.entity.order.OrderEntity;
 import com.goti.domain.entity.order.OrderItemEntity;
-import com.goti.domain.entity.order.OrdererEntity;
+import com.goti.domain.entity.order.OrderHistoryEntity;
 import com.goti.exception.CustomException;
 import com.goti.order.repository.OrderItemRepository;
 import com.goti.order.repository.OrderHistoryRepository;
@@ -25,7 +25,7 @@ public class TicketCreateService {
 
 	@Transactional
 	public void create(OrderEntity order) {
-		OrdererEntity orderer = orderHistoryRepository.findByOrder_Id(order.getId())
+		OrderHistoryEntity orderHistory = orderHistoryRepository.findByOrder_Id(order.getId())
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
 		//TODO: 경기 제목 추가
@@ -34,11 +34,11 @@ public class TicketCreateService {
 				orderItem,
 				order.getGameSchedule().getId(),
 				order.getUserId(),
-				orderer.getName(),
-				orderer.getEmail(),
-				orderer.getMobile(),
+				orderHistory.getName(),
+				orderHistory.getEmail(),
+				orderHistory.getMobile(),
 				null,
-				LocalDateTime.of(order.getGameSchedule().getPlayDate(), order.getGameSchedule().getStartAt()),
+				order.getGameSchedule().getStartAt(),
 				buildSeatInfo(orderItem),
 				orderItem.getTicketPrice()
 			);

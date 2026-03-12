@@ -75,6 +75,7 @@ public enum ErrorCode {
 	TICKET_PRICE_CONDITION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 동일한 티켓 가격 조건이 존재합니다."),
 	TICKET_PRICING_POLICY_NOT_FOUND(HttpStatus.NOT_FOUND, "적용 가능한 가격 정책을 찾을 수 없습니다."),
 	TICKET_PRICE_NOT_FOUND(HttpStatus.NOT_FOUND, "적용 가능한 티켓 가격을 찾을 수 없습니다."),
+	TICKET_NOT_FOUND(HttpStatus.NOT_FOUND, "티켓을 찾을 수 없습니다."),
 	DUPLICATE_HOLD_ID_REQUEST(HttpStatus.BAD_REQUEST, "같은 좌석이 중복 선택되었습니다."),
 	ORDER_SEAT_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 주문된 좌석이 포함되어 있습니다."),
 
