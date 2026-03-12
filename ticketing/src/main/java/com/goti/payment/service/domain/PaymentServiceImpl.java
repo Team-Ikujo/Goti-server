@@ -64,6 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		PaymentEntity payment = PaymentEntity.create(
 			order,
+			null,
 			PaymentType.PAYMENT,
 			paymentMethod,
 			order.getTotalAmount(),
