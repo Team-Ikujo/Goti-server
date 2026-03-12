@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItemEntity, UUID>, OrderItemRepositoryCustom {
-	List<OrderItemEntity> findAllByOrder_Id(UUID orderId);
-
 	boolean existsOrderedSeats(
 		UUID gameId,
 		Collection<UUID> seatIds,
