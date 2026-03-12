@@ -40,12 +40,22 @@ public class PaymentServiceImpl implements PaymentService {
 		String idempotencyKey
 	) {
 		Preconditions.validate(
+			userId != null,
+			ErrorCode.AUTH_INVALID
+		);
+
+		Preconditions.validate(
 			!paymentRepository.existsByIdempotencyKey(idempotencyKey),
 			ErrorCode.PAYMENT_IDEMPOTENCY_KEY_ALREADY_EXISTS
 		);
 
 		OrderEntity order = orderRepository.findById(orderId)
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+		Preconditions.validate(
+			order.getUserId().equals(userId),
+			ErrorCode.AUTH_PERMISSION_DENIED
+		);
 
 		Preconditions.validate(
 			order.getOrderStatus() == OrderStatus.PENDING,
