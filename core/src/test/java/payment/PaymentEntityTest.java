@@ -47,6 +47,7 @@ class PaymentEntityTest {
 	void 결제_생성_성공() {
 		PaymentEntity payment = PaymentEntity.create(
 			order,
+			null,
 			PaymentType.PAYMENT,
 			PaymentMethod.CARD,
 			paymentAmount,
@@ -72,6 +73,7 @@ class PaymentEntityTest {
 	void 결제_성공_처리() {
 		PaymentEntity payment = PaymentEntity.create(
 			order,
+			null,
 			PaymentType.PAYMENT,
 			PaymentMethod.CARD,
 			paymentAmount,
@@ -92,6 +94,7 @@ class PaymentEntityTest {
 	void 결제_실패_처리() {
 		PaymentEntity payment = PaymentEntity.create(
 			order,
+			null,
 			PaymentType.PAYMENT,
 			PaymentMethod.CARD,
 			paymentAmount,
@@ -113,6 +116,7 @@ class PaymentEntityTest {
 			() -> PaymentEntity.create(
 				order,
 				null,
+				null,
 				PaymentMethod.CARD,
 				paymentAmount,
 				"MOCK",
@@ -128,6 +132,7 @@ class PaymentEntityTest {
 		assertThatThrownBy(
 			() -> PaymentEntity.create(
 				order,
+				null,
 				PaymentType.PAYMENT,
 				PaymentMethod.CARD,
 				0,
@@ -146,6 +151,7 @@ class PaymentEntityTest {
 		assertThatThrownBy(
 			() -> PaymentEntity.create(
 				order,
+				null,
 				PaymentType.PAYMENT,
 				PaymentMethod.CARD,
 				paymentAmount,
