@@ -39,11 +39,11 @@ public interface ResalePriceHistoryRepository extends JpaRepository<ResalePriceH
 	@Query("SELECT r FROM ResalePriceHistoryEntity r "
 		+ "WHERE r.gameId = :gameId "
 		+ "AND r.gradeId = :gradeId "
-		+ "AND r.createdAt >= :Time "
+		+ "AND r.createdAt >= :since "
 		+ "ORDER BY r.createdAt ASC")
-	List<ResalePriceHistoryEntity> findByGameAndGradeInLastTime(
+	List<ResalePriceHistoryEntity> findByGameAndGrade(
 		@Param("gameId") UUID gameId,
 		@Param("gradeId") UUID gradeId,
-		@Param("Time") Instant Time
+		@Param("since") Instant since
 	);
 }

@@ -64,12 +64,12 @@ public class ResalePriceService {
 
 	@Transactional(readOnly = true)
 	public List<ResalePriceHistoryResponse> getHistory(UUID gameId, UUID gradeId, ResaleGraphRange range) {
-		Instant Time = range.getTime();
+		Instant since = range.getTime();
 
-		List<ResalePriceHistoryEntity> resaleHistories = priceHistoryRepository.findByGameAndGradeInLastTime(
+		List<ResalePriceHistoryEntity> resaleHistories = priceHistoryRepository.findByGameAndGrade(
 			gameId,
 			gradeId,
-			Time
+			since
 		);
 
 		return resaleHistories
