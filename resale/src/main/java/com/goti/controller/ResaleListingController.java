@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.constants.ResaleGraphRange;
 import com.goti.dto.request.ResaleListingCancelRequest;
 import com.goti.dto.request.ResaleListingCreateRequest;
+import com.goti.dto.response.ResaleListingCountResponse;
 import com.goti.dto.response.ResaleListingResponse;
 import com.goti.dto.response.ResalePriceHistoryResponse;
 import com.goti.global.api.ApiSuccessResponse;
@@ -92,5 +93,27 @@ public class ResaleListingController {
 	) {
 		List<ResalePriceHistoryResponse> responses = priceService.getHistory(gameId, gradeId, range);
 		return wrap(responses);
+	}
+
+	@Operation(
+		summary = "전체 리셀 좌석 개수 조회",
+		description = "전체 리셀 좌석의 갯수 조회 API"
+	)
+	@GetMapping("/listings/count")
+	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getTotalListingCount() {
+		long count = listingService.getTotalListingCount();
+		return wrap(new ResaleListingCountResponse(count));
+	}
+
+	@Operation(
+		summary = "구역별 리셀 좌석 개수 조회",
+		description = "구역별 리셀 좌석의 갯수 조회 API"
+	)
+	@GetMapping("/listings/count/section/{sectionId}")
+	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getListingCountBySection(
+		@PathVariable UUID sectionId
+	) {
+		long count = listingService.getListingCountBySection(sectionId);
+		return wrap(new ResaleListingCountResponse(count));
 	}
 }
