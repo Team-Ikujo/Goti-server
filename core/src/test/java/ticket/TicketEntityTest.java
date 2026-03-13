@@ -30,6 +30,7 @@ import com.goti.exception.FieldValidationException;
 class TicketEntityTest {
 
 	OrderItemEntity orderItem;
+	UUID orderItemId;
 	UUID gameId;
 	UUID userId;
 
@@ -47,6 +48,7 @@ class TicketEntityTest {
 		SeatSectionEntity seatSection = SeatSectionEntity.create(seatGrade, UUID.randomUUID(), "101", 120);
 		SeatEntity seat = SeatEntity.create(seatSection, "A", 1);
 		orderItem = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		orderItemId = UUID.randomUUID();
 		gameId = UUID.randomUUID();
 		userId = UUID.randomUUID();
 	}
@@ -55,7 +57,8 @@ class TicketEntityTest {
 	void 티켓_생성_성공() {
 		TicketEntity ticket = TicketEntity.create(
 			"TKT-20260215-XXXXX",
-			orderItem,
+			orderItemId,
+			null,
 			gameId,
 			userId,
 			"goti-user",
@@ -65,10 +68,11 @@ class TicketEntityTest {
 			LocalDateTime.of(2026, 4, 1, 18, 30),
 			"VIP A구역 3열 15번",
 			12000,
+			null,
 			null
 		);
 
-		assertThat(ticket.getOrderItem()).isEqualTo(orderItem);
+		assertThat(ticket.getOrderItemId()).isEqualTo(orderItemId);
 		assertThat(ticket.getTicketNumber()).isEqualTo("TKT-20260215-XXXXX");
 		assertThat(ticket.getGameId()).isEqualTo(gameId);
 		assertThat(ticket.getUserId()).isEqualTo(userId);
@@ -86,7 +90,8 @@ class TicketEntityTest {
 		assertThatThrownBy(
 			() -> TicketEntity.create(
 				invalidTicketNumber,
-				orderItem,
+				orderItemId,
+				null,
 				gameId,
 				userId,
 				null,
@@ -96,6 +101,7 @@ class TicketEntityTest {
 				null,
 				"VIP A구역 3열 15번",
 				12000,
+				null,
 				null
 			)
 		).isInstanceOf(FieldValidationException.class)
@@ -107,7 +113,8 @@ class TicketEntityTest {
 		assertThatThrownBy(
 			() -> TicketEntity.create(
 				"TKT-20260215-XXXXX",
-				orderItem,
+				orderItemId,
+				null,
 				null,
 				userId,
 				null,
@@ -117,6 +124,7 @@ class TicketEntityTest {
 				null,
 				"VIP A구역 3열 15번",
 				12000,
+				null,
 				null
 			)
 		).isInstanceOf(FieldValidationException.class)
@@ -128,7 +136,8 @@ class TicketEntityTest {
 		assertThatThrownBy(
 			() -> TicketEntity.create(
 				"TKT-20260215-XXXXX",
-				orderItem,
+				orderItemId,
+				null,
 				gameId,
 				userId,
 				null,
@@ -138,6 +147,7 @@ class TicketEntityTest {
 				null,
 				" ",
 				12000,
+				null,
 				null
 			)
 		).isInstanceOf(FieldValidationException.class)
@@ -149,7 +159,8 @@ class TicketEntityTest {
 		assertThatThrownBy(
 			() -> TicketEntity.create(
 				"TKT-20260215-XXXXX",
-				orderItem,
+				orderItemId,
+				null,
 				gameId,
 				userId,
 				null,
@@ -159,6 +170,7 @@ class TicketEntityTest {
 				null,
 				"VIP A구역 3열 15번",
 				-1,
+				null,
 				null
 			)
 		).isInstanceOf(FieldValidationException.class)

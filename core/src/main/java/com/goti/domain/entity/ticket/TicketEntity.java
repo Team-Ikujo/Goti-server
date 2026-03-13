@@ -7,26 +7,30 @@ import java.util.UUID;
 
 import org.springframework.util.StringUtils;
 
-import com.goti.constants.TicketIssueStatus;
 import com.goti.constants.ResaleEnabledStatus;
+import com.goti.constants.TicketIssueStatus;
+import com.goti.constants.TicketResaleStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
-import com.goti.domain.entity.order.OrderItemEntity;
 import com.goti.global.validation.Preconditions;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@AttributeOverrides({
+	@AttributeOverride(name = "id", column = @Column(name = "ticket_id", nullable = false, updatable = false)),
+	@AttributeOverride(name = "createdAt", column = @Column(name = "issued_at", nullable = false, updatable = false)),
+	@AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
+})
 @Table(
 	name = "tickets",
 	indexes = {
@@ -41,9 +45,11 @@ public class TicketEntity extends ModificationTimestampEntity {
 	@Column(nullable = false, unique = true)
 	private String ticketNumber;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_item_id", nullable = false, unique = true)
-	private OrderItemEntity orderItem;
+	@Column(nullable = false, unique = true)
+	private UUID orderItemId;
+
+	@Column
+	private UUID resaleTransactionId;
 
 	@Column(nullable = false)
 	private UUID gameId;
@@ -51,21 +57,29 @@ public class TicketEntity extends ModificationTimestampEntity {
 	@Column(nullable = false)
 	private UUID userId;
 
+	@Column
 	private String userNickname;
 
+	@Column
 	private String userEmail;
 
+	@Column
 	private String userPhone;
 
+	@Column
 	private String gameTitle;
 
+	@Column
 	private LocalDateTime gameDate;
 
 	@Column(nullable = false)
 	private String seatInfo;
 
-	@Column(nullable = false)
+	@Column
 	private Integer ticketPrice;
+
+	@Column
+	private Integer resalePrice;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -75,14 +89,20 @@ public class TicketEntity extends ModificationTimestampEntity {
 	@Column(nullable = false)
 	private ResaleEnabledStatus resaleEnabledStatus;
 
+	@Enumerated(EnumType.STRING)
+	@Column
+	private TicketResaleStatus resaleStatus;
+
 	@Column(unique = true)
 	private String qrCode;
 
+	@Column
 	private LocalDateTime usedAt;
 
 	private TicketEntity(
 		String ticketNumber,
-		OrderItemEntity orderItem,
+		UUID orderItemId,
+		UUID resaleTransactionId,
 		UUID gameId,
 		UUID userId,
 		String userNickname,
@@ -92,10 +112,12 @@ public class TicketEntity extends ModificationTimestampEntity {
 		LocalDateTime gameDate,
 		String seatInfo,
 		Integer ticketPrice,
+		Integer resalePrice,
 		String qrCode
 	) {
 		this.ticketNumber = ticketNumber;
-		this.orderItem = orderItem;
+		this.orderItemId = orderItemId;
+		this.resaleTransactionId = resaleTransactionId;
 		this.gameId = gameId;
 		this.userId = userId;
 		this.userNickname = userNickname;
@@ -105,15 +127,18 @@ public class TicketEntity extends ModificationTimestampEntity {
 		this.gameDate = gameDate;
 		this.seatInfo = seatInfo;
 		this.ticketPrice = ticketPrice;
+		this.resalePrice = resalePrice;
 		this.ticketStatus = TicketIssueStatus.ISSUED;
 		this.resaleEnabledStatus = ResaleEnabledStatus.DISABLED;
+		this.resaleStatus = null;
 		this.qrCode = qrCode;
 		this.usedAt = null;
 	}
 
 	public static TicketEntity create(
 		String ticketNumber,
-		OrderItemEntity orderItem,
+		UUID orderItemId,
+		UUID resaleTransactionId,
 		UUID gameId,
 		UUID userId,
 		String userNickname,
@@ -123,10 +148,12 @@ public class TicketEntity extends ModificationTimestampEntity {
 		LocalDateTime gameDate,
 		String seatInfo,
 		Integer ticketPrice,
+		Integer resalePrice,
 		String qrCode
 	) {
 		validate(
 			ticketNumber,
+			orderItemId,
 			gameId,
 			userId,
 			seatInfo,
@@ -134,7 +161,8 @@ public class TicketEntity extends ModificationTimestampEntity {
 		);
 		return new TicketEntity(
 			ticketNumber,
-			orderItem,
+			orderItemId,
+			resaleTransactionId,
 			gameId,
 			userId,
 			userNickname,
@@ -144,12 +172,14 @@ public class TicketEntity extends ModificationTimestampEntity {
 			gameDate,
 			seatInfo,
 			ticketPrice,
+			resalePrice,
 			qrCode
 		);
 	}
 
 	private static void validate(
 		String ticketNumber,
+		UUID orderItemId,
 		UUID gameId,
 		UUID userId,
 		String seatInfo,
@@ -158,6 +188,10 @@ public class TicketEntity extends ModificationTimestampEntity {
 		Preconditions.domainValidate(
 			StringUtils.hasText(ticketNumber),
 			"티켓 번호는 비어 있을 수 없습니다."
+		);
+		Preconditions.domainValidate(
+			orderItemId != null,
+			"주문 상세 ID는 필수입니다."
 		);
 		Preconditions.domainValidate(
 			gameId != null,
