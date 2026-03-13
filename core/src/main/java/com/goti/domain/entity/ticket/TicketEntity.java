@@ -30,8 +30,7 @@ import lombok.NoArgsConstructor;
 	name = "tickets",
 	indexes = {
 		@Index(name = "idx_tickets_game_id", columnList = "game_id"),
-		@Index(name = "idx_tickets_user_id", columnList = "user_id"),
-		@Index(name = "idx_tickets_ticket_status", columnList = "ticket_status")
+		@Index(name = "idx_tickets_user_id", columnList = "user_id")
 	}
 )
 @NoArgsConstructor(access = PROTECTED)
