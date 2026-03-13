@@ -8,10 +8,10 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
@@ -54,10 +54,10 @@ public class SeatController {
 		summary = "좌석 조회",
 		description = "좌석 구역별 좌석 목록 조회 API"
 	)
-	@GetMapping
-	public ResponseEntity<ApiSuccessResponse<List<SeatResponse>>> list(
+	@GetMapping("/seat-sections/{sectionId}/seats")
+	public ResponseEntity<ApiSuccessResponse<List<SeatResponse>>> getSeats(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@RequestParam UUID sectionId
+		@PathVariable UUID sectionId
 	) {
 		return wrap(seatService.get(sectionId, userId));
 	}
