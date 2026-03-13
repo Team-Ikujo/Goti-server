@@ -39,7 +39,8 @@ public class TicketServiceImpl implements TicketService {
 	) {
 		TicketEntity ticket = TicketEntity.create(
 			generateTicketNumber(),
-			orderItem,
+			orderItem.getId(),
+			null,
 			gameId,
 			userId,
 			userNickname,
@@ -49,6 +50,7 @@ public class TicketServiceImpl implements TicketService {
 			gameDate,
 			seatInfo,
 			ticketPrice,
+			null,
 			generateQrCode()
 		);
 
