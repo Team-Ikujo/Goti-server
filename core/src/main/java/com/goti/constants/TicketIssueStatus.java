@@ -9,8 +9,8 @@ public enum TicketIssueStatus {
 
 	ISSUED("발행 완료"),
 	USED("사용 완료"),
-	CANCELLED("취소 완료"),
-	RESALED("리셀");
+	CANCELED("취소 완료"),
+	RESALE_ISSUED("리셀 발행");
 
 	private final String description;
 }
