@@ -65,6 +65,7 @@ public class ResaleListingService {
 			sellerId,
 			ticketInfo.gameId(),
 			ticketInfo.seatId(),
+			ticketInfo.sectionId(),
 			ticketInfo.gradeId(),
 			ticketInfo.seatInfo(),
 			ticketInfo.ticketPrice(),
