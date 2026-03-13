@@ -46,7 +46,7 @@ public class HomeStadiumManagementServiceTest {
 
 	@BeforeEach
 	void setup() {
-		createStadium();
+		saveStadium();
 		saveBaseballTeam();
 	}
 
@@ -90,7 +90,7 @@ public class HomeStadiumManagementServiceTest {
 		baseballTeamRepository.save(baseballTeam);
 	}
 
-	private void createStadium() {
+	private void saveStadium() {
 		stadium = StadiumEntity.create(
 			"대구삼성라이온즈 파크",
 			"대구",

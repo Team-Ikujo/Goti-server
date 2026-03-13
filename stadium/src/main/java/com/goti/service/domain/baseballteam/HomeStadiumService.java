@@ -1,4 +1,4 @@
-package com.goti.service.domain.stadium;
+package com.goti.service.domain.baseballteam;
 
 import com.goti.constants.StadiumType;
 import com.goti.domain.entity.stadium.HomeStadiumEntity;

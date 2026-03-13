@@ -6,7 +6,7 @@ import com.goti.domain.entity.stadium.StadiumEntity;
 import com.goti.domain.entity.team.BaseballTeamEntity;
 import com.goti.dto.response.HomeStadiumCreateResponse;
 import com.goti.service.domain.baseballteam.BaseballTeamService;
-import com.goti.service.domain.stadium.HomeStadiumService;
+import com.goti.service.domain.baseballteam.HomeStadiumService;
 import com.goti.service.domain.stadium.StadiumService;
 
 import lombok.RequiredArgsConstructor;
