@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 	indexes = {
 		@Index(name = "idx_ticket_id", columnList = "ticket_id"),
 		@Index(name = "idx_seller_id", columnList = "seller_id"),
+		@Index(name = "idx_section_id", columnList = "section_id"),
 		@Index(name = "idx_game_id", columnList = "game_id")
 	})
 @NoArgsConstructor(access = PROTECTED)
@@ -40,6 +41,9 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 
 	@Column(nullable = false)
 	private UUID seatId;
+
+	@Column(nullable = false)
+	private UUID sectionId;
 
 	@Column(nullable = false)
 	private UUID gradeId;
