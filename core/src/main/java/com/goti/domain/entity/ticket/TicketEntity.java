@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.util.StringUtils;
 
 import com.goti.constants.TicketIssueStatus;
-import com.goti.constants.TicketResaleStatus;
+import com.goti.constants.ResaleEnabledStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
 import com.goti.domain.entity.order.OrderItemEntity;
 import com.goti.global.validation.Preconditions;
@@ -73,7 +73,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private TicketResaleStatus ticketResaleStatus;
+	private ResaleEnabledStatus resaleEnabledStatus;
 
 	@Column(unique = true)
 	private String qrCode;
@@ -106,7 +106,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 		this.seatInfo = seatInfo;
 		this.ticketPrice = ticketPrice;
 		this.ticketStatus = TicketIssueStatus.ISSUED;
-		this.ticketResaleStatus = TicketResaleStatus.DISABLED;
+		this.resaleEnabledStatus = ResaleEnabledStatus.DISABLED;
 		this.qrCode = qrCode;
 		this.usedAt = null;
 	}

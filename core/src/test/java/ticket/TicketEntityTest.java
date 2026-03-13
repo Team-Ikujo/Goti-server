@@ -2,9 +2,7 @@ package ticket;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 
 import com.goti.constants.LeagueType;
@@ -17,7 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goti.constants.TicketIssueStatus;
-import com.goti.constants.TicketResaleStatus;
+import com.goti.constants.ResaleEnabledStatus;
 import com.goti.constants.TicketType;
 import com.goti.domain.entity.game.GameScheduleEntity;
 import com.goti.domain.entity.order.OrderEntity;
@@ -77,7 +75,7 @@ class TicketEntityTest {
 		assertThat(ticket.getSeatInfo()).isEqualTo("VIP A구역 3열 15번");
 		assertThat(ticket.getTicketPrice()).isEqualTo(12000);
 		assertThat(ticket.getTicketStatus()).isEqualTo(TicketIssueStatus.ISSUED);
-		assertThat(ticket.getTicketResaleStatus()).isEqualTo(TicketResaleStatus.DISABLED);
+		assertThat(ticket.getResaleEnabledStatus()).isEqualTo(ResaleEnabledStatus.DISABLED);
 		assertThat(ticket.getUsedAt()).isNull();
 	}
 

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TicketResaleStatus {
+public enum ResaleEnabledStatus {
 
 	ENABLED("가능"),
 	DISABLED("불가능");
