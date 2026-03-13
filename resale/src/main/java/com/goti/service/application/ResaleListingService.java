@@ -112,13 +112,23 @@ public class ResaleListingService {
 		return ResaleListingResponse.from(resaleListing);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<ResaleListingResponse> getListingsBySellerId(UUID sellerId) {
 		List<ResaleListingEntity> resaleListings = listingRepository.findAllBySellerId(sellerId);
 
 		return resaleListings.stream()
 			.map(ResaleListingResponse::from)
 			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public long getListingCountBySection(UUID sectionId) {
+		return listingRepository.countBySectionIdAndListingStatus(sectionId, ResaleListingStatus.LISTING);
+	}
+
+	@Transactional(readOnly = true)
+	public long getTotalListingCount() {
+		return listingRepository.countByListingStatus(ResaleListingStatus.LISTING);
 	}
 
 	@Transactional
