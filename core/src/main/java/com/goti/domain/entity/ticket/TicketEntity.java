@@ -14,7 +14,6 @@ import com.goti.domain.base.ModificationTimestampEntity;
 import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,11 +25,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@AttributeOverrides({
-	@AttributeOverride(name = "id", column = @Column(name = "ticket_id", nullable = false, updatable = false)),
-	@AttributeOverride(name = "createdAt", column = @Column(name = "issued_at", nullable = false, updatable = false)),
-	@AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false))
-})
+@AttributeOverride(name = "createdAt", column = @Column(name = "issued_at", nullable = false, updatable = false))
 @Table(
 	name = "tickets",
 	indexes = {
