@@ -5,12 +5,12 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TicketIssueStatus {
+public enum TicketResaleStatus {
 
-	ISSUED("발행 완료"),
-	USED("사용 완료"),
-	INVALID("사용 불가"),
-	RESALE_ISSUED("리셀 발행");
+	LISTED("판매중"),
+	SOLD_PENDING("정산 대기"),
+	SOLD_SETTLED("판매 완료"),
+	UNLISTING("동결");
 
 	private final String description;
 }
