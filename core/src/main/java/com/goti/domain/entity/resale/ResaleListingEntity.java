@@ -79,6 +79,7 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 		UUID sellerId,
 		UUID gameId,
 		UUID seatId,
+		UUID sectionId,
 		UUID gradeId,
 		String seatInfo,
 		Integer dailyBasePrice,
@@ -88,6 +89,7 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 		this.sellerId = sellerId;
 		this.gameId = gameId;
 		this.seatId = seatId;
+		this.sectionId = sectionId;
 		this.gradeId = gradeId;
 		this.seatInfo = seatInfo;
 		this.dailyBasePrice = dailyBasePrice;
@@ -105,18 +107,20 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 		UUID sellerId,
 		UUID gameId,
 		UUID seatId,
+		UUID sectionId,
 		UUID gradeId,
 		String seatInfo,
 		Integer dailyBasePrice,
 		Integer listingPrice
 	) {
-		validate(ticketId, sellerId, gameId, seatId, gradeId, seatInfo, dailyBasePrice, listingPrice);
+		validate(ticketId, sellerId, gameId, seatId, sectionId, gradeId, seatInfo, dailyBasePrice, listingPrice);
 
 		return new ResaleListingEntity(
 			ticketId,
 			sellerId,
 			gameId,
 			seatId,
+			sectionId,
 			gradeId,
 			seatInfo,
 			dailyBasePrice,
@@ -133,6 +137,7 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 		UUID sellerId,
 		UUID gameId,
 		UUID seatId,
+		UUID sectionId,
 		UUID gradeId,
 		String seatInfo,
 		Integer dailyBasePrice,
@@ -142,6 +147,7 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 		Preconditions.domainValidate(sellerId != null, "판매자 ID는 비어 있을 수 없습니다.");
 		Preconditions.domainValidate(gameId != null, "경기 ID는 비어 있을 수 없습니다.");
 		Preconditions.domainValidate(seatId != null, "좌석 ID는 비어 있을 수 없습니다.");
+		Preconditions.domainValidate(sectionId != null, "구역 ID는 비어 있을 수 없습니다");
 		Preconditions.domainValidate(gradeId != null, "등급 ID는 비어 있을 수 없습니다.");
 		Preconditions.domainValidate(seatInfo != null, "좌석 정보는 비어 있을 수 없습니다.");
 		Preconditions.domainValidate(dailyBasePrice != null && dailyBasePrice >= 0, "일일 기준가는 0 이상이어야 합니다.");
