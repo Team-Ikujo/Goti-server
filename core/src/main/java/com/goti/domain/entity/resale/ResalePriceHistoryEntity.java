@@ -9,13 +9,20 @@ import com.goti.global.validation.Preconditions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "resale_price_histories")
+@Table(name = "resale_price_histories",
+	indexes = {
+		@Index(name = "idx_game_id", columnList = "gameId"),
+		@Index(name = "idx_grade_id", columnList = "grade_id"),
+		@Index(name = "idx_seat_id", columnList = "seat_id"),
+		@Index(name = "idx_resale_lookup", columnList = "game_id, grade_id, created_at")
+	})
 @NoArgsConstructor(access = PROTECTED)
 public class ResalePriceHistoryEntity extends ModificationTimestampEntity {
 
