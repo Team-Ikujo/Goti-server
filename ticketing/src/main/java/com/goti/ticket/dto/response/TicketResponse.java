@@ -49,9 +49,6 @@ public record TicketResponse(
 	@Schema(description = "리셀 가능 여부", example = "DISABLED")
 	ResaleEnabledStatus resaleEnabledStatus,
 
-	@Schema(description = "리셀 진행 상태", example = "LISTED")
-	TicketResaleStatus resaleStatus,
-
 	@Schema(description = "티켓 발급 일시", example = "2026-03-13T10:15:30Z")
 	Instant issuedAt,
 
@@ -72,7 +69,6 @@ public record TicketResponse(
 			ticket.getResalePrice(),
 			ticket.getTicketStatus(),
 			ticket.getResaleEnabledStatus(),
-			ticket.getResaleStatus(),
 			ticket.getCreatedAt(),
 			ticket.getUsedAt()
 		);
