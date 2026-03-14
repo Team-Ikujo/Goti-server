@@ -67,10 +67,17 @@ public class PaymentServiceImpl implements PaymentService {
 			payment.fail(MOCK_PAYMENT_FAILED_REASON);
 		} else {
 			payment.succeed(generateMockPgTid());
-			orderService.confirmPayment(orderId, userId);
+			paymentRepository.save(payment);
+			orderService.confirmPayment(
+				orderId,
+				userId,
+				payment.getId(),
+				payment.getPgTid()
+			);
 		}
-
-		paymentRepository.save(payment);
+		if (payment.getId() == null) {
+			paymentRepository.save(payment);
+		}
 
 		return PaymentResponse.from(
 			payment.getId(),
