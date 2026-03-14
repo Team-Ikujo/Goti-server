@@ -1,6 +1,7 @@
 package game;
 
 import com.goti.constants.LeagueType;
+import com.goti.constants.TicketingStatus;
 import com.goti.domain.entity.game.GameScheduleEntity;
 
 import com.goti.domain.entity.game.GameTicketingStatusEntity;
@@ -29,6 +30,7 @@ public class GameTicketingStatusEntityTest {
 	static final LeagueType LEAGUE_TYPE = LeagueType.REGULAR;
 	static final LocalDateTime OPENED_AT = LocalDateTime.now().plusDays(3);
 	static final LocalDateTime CLOSED_AT = LocalDateTime.now().plusDays(5);
+	static final TicketingStatus TICKETING_STATUS = TicketingStatus.SCHEDULED;
 
 	@BeforeEach
 	void setup() {
@@ -44,7 +46,7 @@ public class GameTicketingStatusEntityTest {
 	@Test
 	void 게임_티켓팅_상태_생성_성공() {
 		GameTicketingStatusEntity gameTicketingStatus = GameTicketingStatusEntity.create(
-			gameSchedule, OPENED_AT, CLOSED_AT
+			gameSchedule, OPENED_AT, CLOSED_AT, TICKETING_STATUS
 		);
 
 		assertNotNull(gameTicketingStatus);
@@ -55,7 +57,7 @@ public class GameTicketingStatusEntityTest {
 	void 게임_티켓팅_상태_생성_실패_gameSchedule_null() {
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
-				null, OPENED_AT, CLOSED_AT
+				null, OPENED_AT, CLOSED_AT, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("게임일정 값은 비어있을 수 없습니다.");
@@ -65,7 +67,7 @@ public class GameTicketingStatusEntityTest {
 	void 게임_티켓팅_상태_생성_실패_예매시작_시간_null() {
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
-				gameSchedule, null, CLOSED_AT
+				gameSchedule, null, CLOSED_AT, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("예매 시작 시점은 현재보다 미래여야 합니다.");
@@ -77,7 +79,7 @@ public class GameTicketingStatusEntityTest {
 
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
-				gameSchedule, openedAt , CLOSED_AT
+				gameSchedule, openedAt , CLOSED_AT, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("예매 시작 시점은 현재보다 미래여야 합니다.");
@@ -87,7 +89,7 @@ public class GameTicketingStatusEntityTest {
 	void 게임_티켓팅_상태_생성_실패_예매종료_시간_null() {
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
-				gameSchedule, OPENED_AT, null
+				gameSchedule, OPENED_AT, null, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("예매 종료 시점은 현재보다 미래여야 합니다.");
@@ -99,7 +101,7 @@ public class GameTicketingStatusEntityTest {
 
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
-				gameSchedule, OPENED_AT, closeAt
+				gameSchedule, OPENED_AT, closeAt, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("예매 종료 시점은 현재보다 미래여야 합니다.");
@@ -112,7 +114,7 @@ public class GameTicketingStatusEntityTest {
 
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
-				gameSchedule, openedAt, closeAt
+				gameSchedule, openedAt, closeAt, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("예매 종료 시점은 시작 시점보다 이후여야 합니다.");
