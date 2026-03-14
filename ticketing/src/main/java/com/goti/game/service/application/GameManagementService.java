@@ -15,6 +15,7 @@ import com.goti.service.domain.stadium.StadiumService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class GameManagementService {
 	private final BaseballTeamService baseballTeamService;
 	private final StadiumService stadiumService;
 
+	@Transactional
 	public GameCreateResponse register(
 		UUID homeTeamId,
 		UUID awayTeamId,
