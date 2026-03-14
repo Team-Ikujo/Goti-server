@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.goti.constants.ResaleEnabledStatus;
 import com.goti.constants.TicketIssueStatus;
 import com.goti.constants.TicketResaleStatus;
+import com.goti.constants.TicketStatus;
 import com.goti.domain.entity.ticket.TicketEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,7 +45,7 @@ public record TicketResponse(
 	Integer resalePrice,
 
 	@Schema(description = "티켓 상태", example = "ISSUED")
-	TicketIssueStatus ticketStatus,
+	TicketStatus ticketStatus,
 
 	@Schema(description = "리셀 가능 여부", example = "DISABLED")
 	ResaleEnabledStatus resaleEnabledStatus,
