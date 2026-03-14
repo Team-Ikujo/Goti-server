@@ -5,10 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.goti.constants.LeagueType;
-import com.goti.domain.entity.game.GameScheduleEntity;
-import com.goti.domain.entity.order.OrderEntity;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,9 +12,11 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.goti.constants.LeagueType;
 import com.goti.constants.PaymentMethod;
 import com.goti.constants.PaymentStatus;
 import com.goti.constants.PaymentType;
+import com.goti.domain.entity.game.GameScheduleEntity;
 import com.goti.domain.entity.payment.PaymentEntity;
 import com.goti.exception.FieldValidationException;
 
