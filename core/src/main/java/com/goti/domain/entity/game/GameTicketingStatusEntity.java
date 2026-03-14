@@ -78,21 +78,19 @@ public class GameTicketingStatusEntity extends ModificationTimestampEntity {
 		);
 
 		Preconditions.domainValidate(
-			ticketingOpenedAt != null && ticketingOpenedAt.isAfter(now),
-			"예매 시작 시점은 현재보다 미래여야 합니다."
+			ticketingOpenedAt != null,
+			"예매 시작 시점은 비어있을 수 없습니다."
 		);
 
 		Preconditions.domainValidate(
-			ticketingEndAt != null && ticketingEndAt.isAfter(now),
-			"예매 종료 시점은 현재보다 미래여야 합니다."
+			ticketingEndAt != null,
+			"예매 종료 시점은 비어있을 수 없습니다."
 		);
 
-		if (ticketingOpenedAt != null && ticketingEndAt != null) {
-			Preconditions.domainValidate(
-				ticketingEndAt.isAfter(ticketingOpenedAt),
-				"예매 종료 시점은 시작 시점보다 이후여야 합니다."
-			);
-		}
+		Preconditions.domainValidate(
+			ticketingEndAt.isAfter(ticketingOpenedAt),
+			"예매 종료 시점은 시작 시점보다 이후여야 합니다."
+		);
 
 		Preconditions.domainValidate(
 			status != null,

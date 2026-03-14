@@ -3,11 +3,13 @@ package com.goti.game.service.application;
 import com.goti.constants.LeagueType;
 import com.goti.domain.entity.game.GameScheduleEntity;
 import com.goti.domain.entity.game.GameStatusEntity;
+import com.goti.domain.entity.game.GameTicketingStatusEntity;
 import com.goti.game.dto.response.GameCreateResponse;
 import com.goti.game.service.domain.GameScheduleService;
 
 import com.goti.game.service.domain.GameStatusService;
 
+import com.goti.game.service.domain.GameTicketingStatusService;
 import com.goti.service.domain.baseballteam.BaseballTeamService;
 
 import com.goti.service.domain.stadium.StadiumService;
@@ -26,6 +28,7 @@ public class GameManagementService {
 
 	private final GameScheduleService gameScheduleService;
 	private final GameStatusService gameStatusService;
+	private final GameTicketingStatusService gameTicketingStatusService;
 	private final BaseballTeamService baseballTeamService;
 	private final StadiumService stadiumService;
 
@@ -48,6 +51,9 @@ public class GameManagementService {
 
 		GameStatusEntity gameStatus = gameStatusService.create(gameSchedule);
 
+		GameTicketingStatusEntity gameTicketingStatus =
+			gameTicketingStatusService.create(gameSchedule);
+
 		return GameCreateResponse.from(
 			gameSchedule.getId(),
 			gameSchedule.getHomeTeamId(),
@@ -55,7 +61,10 @@ public class GameManagementService {
 			gameSchedule.getStadiumId(),
 			gameSchedule.getStartAt(),
 			gameSchedule.getLeagueType(),
-			gameStatus.getGameStatus()
+			gameStatus.getGameStatus(),
+			gameTicketingStatus.getTicketingOpenedAt(),
+			gameTicketingStatus.getTicketingEndAt(),
+			gameTicketingStatus.getStatus()
 		);
 	}
 
