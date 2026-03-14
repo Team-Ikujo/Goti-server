@@ -7,7 +7,7 @@ import com.goti.constants.TeamCode;
 import com.goti.domain.entity.stadium.StadiumEntity;
 import com.goti.domain.entity.team.BaseballTeamEntity;
 import com.goti.game.dto.response.GameCreateResponse;
-import com.goti.game.service.application.GameOperationService;
+import com.goti.game.service.application.GameManagementService;
 
 import com.goti.repository.BaseballTeamRepository;
 
@@ -34,10 +34,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @SpringBootTest(classes = GotiTicketingApplication.class)
 @ActiveProfiles("test")
-public class GameOperationServiceTest {
+public class GameManagementServiceTest {
 
 	@Autowired
-	GameOperationService gameOperationService;
+	GameManagementService gameManagementService;
 
 	@Autowired
 	BaseballTeamRepository baseballTeamRepository;
@@ -63,7 +63,7 @@ public class GameOperationServiceTest {
 	@Test
 	@DisplayName("method: create() - 경기 생성 성공")
 	void 경기_생성_성공() {
-		GameCreateResponse response = gameOperationService.register(
+		GameCreateResponse response = gameManagementService.register(
 			homeTeam.getId(),
 			awayTeam.getId(),
 			stadium.getId(),

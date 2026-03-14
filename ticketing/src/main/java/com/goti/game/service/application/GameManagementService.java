@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class GameOperationService {
+public class GameManagementService {
 
 	private final GameScheduleService gameScheduleService;
 	private final GameStatusService gameStatusService;
