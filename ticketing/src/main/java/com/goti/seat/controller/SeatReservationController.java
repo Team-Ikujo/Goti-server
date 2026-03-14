@@ -37,7 +37,7 @@ public class SeatReservationController {
 	@PostMapping("/{gameId}/seat-reservations")
 	public ResponseEntity<ApiSuccessResponse<HoldSeatResponse>> hold(
 		@PathVariable UUID gameId,
-		@AuthenticationPrincipal(expression = "id") UUID userId,
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@Valid @RequestBody HoldSeatRequest request
 	) {
 		// TODO: 대기열 구현 완료 후 queueTokenJti를 요청값이 아닌 queue token claim(jti)에서 추출하도록 변경
@@ -45,7 +45,7 @@ public class SeatReservationController {
 			seatHoldService.hold(
 				gameId,
 				request.seatId(),
-				userId,
+				memberId,
 				request.queueTokenJti()
 			)
 		);
@@ -60,10 +60,10 @@ public class SeatReservationController {
 	public ResponseEntity<ApiSuccessResponse<ReleaseSeatResponse>> release(
 		@PathVariable UUID gameId,
 		@PathVariable UUID holdId,
-		@AuthenticationPrincipal(expression = "id") UUID userId
+		@AuthenticationPrincipal(expression = "id") UUID memberId
 	) {
 		ReleaseSeatResponse response = ReleaseSeatResponse.from(
-			seatHoldService.release(gameId, holdId, userId)
+			seatHoldService.release(gameId, holdId, memberId)
 		);
 		return wrap(response);
 	}

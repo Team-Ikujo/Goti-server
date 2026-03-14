@@ -33,10 +33,10 @@ public class GameSeatStatusController {
 	)
 	@GetMapping("/{gameId}/sections/{sectionId}/seat-statuses")
 	public ResponseEntity<ApiSuccessResponse<List<GameSeatStatusResponse>>> list(
-		@AuthenticationPrincipal(expression = "id") UUID userId,
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@PathVariable UUID gameId,
 		@PathVariable UUID sectionId
 	) {
-		return wrap(seatStatusService.get(gameId, sectionId, userId));
+		return wrap(seatStatusService.get(gameId, sectionId, memberId));
 	}
 }
