@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TicketIssueStatus {
+public enum TicketStatus {
 
 	ISSUED("발행 완료"),
 	USED("사용 완료"),

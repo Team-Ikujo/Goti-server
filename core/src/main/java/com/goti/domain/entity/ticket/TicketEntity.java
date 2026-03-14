@@ -5,10 +5,11 @@ import static lombok.AccessLevel.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.goti.constants.TicketStatus;
+
 import org.springframework.util.StringUtils;
 
 import com.goti.constants.ResaleEnabledStatus;
-import com.goti.constants.TicketIssueStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
 import com.goti.global.validation.Preconditions;
 
@@ -76,7 +77,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private TicketIssueStatus ticketStatus;
+	private TicketStatus ticketStatus;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -117,7 +118,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 		this.seatInfo = seatInfo;
 		this.ticketPrice = ticketPrice;
 		this.resalePrice = resalePrice;
-		this.ticketStatus = TicketIssueStatus.ISSUED;
+		this.ticketStatus = TicketStatus.ISSUED;
 		this.resaleEnabledStatus = ResaleEnabledStatus.DISABLED;
 		this.qrCode = qrCode;
 		this.usedAt = null;
