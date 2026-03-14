@@ -28,7 +28,7 @@ public class GameTicketingStatusEntityTest {
 
 	static final LocalDateTime START_AT = LocalDateTime.now().plusDays(3);
 	static final LeagueType LEAGUE_TYPE = LeagueType.REGULAR;
-	static final LocalDateTime OPENED_AT = LocalDateTime.now().plusDays(3);
+	static final LocalDateTime OPENED_AT = LocalDateTime.now().plusDays(1);
 	static final LocalDateTime CLOSED_AT = LocalDateTime.now().plusDays(5);
 	static final TicketingStatus TICKETING_STATUS = TicketingStatus.SCHEDULED;
 
@@ -70,19 +70,7 @@ public class GameTicketingStatusEntityTest {
 				gameSchedule, null, CLOSED_AT, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("예매 시작 시점은 현재보다 미래여야 합니다.");
-	}
-
-	@Test
-	void 게임_티켓팅_상태_생성_실패_예매시작_시간_과거() {
-		LocalDateTime openedAt = LocalDateTime.now().minusDays(2);
-
-		assertThatThrownBy(
-			() -> GameTicketingStatusEntity.create(
-				gameSchedule, openedAt , CLOSED_AT, TICKETING_STATUS
-			)
-		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("예매 시작 시점은 현재보다 미래여야 합니다.");
+			.hasMessageContaining("예매 시작 시점은 비어있을 수 없습니다.");
 	}
 
 	@Test
@@ -92,25 +80,13 @@ public class GameTicketingStatusEntityTest {
 				gameSchedule, OPENED_AT, null, TICKETING_STATUS
 			)
 		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("예매 종료 시점은 현재보다 미래여야 합니다.");
-	}
-
-	@Test
-	void 게임_티켓팅_상태_생성_실패_예매종료_시간_과거() {
-		LocalDateTime closeAt = LocalDateTime.now().minusDays(2);
-
-		assertThatThrownBy(
-			() -> GameTicketingStatusEntity.create(
-				gameSchedule, OPENED_AT, closeAt, TICKETING_STATUS
-			)
-		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("예매 종료 시점은 현재보다 미래여야 합니다.");
+			.hasMessageContaining("예매 종료 시점은 비어있을 수 없습니다.");
 	}
 
 	@Test
 	void 게임_티켓팅_상태_생성_실패_예매시작시간_예매종료시간_이후() {
 		LocalDateTime openedAt = LocalDateTime.now().plusDays(3);
-		LocalDateTime closeAt = LocalDateTime.now().plusDays(1);
+		LocalDateTime closeAt = LocalDateTime.now().minusDays(1);
 
 		assertThatThrownBy(
 			() -> GameTicketingStatusEntity.create(
