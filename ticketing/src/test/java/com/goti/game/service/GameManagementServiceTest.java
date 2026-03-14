@@ -4,6 +4,7 @@ import com.goti.GotiTicketingApplication;
 
 import com.goti.constants.LeagueType;
 import com.goti.constants.TeamCode;
+import com.goti.constants.TicketingStatus;
 import com.goti.domain.entity.stadium.StadiumEntity;
 import com.goti.domain.entity.team.BaseballTeamEntity;
 import com.goti.game.dto.response.GameCreateResponse;
@@ -49,7 +50,8 @@ public class GameManagementServiceTest {
 	BaseballTeamEntity awayTeam;
 	StadiumEntity stadium;
 
-	static final LocalDateTime START_AT = LocalDateTime.now().plusDays(3);
+	static final LocalDateTime START_AT =
+		LocalDateTime.now().plusDays(3).withHour(18).withMinute(30).withSecond(0).withNano(0);
 
 	static final LeagueType LEAGUE_TYPE = LeagueType.REGULAR;
 
@@ -72,7 +74,13 @@ public class GameManagementServiceTest {
 		);
 
 		assertNotNull(response.gameId());
+		assertNotNull(response.ticketingOpenedAt());
+		assertNotNull(response.ticketingEndAt());
+		assertEquals(TicketingStatus.AVAILABLE, response.ticketingStatus());
 		log.info("response gameId : {}", response.gameId());
+		log.info("response ticketingStatus :: {}", response.ticketingStatus());
+		log.info("response ticketingOpenedAt :: {}", response.ticketingOpenedAt());
+		log.info("response ticketingEndAt :: {}", response.ticketingEndAt());
 	}
 
 	void saveHomeTeam() {

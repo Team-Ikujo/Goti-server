@@ -26,7 +26,7 @@ public class GameTicketingStatusServiceImpl implements GameTicketingStatusServic
 		LocalDateTime now = LocalDateTime.now();
 
 		LocalDateTime openedAt = calculateOpenedAt(gameStartAt, now);
-		LocalDateTime endAt = gameStartAt.plusHours(1);
+		LocalDateTime endAt = gameStartAt.plusHours(1).withSecond(0).withNano(0);
 		TicketingStatus status = TicketingStatus.SCHEDULED;
 		if (openedAt.isBefore(now) || openedAt.isEqual(now))
 			status = TicketingStatus.AVAILABLE;
