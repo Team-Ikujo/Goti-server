@@ -26,25 +26,25 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Seat Reservation", description = "좌석 점유 및 해제 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/games")
+@RequestMapping("/api/v1/seat-reservations")
 public class SeatReservationController {
 	private final SeatHoldService seatHoldService;
 
 	@Operation(
 		summary = "좌석 점유",
-		description = "좌석을 임시 점유(HOLD) API"
+		description = "좌석 임시 점유(HOLD) API"
 	)
-	@PostMapping("/{gameId}/seat-reservations")
+	@PostMapping("/seats/{seatId}")
 	public ResponseEntity<ApiSuccessResponse<HoldSeatResponse>> hold(
-		@PathVariable UUID gameId,
+		@PathVariable UUID seatId,
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@Valid @RequestBody HoldSeatRequest request
 	) {
 		// TODO: 대기열 구현 완료 후 queueTokenJti를 요청값이 아닌 queue token claim(jti)에서 추출하도록 변경
 		HoldSeatResponse response = HoldSeatResponse.from(
 			seatHoldService.hold(
-				gameId,
-				request.seatId(),
+				request.gameId(),
+				seatId,
 				memberId,
 				request.queueTokenJti()
 			)
@@ -56,14 +56,13 @@ public class SeatReservationController {
 		summary = "좌석 점유 해제",
 		description = "좌석 점유 해제 API"
 	)
-	@PostMapping("/{gameId}/seat-reservations/{holdId}")
+	@PostMapping("/{holdId}")
 	public ResponseEntity<ApiSuccessResponse<ReleaseSeatResponse>> release(
-		@PathVariable UUID gameId,
 		@PathVariable UUID holdId,
 		@AuthenticationPrincipal(expression = "id") UUID memberId
 	) {
 		ReleaseSeatResponse response = ReleaseSeatResponse.from(
-			seatHoldService.release(gameId, holdId, memberId)
+			seatHoldService.release(holdId, memberId)
 		);
 		return wrap(response);
 	}
