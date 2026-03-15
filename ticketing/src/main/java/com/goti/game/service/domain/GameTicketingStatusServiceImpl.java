@@ -45,7 +45,7 @@ public class GameTicketingStatusServiceImpl implements GameTicketingStatusServic
 			.withNano(0);
 
 		if (standardOpenAt.isBefore(now)) {
-			standardOpenAt = now.toLocalDate().atTime(11, 0);
+			standardOpenAt = now.toLocalDate().atTime(11, 0, 0, 0);
 		}
 
 		return standardOpenAt;

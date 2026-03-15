@@ -69,11 +69,11 @@ public class GameRegistrationTest {
 	BaseballTeamEntity awayTeam;
 	StadiumEntity stadium;
 
-	static final LocalDateTime START_AT =
+	private static final LocalDateTime START_AT =
 		LocalDateTime.now().plusDays(3).withMinute(30).withSecond(0).withNano(0);
-	static final LeagueType LEAGUE_TYPE = LeagueType.REGULAR;
-	static final LocalDateTime now = LocalDateTime.now();
-	static final int TICKETING_START_HOUR = 11;
+	private static final LeagueType LEAGUE_TYPE = LeagueType.REGULAR;
+	private static final LocalDateTime now = LocalDateTime.now();
+	private static final int TICKETING_START_HOUR = 11;
 
 	@BeforeEach
 	void setup() {
@@ -95,11 +95,17 @@ public class GameRegistrationTest {
 			LEAGUE_TYPE
 		);
 
-		String expectedTicketingOpenedAt = LocalDateTime.of(
-			now.getYear(), now.getMonth(), now.getDayOfMonth(), TICKETING_START_HOUR, 0,0,0
-		).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		LocalDateTime executionTime = LocalDateTime.now();
 
-		String expectedTicketingEndAt = START_AT.plusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		LocalDateTime expectedOpenTime = executionTime.toLocalDate().atTime(TICKETING_START_HOUR, 0);
+		String formattedOpenedAt = expectedOpenTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		String formattedEndAt = START_AT.plusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		TicketingStatus expectedStatus = TicketingStatus.SCHEDULED;
+		if (expectedOpenTime.isBefore(executionTime) || expectedOpenTime.isEqual(executionTime)) {
+			expectedStatus = TicketingStatus.AVAILABLE;
+		}
 
 		MvcResult result = mockMvc.perform(
 				post("/api/v1/games")
@@ -117,9 +123,9 @@ public class GameRegistrationTest {
 				jsonPath("$.data.homeTeamId").value(homeTeam.getId().toString()),
 				jsonPath("$.data.awayTeamId").value(awayTeam.getId().toString()),
 				jsonPath("$.data.stadiumId").value(stadium.getId().toString()),
-				jsonPath("$.data.ticketingOpenedAt").value(expectedTicketingOpenedAt),
-				jsonPath("$.data.ticketingEndAt").value(expectedTicketingEndAt),
-				jsonPath("$.data.ticketingStatus").value(TicketingStatus.AVAILABLE.name())
+				jsonPath("$.data.ticketingOpenedAt").value(formattedOpenedAt),
+				jsonPath("$.data.ticketingEndAt").value(formattedEndAt),
+				jsonPath("$.data.ticketingStatus").value(expectedStatus.name())
 
 			).andReturn();
 
