@@ -65,6 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		if (shouldFail(idempotencyKey)) {
 			payment.fail(MOCK_PAYMENT_FAILED_REASON);
+			paymentRepository.save(payment);
 		} else {
 			payment.succeed(generateMockPgTid());
 			paymentRepository.save(payment);
@@ -74,9 +75,6 @@ public class PaymentServiceImpl implements PaymentService {
 				payment.getId(),
 				payment.getPgTid()
 			);
-		}
-		if (payment.getId() == null) {
-			paymentRepository.save(payment);
 		}
 
 		return PaymentResponse.from(
