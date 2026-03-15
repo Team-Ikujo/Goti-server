@@ -1,4 +1,4 @@
-package com.goti.service;
+package com.goti.service.application;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OrderService {
+public class PaymentOrderGateway {
 	private final TicketingOrderClient ticketingOrderClient;
 
 	public PaymentOrderInfo getPaymentOrder(
