@@ -27,7 +27,7 @@ public class TicketCreateService {
 	@Transactional
 	public List<TicketResponse> create(OrderEntity order) {
 		OrderHistoryEntity orderHistory = orderHistoryRepository.findByOrder_Id(order.getId())
-			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_HISTORY_NOT_FOUND));
 
 		//TODO: 경기 제목 추가
 		return orderItemRepository.findOrderItemsByOrderId(order.getId()).stream()
