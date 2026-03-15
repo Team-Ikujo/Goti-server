@@ -71,6 +71,11 @@ public class OrderController {
 		@PathVariable UUID orderId,
 		@Valid @RequestBody OrderPaymentConfirmRequest request
 	) {
-		return wrap(orderPaymentConfirmService.confirm(orderId, request.userId()));
+		return wrap(orderPaymentConfirmService.confirm(
+			orderId,
+			request.userId(),
+			request.paymentId(),
+			request.pgTid()
+		));
 	}
 }

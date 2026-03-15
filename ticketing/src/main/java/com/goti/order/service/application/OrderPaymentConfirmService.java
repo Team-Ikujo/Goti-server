@@ -19,7 +19,9 @@ import com.goti.ticket.dto.response.TicketResponse;
 import com.goti.ticket.service.application.TicketCreateService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderPaymentConfirmService {
@@ -30,8 +32,18 @@ public class OrderPaymentConfirmService {
 	@Transactional
 	public OrderPaymentConfirmResponse confirm(
 		UUID orderId,
-		UUID userId
+		UUID userId,
+		UUID paymentId,
+		String pgTid
 	) {
+		log.info(
+			"주문 결제 완료 처리 시작 - orderId: {}, userId: {}, paymentId: {}, pgTid: {}",
+			orderId,
+			userId,
+			paymentId,
+			pgTid
+		);
+
 		OrderEntity order = orderRepository.findByIdAndUserId(orderId, userId)
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
