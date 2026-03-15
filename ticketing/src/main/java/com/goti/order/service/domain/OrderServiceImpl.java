@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
 			ErrorCode.AUTH_INVALID
 		);
 
-		return orderRepository.findAllByUserIdOrderByCreatedAtDesc(memberId).stream()
+		return orderRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId).stream()
 			.map(OrderListResponse::from)
 			.toList();
 	}

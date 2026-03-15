@@ -12,5 +12,5 @@ import com.goti.domain.entity.order.OrderEntity;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
 	@EntityGraph(attributePaths = "gameSchedule")
-	List<OrderEntity> findAllByUserIdOrderByCreatedAtDesc(UUID userId);
+	List<OrderEntity> findAllByMemberIdOrderByCreatedAtDesc(UUID memberId);
 }
