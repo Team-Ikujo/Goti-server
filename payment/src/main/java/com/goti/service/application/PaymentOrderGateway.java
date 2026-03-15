@@ -21,14 +21,14 @@ public class PaymentOrderGateway {
 
 	public PaymentOrderInfo getPaymentOrder(
 		UUID orderId,
-		UUID userId
+		UUID memberId
 	) {
-		log.info("주문 조회 - orderId: {}, userId: {}", orderId, userId);
+		log.info("주문 조회 - orderId: {}, memberId: {}", orderId, memberId);
 
 		// TODO: 실제 구현 시 ticketing/order 도메인 API 또는 RestClient로 조회
 		return new PaymentOrderInfo(
 			orderId,
-			userId,
+			memberId,
 			OrderStatus.PENDING,
 			1000
 		);
@@ -36,14 +36,14 @@ public class PaymentOrderGateway {
 
 	public void confirmPayment(
 		UUID orderId,
-		UUID userId,
+		UUID memberId,
 		UUID paymentId,
 		String pgTid
 	) {
-		log.info("주문 결제 확정 - orderId: {}, userId: {}", orderId, userId);
+		log.info("주문 결제 확정 - orderId: {}, memberId: {}", orderId, memberId);
 		ticketingOrderClient.confirmPayment(
 			orderId,
-			new OrderPaymentConfirmApiRequest(userId, paymentId, pgTid)
+			new OrderPaymentConfirmApiRequest(memberId, paymentId, pgTid)
 		);
 	}
 }

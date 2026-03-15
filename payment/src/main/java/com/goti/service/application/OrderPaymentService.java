@@ -24,20 +24,20 @@ public class OrderPaymentService {
 	@Transactional
 	public PaymentResponse create(
 		UUID orderId,
-		UUID userId,
+		UUID memberId,
 		PaymentMethod paymentMethod,
 		String idempotencyKey
 	) {
-		PaymentOrderInfo order = paymentOrderGateway.getPaymentOrder(orderId, userId);
+		PaymentOrderInfo order = paymentOrderGateway.getPaymentOrder(orderId, memberId);
 
 		Preconditions.validate(
-			order.userId().equals(userId),
+			order.memberId().equals(memberId),
 			ErrorCode.AUTH_PERMISSION_DENIED
 		);
 
 		PaymentResponse payment = paymentService.create(
 			order.orderId(),
-			userId,
+			memberId,
 			paymentMethod,
 			idempotencyKey,
 			order.totalAmount()
@@ -46,7 +46,7 @@ public class OrderPaymentService {
 		if (payment.paymentStatus() == PaymentStatus.SUCCESS) {
 			paymentOrderGateway.confirmPayment(
 				orderId,
-				userId,
+				memberId,
 				payment.paymentId(),
 				payment.pgTid()
 			);

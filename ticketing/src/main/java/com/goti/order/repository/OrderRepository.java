@@ -14,5 +14,5 @@ import com.goti.domain.entity.order.OrderEntity;
 public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
 	@EntityGraph(attributePaths = "gameSchedule")
 	List<OrderEntity> findAllByMemberIdOrderByCreatedAtDesc(UUID memberId);
-	Optional<OrderEntity> findByIdAndUserId(UUID id, UUID userId);
+	Optional<OrderEntity> findByIdAndMemberId(UUID id, UUID memberId);
 }

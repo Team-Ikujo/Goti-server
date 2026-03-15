@@ -44,7 +44,7 @@ public class OrderPaymentConfirmService {
 			pgTid
 		);
 
-		OrderEntity order = orderRepository.findByIdAndUserId(orderId, userId)
+		OrderEntity order = orderRepository.findByIdAndMemberId(orderId, userId)
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
 		Preconditions.validate(
