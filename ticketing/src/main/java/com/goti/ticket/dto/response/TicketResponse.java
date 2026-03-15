@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.goti.constants.ResaleEnabledStatus;
-import com.goti.constants.TicketIssueStatus;
-import com.goti.constants.TicketResaleStatus;
 import com.goti.constants.TicketStatus;
 import com.goti.domain.entity.ticket.TicketEntity;
 
