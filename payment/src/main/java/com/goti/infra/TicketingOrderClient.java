@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.goti.config.properties.TicketingApiProperties;
 import com.goti.service.dto.OrderPaymentConfirmApiRequest;
@@ -23,7 +24,12 @@ public class TicketingOrderClient {
 		OrderPaymentConfirmApiRequest request
 	) {
 		restClient.post()
-			.uri(properties.baseUrl() + "/api/v1/orders/{orderId}/payment-confirmations", orderId)
+			.uri(
+				UriComponentsBuilder.fromUriString(properties.baseUrl())
+					.path("/api/v1/orders/{orderId}/payment-confirmations")
+					.buildAndExpand(orderId)
+					.toUri()
+			)
 			.body(request)
 			.retrieve()
 			.toBodilessEntity();
