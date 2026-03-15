@@ -31,7 +31,7 @@ public class TicketController {
 
 	@Operation(
 		summary = "티켓 상세 조회",
-		description = "사용자 본인의 티켓 상세 정보를 조회하는 API"
+		description = "티켓 상세 정보 조회 API"
 	)
 	@GetMapping("/{ticketId}")
 	public ResponseEntity<ApiSuccessResponse<TicketResponse>> getDetail(
@@ -43,7 +43,7 @@ public class TicketController {
 
 	@Operation(
 		summary = "모바일 티켓 QR 발급",
-		description = "모바일 티켓 QR 토큰을 발급하는 API"
+		description = "모바일 티켓 QR 토큰 발급 API"
 	)
 	@GetMapping("/{ticketId}/qr")
 	public ResponseEntity<ApiSuccessResponse<TicketQrResponse>> getQr(
