@@ -73,10 +73,19 @@ public class GameManagementServiceTest {
 			LEAGUE_TYPE
 		);
 
+		LocalDateTime executionTime = LocalDateTime.now();
+
+		LocalDateTime expectedOpenAt = executionTime.toLocalDate().atTime(11, 0);
+
+		TicketingStatus expectedStatus = TicketingStatus.SCHEDULED;
+		if (expectedOpenAt.isBefore(executionTime) || expectedOpenAt.isEqual(executionTime)) {
+			expectedStatus = TicketingStatus.AVAILABLE;
+		}
+
 		assertNotNull(response.gameId());
 		assertNotNull(response.ticketingOpenedAt());
 		assertNotNull(response.ticketingEndAt());
-		assertEquals(TicketingStatus.AVAILABLE, response.ticketingStatus());
+		assertEquals(expectedStatus, response.ticketingStatus());
 		log.info("response gameId : {}", response.gameId());
 		log.info("response ticketingStatus :: {}", response.ticketingStatus());
 		log.info("response ticketingOpenedAt :: {}", response.ticketingOpenedAt());
