@@ -7,6 +7,7 @@ import com.goti.config.jwt.JwtAuthenticationFilter;
 import com.goti.config.security.SecurityConfig;
 import com.goti.constants.LeagueType;
 import com.goti.constants.TeamCode;
+import com.goti.constants.TicketingStatus;
 import com.goti.domain.entity.stadium.StadiumEntity;
 
 import com.goti.domain.entity.team.BaseballTeamEntity;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -67,8 +69,11 @@ public class GameRegistrationTest {
 	BaseballTeamEntity awayTeam;
 	StadiumEntity stadium;
 
-	static final LocalDateTime START_AT = LocalDateTime.now().plusDays(3);
+	static final LocalDateTime START_AT =
+		LocalDateTime.now().plusDays(3).withMinute(30).withSecond(0).withNano(0);
 	static final LeagueType LEAGUE_TYPE = LeagueType.REGULAR;
+	static final LocalDateTime now = LocalDateTime.now();
+	static final int TICKETING_START_HOUR = 11;
 
 	@BeforeEach
 	void setup() {
@@ -90,6 +95,11 @@ public class GameRegistrationTest {
 			LEAGUE_TYPE
 		);
 
+		String expectedTicketingOpenedAt = LocalDateTime.of(
+			now.getYear(), now.getMonth(), now.getDayOfMonth(), TICKETING_START_HOUR, 0,0,0
+		).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		String expectedTicketingEndAt = START_AT.plusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
 		MvcResult result = mockMvc.perform(
 				post("/api/v1/games")
@@ -106,7 +116,11 @@ public class GameRegistrationTest {
 				jsonPath("$.data.gameId").exists(),
 				jsonPath("$.data.homeTeamId").value(homeTeam.getId().toString()),
 				jsonPath("$.data.awayTeamId").value(awayTeam.getId().toString()),
-				jsonPath("$.data.stadiumId").value(stadium.getId().toString())
+				jsonPath("$.data.stadiumId").value(stadium.getId().toString()),
+				jsonPath("$.data.ticketingOpenedAt").value(expectedTicketingOpenedAt),
+				jsonPath("$.data.ticketingEndAt").value(expectedTicketingEndAt),
+				jsonPath("$.data.ticketingStatus").value(TicketingStatus.AVAILABLE.name())
+
 			).andReturn();
 
 		String responseJson = result.getResponse().getContentAsString();
