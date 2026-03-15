@@ -123,13 +123,13 @@ public class ResaleListingService {
 	}
 
 	@Transactional(readOnly = true)
-	public long getListingCountBySection(UUID sectionId) {
-		return listingRepository.countBySectionIdAndListingStatus(sectionId, ResaleListingStatus.LISTING);
+	public long getListingCountBySection(UUID gameId, UUID sectionId) {
+		return listingRepository.countByGameIdAndSectionIdAndListingStatus(gameId, sectionId, ResaleListingStatus.LISTING);
 	}
 
 	@Transactional(readOnly = true)
-	public long getTotalListingCount() {
-		return listingRepository.countByListingStatus(ResaleListingStatus.LISTING);
+	public long getTotalListingCount(UUID gameId) {
+		return listingRepository.countByGameIdAndListingStatus(gameId, ResaleListingStatus.LISTING);
 	}
 
 	@Transactional

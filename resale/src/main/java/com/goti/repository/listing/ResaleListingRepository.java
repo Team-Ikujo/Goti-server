@@ -14,9 +14,9 @@ public interface ResaleListingRepository extends JpaRepository<ResaleListingEnti
 
 	List<ResaleListingEntity> findAllBySellerId(UUID sellerId);
 
-	Long countBySectionIdAndListingStatus(UUID sectionId, ResaleListingStatus status);
+	Long countByGameIdAndSectionIdAndListingStatus(UUID gameId, UUID sectionId, ResaleListingStatus status);
 
-	Long countByListingStatus(ResaleListingStatus status);
+	Long countByGameIdAndListingStatus(UUID gameId, ResaleListingStatus status);
 
 	boolean existsByTicketIdAndListingStatusIn(UUID ticketId, List<ResaleListingStatus> statuses);
 

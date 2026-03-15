@@ -82,10 +82,10 @@ public class ResaleListingController {
 	}
 
 	@Operation(
-		summary = "판매 기록 조회",
-		description = "지난 시간(HOUR, DAY, WEEK) 내 등급 별 판매 기록 조회 API"
+		summary = "경기의 판매 기록 조회",
+		description = "경기의 지난 시간(HOUR, DAY, WEEK) 내 등급 별 판매 기록 조회 API"
 	)
-	@GetMapping("/histories/graph/{gameId}/{gradeId}/{range}")
+	@GetMapping("/histories/games/{gameId}/grade/{gradeId}/ranges/{range}/graph")
 	public ResponseEntity<ApiSuccessResponse<List<ResalePriceHistoryResponse>>> getListPriceHistory(
 		@PathVariable UUID gameId,
 		@PathVariable UUID gradeId,
@@ -96,24 +96,27 @@ public class ResaleListingController {
 	}
 
 	@Operation(
-		summary = "전체 리셀 좌석 개수 조회",
-		description = "전체 리셀 좌석의 갯수 조회 API"
+		summary = "경기의 전체 리셀 좌석 개수 조회",
+		description = "경기의 전체 리셀 좌석의 갯수 조회 API"
 	)
-	@GetMapping("/listings/count")
-	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getTotalListingCount() {
-		long count = listingService.getTotalListingCount();
+	@GetMapping("/listings/games/{gameId}/count")
+	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getTotalListingCount(
+		@PathVariable UUID gameId
+	) {
+		long count = listingService.getTotalListingCount(gameId);
 		return wrap(new ResaleListingCountResponse(count));
 	}
 
 	@Operation(
-		summary = "구역별 리셀 좌석 개수 조회",
-		description = "구역별 리셀 좌석의 갯수 조회 API"
+		summary = "경기의 구역별 리셀 좌석 개수 조회",
+		description = "경기의 구역별 리셀 좌석의 갯수 조회 API"
 	)
-	@GetMapping("/listings/count/section/{sectionId}")
+	@GetMapping("/listings/games/{gameId}/section/{sectionId}/count")
 	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getListingCountBySection(
+		@PathVariable UUID gameId,
 		@PathVariable UUID sectionId
 	) {
-		long count = listingService.getListingCountBySection(sectionId);
+		long count = listingService.getListingCountBySection(gameId, sectionId);
 		return wrap(new ResaleListingCountResponse(count));
 	}
 }
