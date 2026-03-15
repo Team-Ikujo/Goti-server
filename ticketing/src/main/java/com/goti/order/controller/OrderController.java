@@ -52,7 +52,7 @@ public class OrderController {
 
 	@Operation(
 		summary = "내 주문 목록 조회",
-		description = "현재 로그인한 사용자의 주문 목록을 조회하는 API"
+		description = "주문 목록 조회 API"
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<List<OrderListResponse>>> getMyOrders(
