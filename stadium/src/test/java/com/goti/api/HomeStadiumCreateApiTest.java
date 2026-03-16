@@ -1,19 +1,12 @@
 package com.goti.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goti.GotiStadiumApplication;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.goti.constants.StadiumType;
-import com.goti.constants.TeamCode;
-import com.goti.domain.entity.stadium.StadiumEntity;
-import com.goti.domain.entity.team.BaseballTeamEntity;
-
-import com.goti.dto.request.BaseballTeamCreateRequest;
-import com.goti.dto.request.HomeStadiumCreateRequest;
-import com.goti.dto.response.HomeStadiumCreateResponse;
-import com.goti.repository.BaseballTeamRepository;
-
-import com.goti.repository.StadiumRepository;
+import java.math.BigDecimal;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,14 +19,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goti.GotiStadiumApplication;
+import com.goti.constants.StadiumType;
+import com.goti.constants.TeamCode;
+import com.goti.domain.entity.stadium.StadiumEntity;
+import com.goti.domain.entity.team.BaseballTeamEntity;
+import com.goti.dto.request.HomeStadiumCreateRequest;
+import com.goti.repository.BaseballTeamRepository;
+import com.goti.repository.StadiumRepository;
 
 @SpringBootTest(classes = GotiStadiumApplication.class)
 @Transactional
