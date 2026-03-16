@@ -22,22 +22,24 @@ public class GameScheduleSearchService {
 		List<GameScheduleEntity> schedules = gameScheduleRepository.searchSchedules(condition);
 
 		return schedules.stream().map(
-			schedule -> {
-				return new GameScheduleSearchResponse(
-					schedule.getId(),
-					schedule.getStartAt(),
-					schedule.getLeagueType(),
-					schedule.getHomeTeamId(),
-					schedule.getAwayTeamId(),
-					schedule.getStadiumId(),
-					schedule.getGameStatus().getGameStatus(),
-					schedule.getGameStatus().getHomeTeamScore(),
-					schedule.getGameStatus().getAwayTeamScore(),
-					schedule.getGameStatus().getGameResult(),
-					schedule.getTicketingStatus().getStatus(),
-					schedule.getTicketingStatus().getTicketingOpenedAt()
-				);
-			}
+			this::toGameScheduleSearchResponse
 		).toList();
+	}
+
+	private GameScheduleSearchResponse toGameScheduleSearchResponse(GameScheduleEntity schedule) {
+		return new GameScheduleSearchResponse(
+			schedule.getId(),
+			schedule.getStartAt(),
+			schedule.getLeagueType(),
+			schedule.getHomeTeamId(),
+			schedule.getAwayTeamId(),
+			schedule.getStadiumId(),
+			schedule.getGameStatus().getGameStatus(),
+			schedule.getGameStatus().getHomeTeamScore(),
+			schedule.getGameStatus().getAwayTeamScore(),
+			schedule.getGameStatus().getGameResult(),
+			schedule.getTicketingStatus().getStatus(),
+			schedule.getTicketingStatus().getTicketingOpenedAt()
+		);
 	}
 }
