@@ -9,13 +9,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 
 import static lombok.AccessLevel.*;
@@ -40,6 +40,12 @@ public class GameScheduleEntity extends ModificationTimestampEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private LeagueType leagueType;
+
+	@OneToOne(mappedBy = "gameSchedule", fetch = FetchType.LAZY)
+	private GameStatusEntity gameStatus;
+
+	@OneToOne(mappedBy = "gameSchedule", fetch = FetchType.LAZY)
+	private GameTicketingStatusEntity ticketingStatus;
 
 	private GameScheduleEntity(
 		UUID homeTeamId,
