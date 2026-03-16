@@ -53,6 +53,10 @@ public class GameController {
 		);
 	}
 
+	@Operation(
+		summary = "야구 경기 일정 조회",
+		description = "야구 경기 일정 (당일, 일정별, 팀별) 조회 API"
+	)
 	@GetMapping("/schedules")
 	public ResponseEntity<ApiSuccessResponse<List<GameScheduleSearchResponse>>> search(
 		@Valid GameScheduleSearchCondition condition
