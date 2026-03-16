@@ -1,5 +1,16 @@
 package com.goti.controller;
 
+import static com.goti.global.api.ApiSuccessResponse.*;
+
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.goti.dto.request.BaseballTeamCreateRequest;
 import com.goti.dto.request.HomeStadiumCreateRequest;
 import com.goti.dto.response.BaseballTeamCreateResponse;
@@ -11,17 +22,6 @@ import com.goti.service.domain.baseballteam.BaseballTeamService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
-
-import static com.goti.global.api.ApiSuccessResponse.wrap;
 
 @Tag(name = "BaseballTeam", description = "야구구단(팀) 관련 API")
 @RestController
