@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 
 @Schema(description = "게임 일정 조회 요청")
-public record GameSearchRequest(
+public record GameScheduleSearchCondition(
 	@Schema(description = "야구구단(팀) ID", example = "550e8400-e29b-41d4-a716-446655440000")
 	UUID teamId,
 
