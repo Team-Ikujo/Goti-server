@@ -47,6 +47,14 @@ public class GameScheduleEntity extends ModificationTimestampEntity {
 	@OneToOne(mappedBy = "gameSchedule", fetch = FetchType.LAZY)
 	private GameTicketingStatusEntity ticketingStatus;
 
+	public void initGameStatus(GameStatusEntity gameStatus) {
+		this.gameStatus = gameStatus;
+	}
+
+	public void initTicketingStatus(GameTicketingStatusEntity gameTicketingStatus) {
+		this.ticketingStatus = gameTicketingStatus;
+	}
+
 	private GameScheduleEntity(
 		UUID homeTeamId,
 		UUID awayTeamId,
