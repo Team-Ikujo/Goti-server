@@ -1,9 +1,12 @@
 package com.goti.game.controller;
 
 import com.goti.game.dto.request.GameCreateRequest;
+import com.goti.game.dto.request.GameScheduleSearchCondition;
 import com.goti.game.dto.response.GameCreateResponse;
+import com.goti.game.dto.response.GameScheduleSearchResponse;
 import com.goti.game.service.application.GameManagementService;
 
+import com.goti.game.service.application.GameScheduleSearchService;
 import com.goti.global.api.ApiSuccessResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,11 +14,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static com.goti.global.api.ApiSuccessResponse.wrap;
 
@@ -26,6 +33,7 @@ import static com.goti.global.api.ApiSuccessResponse.wrap;
 public class GameController {
 
 	private final GameManagementService gameManagementService;
+	private final GameScheduleSearchService scheduleSearchService;
 
 	@Operation(
 		summary = "야구 경기 등록",
@@ -44,6 +52,15 @@ public class GameController {
 				request.leagueType()
 			)
 		);
-
 	}
+
+	@GetMapping("/schedules")
+	public ResponseEntity<ApiSuccessResponse<List<GameScheduleSearchResponse>>> search(
+		@Valid GameScheduleSearchCondition condition
+	) {
+		return wrap(
+			scheduleSearchService.searchSchedules(condition)
+		);
+	}
+
 }
