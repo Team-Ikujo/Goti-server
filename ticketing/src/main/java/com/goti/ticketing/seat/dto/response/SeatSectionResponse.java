@@ -25,6 +25,10 @@ public record SeatSectionResponse(
 	@Schema(description = "잔여석 수", example = "87")
 	Integer availableSeatCount
 ) {
+	public static SeatSectionResponse from(SeatSectionEntity seatSection) {
+		return from(seatSection, null);
+	}
+
 	public static SeatSectionResponse from(
 		SeatSectionEntity seatSection,
 		Integer availableSeatCount
