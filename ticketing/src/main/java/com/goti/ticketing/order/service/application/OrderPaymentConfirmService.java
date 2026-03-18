@@ -15,6 +15,7 @@ import com.goti.global.validation.Preconditions;
 import com.goti.ticketing.order.dto.response.OrderPaymentConfirmResponse;
 import com.goti.ticketing.order.repository.OrderItemRepository;
 import com.goti.ticketing.order.repository.OrderRepository;
+import com.goti.ticketing.seat.repository.SeatStatusRepository;
 import com.goti.ticketing.ticket.dto.response.TicketResponse;
 import com.goti.ticketing.ticket.service.application.TicketCreateService;
 
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderPaymentConfirmService {
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
+	private final SeatStatusRepository seatStatusRepository;
 	private final TicketCreateService ticketCreateService;
 
 	@Transactional
@@ -56,6 +58,9 @@ public class OrderPaymentConfirmService {
 
 		List<OrderItemEntity> orderItems = orderItemRepository.findOrderItemsByOrderId(orderId);
 		for (OrderItemEntity orderItem : orderItems) {
+			seatStatusRepository.findByGameAndSeat(order.getGameSchedule(), orderItem.getSeat())
+				.orElseThrow(() -> new CustomException(ErrorCode.SEAT_STATUS_NOT_FOUND))
+				.sell();
 			orderItem.pay();
 		}
 
