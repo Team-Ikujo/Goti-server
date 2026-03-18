@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Payment", description = "결제 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/api/v1/payment-orders")
 public class PaymentController {
 	private final OrderPaymentService orderPaymentService;
 
