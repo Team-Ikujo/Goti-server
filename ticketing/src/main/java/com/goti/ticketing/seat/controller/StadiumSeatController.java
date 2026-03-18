@@ -86,11 +86,12 @@ public class StadiumSeatController {
 		summary = "좌석 구역 조회",
 		description = "구장별 좌석 구역 목록 조회 API"
 	)
-	@GetMapping("/{stadiumId}/seat-sections")
+	@GetMapping("/stadiums/{stadiumId}/games/{gameId}/seat-sections")
 	public ResponseEntity<ApiSuccessResponse<List<SeatSectionResponse>>> getSeatSections(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@PathVariable UUID stadiumId
+		@PathVariable UUID stadiumId,
+		@PathVariable UUID gameId
 	) {
-		return wrap(seatSectionService.get(stadiumId, userId));
+		return wrap(seatSectionService.get(stadiumId, userId, gameId));
 	}
 }
