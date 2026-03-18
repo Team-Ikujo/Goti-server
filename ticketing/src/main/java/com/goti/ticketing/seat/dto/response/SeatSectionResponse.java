@@ -20,15 +20,22 @@ public record SeatSectionResponse(
 	String sectionCode,
 
 	@Schema(description = "수용 인원", example = "120")
-	Integer capacity
+	Integer capacity,
+
+	@Schema(description = "잔여석 수", example = "87")
+	Integer availableSeatCount
 ) {
-	public static SeatSectionResponse from(SeatSectionEntity seatSection) {
+	public static SeatSectionResponse from(
+		SeatSectionEntity seatSection,
+		Integer availableSeatCount
+	) {
 		return new SeatSectionResponse(
 			seatSection.getId(),
 			seatSection.getSeatGrade().getId(),
 			seatSection.getStadiumId(),
 			seatSection.getSectionCode(),
-			seatSection.getCapacity()
+			seatSection.getCapacity(),
+			availableSeatCount
 		);
 	}
 }
