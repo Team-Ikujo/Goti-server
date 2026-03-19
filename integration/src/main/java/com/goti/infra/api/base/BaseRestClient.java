@@ -18,6 +18,7 @@ public abstract class BaseRestClient {
 
 	protected BaseRestClient(RestClient.Builder builder, String baseUrl) {
 		this.restClient = builder
+			.baseUrl(baseUrl != null ? baseUrl : "")
 			.defaultHeaders(headers -> {
 				headers.setContentType(MediaType.APPLICATION_JSON);
 				headers.setAccept(java.util.List.of(MediaType.APPLICATION_JSON));
