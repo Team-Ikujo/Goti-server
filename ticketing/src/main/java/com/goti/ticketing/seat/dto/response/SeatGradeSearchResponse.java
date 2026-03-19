@@ -6,6 +6,7 @@ import com.goti.ticketing.domain.entity.seat.SeatGradeEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "좌석 등급 조회 응답")
 public record SeatGradeSearchResponse(
 	@Schema(description = "좌석 등급 ID", example = "22222222-2222-2222-2222-222222222222")
 	UUID seatGradeId,

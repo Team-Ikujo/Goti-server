@@ -6,7 +6,7 @@ import com.goti.ticketing.domain.entity.seat.SeatSectionEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "좌석 구역 등록 응답")
+@Schema(description = "좌석 구역 응답")
 public record SeatSectionResponse(
 	@Schema(description = "좌석 구역 ID", example = "33333333-3333-3333-3333-333333333333")
 	UUID sectionId,
