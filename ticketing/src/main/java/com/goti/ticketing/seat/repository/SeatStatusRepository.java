@@ -31,6 +31,18 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 		@Param("sectionId") UUID sectionId
 	);
 
+	@Query("""
+		SELECT ss
+			FROM SeatStatusEntity ss
+		JOIN FETCH ss.seat seat
+		WHERE ss.game.id = :gameId
+		  AND seat.id IN :seatIds
+	""")
+	List<SeatStatusEntity> findAllByGameIdAndSeatIds(
+		@Param("gameId") UUID gameId,
+		@Param("seatIds") List<UUID> seatIds
+	);
+
 	Optional<SeatStatusEntity> findByGameAndSeat(GameScheduleEntity game, SeatEntity seat);
 
 	@Query("""
@@ -38,7 +50,7 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 			ss.seat.seatSection.seatGrade.id,
 			COUNT(ss)
 		)
-		FROM SeatStatusEntity ss
+			FROM SeatStatusEntity ss
 		WHERE ss.game.id = :gameId
 		  AND ss.seat.seatSection.seatGrade.id IN :seatGradeIds
 		  AND ss.status = :status
