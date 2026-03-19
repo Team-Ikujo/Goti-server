@@ -56,7 +56,7 @@ public class StadiumSeatController {
 		summary = "좌석 등급 조회",
 		description = "구장별 좌석 등급 조회 API"
 	)
-	@GetMapping("/{stadiumId}/seat-grades")
+	@GetMapping("/stadiums/{stadiumId}/seat-grades")
 	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> getSeatGrades(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
 		@PathVariable UUID stadiumId
