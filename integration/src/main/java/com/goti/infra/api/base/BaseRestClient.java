@@ -13,6 +13,10 @@ public abstract class BaseRestClient {
 	protected final RestClient restClient;
 
 	protected BaseRestClient(RestClient.Builder builder) {
+		this(builder, null);
+	}
+
+	protected BaseRestClient(RestClient.Builder builder, String baseUrl) {
 		this.restClient = builder
 			.defaultHeaders(headers -> {
 				headers.setContentType(MediaType.APPLICATION_JSON);
