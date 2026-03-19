@@ -6,7 +6,7 @@ import com.goti.ticketing.domain.entity.seat.SeatSectionEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record SeatSectionResponse(
+public record SeatSectionSearchResponse(
 	@Schema(description = "좌석 구역 ID", example = "33333333-3333-3333-3333-333333333333")
 	UUID sectionId,
 
@@ -25,15 +25,11 @@ public record SeatSectionResponse(
 	@Schema(description = "잔여석 수", example = "87")
 	Integer availableSeatCount
 ) {
-	public static SeatSectionResponse from(SeatSectionEntity seatSection) {
-		return from(seatSection, null);
-	}
-
-	public static SeatSectionResponse from(
+	public static SeatSectionSearchResponse from(
 		SeatSectionEntity seatSection,
 		Integer availableSeatCount
 	) {
-		return new SeatSectionResponse(
+		return new SeatSectionSearchResponse(
 			seatSection.getId(),
 			seatSection.getSeatGrade().getId(),
 			seatSection.getStadiumId(),

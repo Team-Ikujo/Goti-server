@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.goti.ticketing.seat.dto.response.SeatSectionRegisterResponse;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +16,7 @@ import com.goti.ticketing.domain.entity.seat.SeatGradeEntity;
 import com.goti.ticketing.domain.entity.seat.SeatSectionEntity;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
-import com.goti.ticketing.seat.dto.response.SeatSectionResponse;
+import com.goti.ticketing.seat.dto.response.SeatSectionSearchResponse;
 import com.goti.ticketing.seat.repository.SeatGradeRepository;
 import com.goti.ticketing.seat.repository.SeatSectionRepository;
 import com.goti.ticketing.seat.repository.SeatStatusRepository;
@@ -30,7 +32,7 @@ public class SeatSectionServiceImpl implements SeatSectionService {
 
 	@Override
 	@Transactional
-	public SeatSectionResponse create(
+	public SeatSectionRegisterResponse create(
 		UUID gradeId,
 		UUID stadiumId,
 		String sectionCode,
@@ -52,12 +54,12 @@ public class SeatSectionServiceImpl implements SeatSectionService {
 		SeatSectionEntity seatSection = SeatSectionEntity.create(seatGrade, stadiumId, sectionCode, capacity);
 		seatSectionRepository.save(seatSection);
 
-		return SeatSectionResponse.from(seatSection);
+		return SeatSectionRegisterResponse.from(seatSection);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<SeatSectionResponse> get(UUID stadiumId, UUID userId, UUID gameId) {
+	public List<SeatSectionSearchResponse> get(UUID stadiumId, UUID userId, UUID gameId) {
 		Preconditions.validate(
 			userId != null,
 			ErrorCode.AUTH_INVALID
@@ -78,7 +80,7 @@ public class SeatSectionServiceImpl implements SeatSectionService {
 			));
 
 		return seatSections.stream()
-			.map(section -> SeatSectionResponse.from(
+			.map(section -> SeatSectionSearchResponse.from(
 				section,
 				availableSeatCounts.getOrDefault(section.getId(), 0)
 			))
