@@ -10,9 +10,7 @@ import com.goti.ticketing.game.service.domain.GameScheduleService;
 import com.goti.ticketing.game.service.domain.GameStatusService;
 
 import com.goti.ticketing.game.service.domain.GameTicketingStatusService;
-import com.goti.stadium.service.domain.baseballteam.BaseballTeamService;
-
-import com.goti.stadium.service.domain.stadium.StadiumService;
+import com.goti.ticketing.infra.api.StadiumApiClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,8 +27,7 @@ public class GameManagementService {
 	private final GameScheduleService gameScheduleService;
 	private final GameStatusService gameStatusService;
 	private final GameTicketingStatusService gameTicketingStatusService;
-	private final BaseballTeamService baseballTeamService;
-	private final StadiumService stadiumService;
+	private final StadiumApiClient stadiumApiClient;
 
 	@Transactional
 	public GameCreateResponse register(
@@ -72,10 +69,10 @@ public class GameManagementService {
 	}
 
 	private void validateBaseballTeam(UUID teamId) {
-		baseballTeamService.getById(teamId);
+		stadiumApiClient.getBaseballTeam(teamId);
 	}
 
 	private void validateStadium(UUID stadiumId) {
-		stadiumService.getById(stadiumId);
+		stadiumApiClient.getStadium(stadiumId);
 	}
 }
