@@ -26,6 +26,7 @@ class OrderItemEntityTest {
 
 	OrderEntity order;
 	SeatEntity seat;
+	UUID holdId;
 
 	@BeforeEach
 	void setup() {
@@ -37,6 +38,7 @@ class OrderItemEntityTest {
 			LeagueType.REGULAR
 		);
 		order = OrderEntity.create("ORD-20260309-0001", UUID.randomUUID(), gameSchedule, 2, 24000);
+		holdId = UUID.randomUUID();
 
 		SeatGradeEntity seatGrade = SeatGradeEntity.create(UUID.randomUUID(), "VIP", "#FFAA00");
 		SeatSectionEntity seatSection = SeatSectionEntity.create(seatGrade, UUID.randomUUID(), "101", 120);
@@ -45,10 +47,11 @@ class OrderItemEntityTest {
 
 	@Test
 	void 주문상세_생성_성공() {
-		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		OrderItemEntity item = OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, 12000);
 
 		assertThat(item.getOrder()).isEqualTo(order);
 		assertThat(item.getSeat()).isEqualTo(seat);
+		assertThat(item.getHoldId()).isEqualTo(holdId);
 		assertThat(item.getTicketType()).isEqualTo(TicketType.ADULT);
 		assertThat(item.getTicketPrice()).isEqualTo(12000);
 		assertThat(item.getItemStatus()).isEqualTo(OrderItemStatus.RESERVED);
@@ -56,7 +59,7 @@ class OrderItemEntityTest {
 
 	@Test
 	void 주문상세_결제완료_성공() {
-		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		OrderItemEntity item = OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, 12000);
 
 		item.pay();
 
@@ -65,7 +68,7 @@ class OrderItemEntityTest {
 
 	@Test
 	void 주문상세_만료처리_성공() {
-		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		OrderItemEntity item = OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, 12000);
 
 		item.expire();
 
@@ -74,7 +77,7 @@ class OrderItemEntityTest {
 
 	@Test
 	void 주문상세_만료처리_실패_결제완료후만료처리() {
-		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		OrderItemEntity item = OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, 12000);
 		item.pay();
 
 		assertThatThrownBy(item::expire)
@@ -85,7 +88,7 @@ class OrderItemEntityTest {
 	@Test
 	void 주문상세_생성_실패_권종_null() {
 		assertThatThrownBy(
-			() -> OrderItemEntity.create(order, seat, null, 12000)
+			() -> OrderItemEntity.create(order, seat, holdId, null, 12000)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("권종은 필수입니다.");
 	}
@@ -93,7 +96,7 @@ class OrderItemEntityTest {
 	@Test
 	void 주문상세_생성_실패_판매금액_음수() {
 		assertThatThrownBy(
-			() -> OrderItemEntity.create(order, seat, TicketType.ADULT, -1)
+			() -> OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, -1)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("티켓 가격은 0원 보다 커야합니다");
 	}
