@@ -45,7 +45,7 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 		  AND ss.status = :status
 		GROUP BY ss.seat.seatSection.id
 	""")
-	List<SectionAvailableSeatCountProjection> countByGameIdAndSectionIdsAndStatus(
+	List<SectionAvailableSeatCountProjection> countSectionAvailableSeats(
 		@Param("gameId") UUID gameId,
 		@Param("sectionIds") List<UUID> sectionIds,
 		@Param("status") SeatStatus status

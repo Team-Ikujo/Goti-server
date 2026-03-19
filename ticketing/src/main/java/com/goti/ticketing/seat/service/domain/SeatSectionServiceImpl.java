@@ -72,7 +72,7 @@ public class SeatSectionServiceImpl implements SeatSectionService {
 			.toList();
 
 		Map<UUID, Integer> availableSeatCounts = seatStatusRepository
-			.countByGameIdAndSectionIdsAndStatus(gameId, sectionIds, SeatStatus.AVAILABLE)
+			.countSectionAvailableSeats(gameId, sectionIds, SeatStatus.AVAILABLE)
 			.stream()
 			.collect(Collectors.toMap(
 				SeatStatusRepository.SectionAvailableSeatCountProjection::getSectionId,
