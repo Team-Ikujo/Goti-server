@@ -1,5 +1,7 @@
 package com.goti.ticketing.order.service.domain;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +23,11 @@ public class OrderItemServiceImpl implements OrderItemService {
 	public OrderItemEntity create(
 		OrderEntity order,
 		SeatEntity seat,
+		UUID holdId,
 		TicketType ticketType,
 		Integer ticketPrice
 	) {
-		OrderItemEntity orderItem = OrderItemEntity.create(order, seat, ticketType, ticketPrice);
+		OrderItemEntity orderItem = OrderItemEntity.create(order, seat, holdId, ticketType, ticketPrice);
 		return orderItemRepository.save(orderItem);
 	}
 }
