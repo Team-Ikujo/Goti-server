@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@DisplayName("야구구단 조회 - GET /api/v1/baseball-teams")
+@DisplayName("야구구단 조회 - GET /api/v1/baseball-teams/{teamId}")
 public class BaseballTeamDetailApiTest {
 
 	@Autowired
@@ -58,7 +58,7 @@ public class BaseballTeamDetailApiTest {
 				jsonPath("$.code").value("ok"),
 				jsonPath("$.message").value("성공"),
 				jsonPath("$.data").exists(),
-				jsonPath("$.data.id").value(teamId.toString()),
+				jsonPath("$.data.id").value(String.valueOf(teamId)),
 				jsonPath("$.data.teamCode").value(TeamCode.SS.name())
 			).andReturn();
 
