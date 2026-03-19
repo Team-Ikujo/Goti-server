@@ -19,8 +19,8 @@ import com.goti.ticketing.constants.SeatStatus;
 @Repository
 public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UUID> {
 
-	interface SectionAvailableSeatCountProjection {
-		UUID getSectionId();
+	interface SeatGradeAvailableSeatCountProjection {
+		UUID getSeatGradeId();
 		Long getAvailableSeatCount();
 	}
 
@@ -38,16 +38,16 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 	Optional<SeatStatusEntity> findByGameAndSeat(GameScheduleEntity game, SeatEntity seat);
 
 	@Query("""
-		SELECT ss.seat.seatSection.id AS sectionId, COUNT(ss) AS availableSeatCount
+		SELECT ss.seat.seatSection.seatGrade.id AS seatGradeId, COUNT(ss) AS availableSeatCount
 		FROM SeatStatusEntity ss
 		WHERE ss.game.id = :gameId
-		  AND ss.seat.seatSection.id IN :sectionIds
+		  AND ss.seat.seatSection.seatGrade.id IN :seatGradeIds
 		  AND ss.status = :status
-		GROUP BY ss.seat.seatSection.id
+		GROUP BY ss.seat.seatSection.seatGrade.id
 	""")
-	List<SectionAvailableSeatCountProjection> countSectionAvailableSeats(
+	List<SeatGradeAvailableSeatCountProjection> countSeatGradeAvailableSeats(
 		@Param("gameId") UUID gameId,
-		@Param("sectionIds") List<UUID> sectionIds,
+		@Param("seatGradeIds") List<UUID> seatGradeIds,
 		@Param("status") SeatStatus status
 	);
 }

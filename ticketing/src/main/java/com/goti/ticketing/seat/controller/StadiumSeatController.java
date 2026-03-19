@@ -5,7 +5,7 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.ticketing.seat.dto.response.SeatSectionRegisterResponse;
+import com.goti.ticketing.seat.dto.response.SeatGradeRegisterResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,11 +42,11 @@ public class StadiumSeatController {
 		description = "구장별 좌석 등급 생성 API"
 	)
 	@PostMapping("/seat-grades")
-	public ResponseEntity<ApiSuccessResponse<SeatGradeResponse>> createGrade(
+	public ResponseEntity<ApiSuccessResponse<SeatGradeRegisterResponse>> createGrade(
 		@Valid @RequestBody CreateSeatGradeRequest request
 	) {
 		// TODO: 관리자용 API 분리 예정
-		SeatGradeResponse response = seatGradeService.create(
+		SeatGradeRegisterResponse response = seatGradeService.create(
 			request.stadiumId(),
 			request.name(),
 			request.displayColorHex()
@@ -58,12 +58,13 @@ public class StadiumSeatController {
 		summary = "좌석 등급 조회",
 		description = "구장별 좌석 등급 조회 API"
 	)
-	@GetMapping("/stadiums/{stadiumId}/seat-grades")
-	public ResponseEntity<ApiSuccessResponse<List<SeatGradeResponse>>> getSeatGrades(
+	@GetMapping("/stadiums/{stadiumId}/games/{gameId}/seat-grades")
+	public ResponseEntity<ApiSuccessResponse<List<SeatGradeSearchResponse>>> getSeatGrades(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@PathVariable UUID stadiumId
+		@PathVariable UUID stadiumId,
+		@PathVariable UUID gameId
 	) {
-		return wrap(seatGradeService.get(stadiumId, userId));
+		return wrap(seatGradeService.get(stadiumId, gameId, userId));
 	}
 
 	@Operation(
