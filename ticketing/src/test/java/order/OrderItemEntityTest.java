@@ -64,6 +64,25 @@ class OrderItemEntityTest {
 	}
 
 	@Test
+	void 주문상세_만료처리_성공() {
+		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+
+		item.expire();
+
+		assertThat(item.getItemStatus()).isEqualTo(OrderItemStatus.CANCELED);
+	}
+
+	@Test
+	void 주문상세_만료처리_실패_결제완료후만료처리() {
+		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		item.pay();
+
+		assertThatThrownBy(item::expire)
+			.isInstanceOf(FieldValidationException.class)
+			.hasMessageContaining("RESERVED 상태에서만 주문 상세 만료 처리가 가능합니다.");
+	}
+
+	@Test
 	void 주문상세_생성_실패_권종_null() {
 		assertThatThrownBy(
 			() -> OrderItemEntity.create(order, seat, null, 12000)

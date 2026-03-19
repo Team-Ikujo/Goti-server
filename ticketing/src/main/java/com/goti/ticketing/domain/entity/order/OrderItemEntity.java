@@ -86,6 +86,14 @@ public class OrderItemEntity extends ModificationTimestampEntity {
 		this.itemStatus = OrderItemStatus.PAID;
 	}
 
+	public void expire() {
+		Preconditions.domainValidate(
+			this.itemStatus == OrderItemStatus.RESERVED,
+			"RESERVED 상태에서만 주문 상세 만료 처리가 가능합니다."
+		);
+		this.itemStatus = OrderItemStatus.CANCELED;
+	}
+
 	private static void validate(
 		TicketType ticketType,
 		Integer ticketPrice
