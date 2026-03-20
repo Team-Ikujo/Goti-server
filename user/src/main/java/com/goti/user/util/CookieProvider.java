@@ -30,23 +30,24 @@ public class CookieProvider {
 	}
 
 	public ResponseCookie createCookie(String name, String value, String path, long maxAge) {
-		return ResponseCookie.from(name, value)
-			.httpOnly(true)
-			.secure(properties.secure())
-			.path(path)
+		return createBaseCookieBuilder(name, path)
+			.value(value)
 			.maxAge(maxAge)
-			.sameSite(properties.sameSite())
 			.build();
 	}
 
 	public ResponseCookie deleteCookie(String name, String path) {
+		return createBaseCookieBuilder(name, path)
+			.maxAge(0)
+			.build();
+	}
+
+	private ResponseCookie.ResponseCookieBuilder createBaseCookieBuilder(String name, String path) {
 		return ResponseCookie.from(name, "")
 			.httpOnly(true)
 			.secure(properties.secure())
 			.path(path)
-			.maxAge(0)
-			.sameSite(properties.sameSite())
-			.build();
+			.sameSite(properties.sameSite());
 	}
 
 }
