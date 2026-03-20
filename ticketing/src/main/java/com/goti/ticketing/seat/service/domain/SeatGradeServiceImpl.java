@@ -16,6 +16,7 @@ import com.goti.ticketing.seat.dto.response.SeatGradeRegisterResponse;
 import com.goti.ticketing.seat.dto.response.SeatGradeSearchResponse;
 import com.goti.ticketing.seat.repository.SeatGradeRepository;
 import com.goti.ticketing.seat.repository.SeatStatusRepository;
+import com.goti.ticketing.seat.repository.dto.SeatGradeAvailableSeatCount;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,8 +56,8 @@ public class SeatGradeServiceImpl implements SeatGradeService {
 			.countSeatGradeAvailableSeats(gameId, seatGradeIds, SeatStatus.AVAILABLE)
 			.stream()
 			.collect(Collectors.toMap(
-				SeatStatusRepository.SeatGradeAvailableSeatCountProjection::getSeatGradeId,
-				count -> Math.toIntExact(count.getAvailableSeatCount())
+				SeatGradeAvailableSeatCount::seatGradeId,
+				count -> Math.toIntExact(count.availableSeatCount())
 			));
 
 		return seatGrades.stream()
