@@ -75,6 +75,7 @@ public class GameRegistrationTest {
 
 	private static final String BASEBALL_GET_API_URI = "/api/v1/baseball-teams/";
 	private static final String STADIUM_GET_API_URI = "/api/v1/stadiums/";
+
 	@BeforeEach
 	void setup() {
 		saveAwayTeam();
