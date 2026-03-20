@@ -3,9 +3,6 @@ package com.goti.ticketing.infra.api;
 import com.goti.config.properties.ApiEndpointProperties;
 import com.goti.infra.api.base.BaseRestClient;
 
-import com.goti.stadium.domain.entity.stadium.StadiumEntity;
-import com.goti.stadium.domain.entity.team.BaseballTeamEntity;
-
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -22,14 +19,14 @@ public class StadiumApiClient extends BaseRestClient implements StadiumClient {
 	}
 
 	@Override
-	public BaseballTeamEntity getBaseballTeam(UUID teamId) {
+	public void validateBaseballTeam(UUID teamId) {
 		String uri = BASEBALL_TEAM_GET_API + teamId;
-		return get(uri, null, null, BaseballTeamEntity.class);
+		getVoid(uri, null, null);
 	}
 
 	@Override
-	public StadiumEntity getStadium(UUID stadiumId) {
+	public void validateStadium(UUID stadiumId) {
 		String uri = STADIUM_GET_API + stadiumId;
-		return get(uri, null, null, StadiumEntity.class);
+		getVoid(uri, null, null);
 	}
 }
