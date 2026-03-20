@@ -69,10 +69,10 @@ public class GameManagementService {
 	}
 
 	private void validateBaseballTeam(UUID teamId) {
-		stadiumApiClient.getBaseballTeam(teamId);
+		stadiumApiClient.validateBaseballTeam(teamId);
 	}
 
 	private void validateStadium(UUID stadiumId) {
-		stadiumApiClient.getStadium(stadiumId);
+		stadiumApiClient.validateStadium(stadiumId);
 	}
 }
