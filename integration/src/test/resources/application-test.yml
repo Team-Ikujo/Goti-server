@@ -1,9 +1,0 @@
-spring:
-  config:
-    import:
-      - application-integration.yml
-      - optional:file:.env.test[.properties]
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration

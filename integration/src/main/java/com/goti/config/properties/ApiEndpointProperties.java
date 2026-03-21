@@ -1,9 +1,0 @@
-package com.goti.config.properties;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-@ConfigurationProperties(prefix = "infra.api.endpoints")
-public record ApiEndpointProperties(
-	String stadium
-) {
-}
