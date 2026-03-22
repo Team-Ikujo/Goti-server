@@ -24,8 +24,8 @@ import com.goti.exception.FieldValidationException;
 @ActiveProfiles("test")
 class OrderItemEntityTest {
 
-	OrderEntity order;
-	SeatEntity seat;
+	private OrderEntity order;
+	private SeatEntity seat;
 
 	@BeforeEach
 	void setup() {
@@ -61,6 +61,16 @@ class OrderItemEntityTest {
 		item.pay();
 
 		assertThat(item.getItemStatus()).isEqualTo(OrderItemStatus.PAID);
+	}
+
+	@Test
+	void 주문상세_취소_성공() {
+		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		item.pay();
+
+		item.cancel();
+
+		assertThat(item.getItemStatus()).isEqualTo(OrderItemStatus.CANCELED);
 	}
 
 	@Test
