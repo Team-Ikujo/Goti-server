@@ -99,6 +99,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 		String idempotencyKey
 	) {
 		validate(
+			order,
 			requestType,
 			requestedBy,
 			refundAmountTotal,
@@ -116,12 +117,17 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	}
 
 	private static void validate(
+		OrderEntity order,
 		OrderCancellationRequestType requestType,
 		UUID requestedBy,
 		Integer refundAmountTotal,
 		Integer feeAmountTotal,
 		String idempotencyKey
 	) {
+		Preconditions.domainValidate(
+			order != null,
+			"주문은 필수입니다."
+		);
 		Preconditions.domainValidate(
 			requestType != null,
 			"취소 요청 타입은 필수입니다."
