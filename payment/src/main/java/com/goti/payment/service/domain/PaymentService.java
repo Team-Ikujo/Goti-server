@@ -13,4 +13,9 @@ public interface PaymentService {
 		String idempotencyKey,
 		Integer paymentAmount
 	);
+
+	PaymentResponse cancel(
+		UUID orderId,
+		UUID cancellationId
+	);
 }
