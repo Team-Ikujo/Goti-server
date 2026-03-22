@@ -19,9 +19,6 @@ public record PaymentDetailResponse(
 	@Schema(description = "주문 상태", example = "CONFIRMED")
 	OrderStatus orderStatus,
 
-	@Schema(description = "주문 접수 일시")
-	LocalDateTime orderedAt,
-
 	@Schema(description = "결제 일시")
 	LocalDateTime paidAt,
 
@@ -35,7 +32,6 @@ public record PaymentDetailResponse(
 		UUID orderId,
 		PaymentMethod paymentMethod,
 		OrderStatus orderStatus,
-		LocalDateTime orderedAt,
 		LocalDateTime paidAt,
 		String receiptMethod,
 		Integer paymentAmount
@@ -44,7 +40,6 @@ public record PaymentDetailResponse(
 			orderId,
 			paymentMethod,
 			orderStatus,
-			orderedAt,
 			paidAt,
 			receiptMethod,
 			paymentAmount
