@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import com.goti.global.validation.Preconditions;
+import com.goti.ticketing.constants.OrderCancellationRequestType;
 
 @Component
 public class OrderCancellationRefundPolicy {
@@ -18,9 +19,17 @@ public class OrderCancellationRefundPolicy {
 		LocalDateTime canceledAt,
 		Integer ticketAmount,
 		Integer bookingFeeAmount,
+		OrderCancellationRequestType requestType,
 		boolean refundableByGameCanceled
 	) {
-		validate(paidAt, gameStartAt, canceledAt, ticketAmount, bookingFeeAmount);
+		validate(
+			paidAt,
+			gameStartAt,
+			canceledAt,
+			ticketAmount,
+			bookingFeeAmount,
+			requestType
+		);
 
 		if (refundableByGameCanceled) {
 			return new RefundAmount(
@@ -36,10 +45,13 @@ public class OrderCancellationRefundPolicy {
 		);
 
 		if (paidAt.toLocalDate().isEqual(canceledAt.toLocalDate())) {
+			int refundedBookingFeeAmount = requestType == OrderCancellationRequestType.ORDER_FULL
+				? bookingFeeAmount
+				: 0;
 			return new RefundAmount(
-				ticketAmount + bookingFeeAmount,
+				ticketAmount + refundedBookingFeeAmount,
 				0,
-				bookingFeeAmount
+				refundedBookingFeeAmount
 			);
 		}
 
@@ -56,7 +68,8 @@ public class OrderCancellationRefundPolicy {
 		LocalDateTime gameStartAt,
 		LocalDateTime canceledAt,
 		Integer ticketAmount,
-		Integer bookingFeeAmount
+		Integer bookingFeeAmount,
+		OrderCancellationRequestType requestType
 	) {
 		Preconditions.domainValidate(
 			paidAt != null,
@@ -77,6 +90,10 @@ public class OrderCancellationRefundPolicy {
 		Preconditions.domainValidate(
 			bookingFeeAmount != null && bookingFeeAmount >= 0,
 			"예매 수수료는 0 이상이어야 합니다."
+		);
+		Preconditions.domainValidate(
+			requestType != null,
+			"취소 요청 타입은 필수입니다."
 		);
 	}
 
