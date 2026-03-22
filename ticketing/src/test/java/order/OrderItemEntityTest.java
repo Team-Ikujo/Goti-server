@@ -2,6 +2,7 @@ package order;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,15 +19,17 @@ import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.seat.SeatEntity;
 import com.goti.ticketing.domain.entity.seat.SeatGradeEntity;
+import com.goti.ticketing.domain.entity.seat.SeatHoldEntity;
 import com.goti.ticketing.domain.entity.seat.SeatSectionEntity;
+import com.goti.domain.base.BaseUuidEntity;
 import com.goti.exception.FieldValidationException;
 
 @ActiveProfiles("test")
 class OrderItemEntityTest {
 
-	OrderEntity order;
-	SeatEntity seat;
-	UUID holdId;
+	private OrderEntity order;
+	private SeatEntity seat;
+	private UUID holdId;
 
 	@BeforeEach
 	void setup() {
@@ -38,11 +41,19 @@ class OrderItemEntityTest {
 			LeagueType.REGULAR
 		);
 		order = OrderEntity.create("ORD-20260309-0001", UUID.randomUUID(), gameSchedule, 2, 24000);
-		holdId = UUID.randomUUID();
 
 		SeatGradeEntity seatGrade = SeatGradeEntity.create(UUID.randomUUID(), "VIP", "#FFAA00");
 		SeatSectionEntity seatSection = SeatSectionEntity.create(seatGrade, UUID.randomUUID(), "101", 120);
 		seat = SeatEntity.create(seatSection, "A", 1);
+		SeatHoldEntity seatHold = SeatHoldEntity.create(
+			seat,
+			gameSchedule,
+			order.getMemberId(),
+			"queue-token-jti",
+			LocalDateTime.now().plusMinutes(10)
+		);
+		assignId(seatHold, UUID.randomUUID());
+		holdId = seatHold.getId();
 	}
 
 	@Test
@@ -99,5 +110,15 @@ class OrderItemEntityTest {
 			() -> OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, -1)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("티켓 가격은 0원 보다 커야합니다");
+	}
+
+	private void assignId(SeatHoldEntity seatHold, UUID holdId) {
+		try {
+			Field idField = BaseUuidEntity.class.getDeclaredField("id");
+			idField.setAccessible(true);
+			idField.set(seatHold, holdId);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("테스트용 SeatHold ID 설정에 실패했습니다.", e);
+		}
 	}
 }
