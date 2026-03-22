@@ -146,6 +146,15 @@ public class PaymentEntity extends ModificationTimestampEntity {
 		this.failedReason = failedReason;
 	}
 
+	public void cancel() {
+		Preconditions.domainValidate(
+			this.paymentStatus == PaymentStatus.SUCCESS,
+			"SUCCESS 상태에서만 결제 취소가 가능합니다."
+		);
+		this.paymentStatus = PaymentStatus.CANCELED;
+		this.failedReason = null;
+	}
+
 	private static void validate(
 		UUID orderId,
 		UUID cancellationId,

@@ -97,6 +97,16 @@ class OrderItemEntityTest {
 	}
 
 	@Test
+	void 주문상세_취소_성공() {
+		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		item.pay();
+
+		item.cancel();
+
+		assertThat(item.getItemStatus()).isEqualTo(OrderItemStatus.CANCELED);
+	}
+
+	@Test
 	void 주문상세_생성_실패_권종_null() {
 		assertThatThrownBy(
 			() -> OrderItemEntity.create(order, seat, holdId, null, 12000)

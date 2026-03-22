@@ -101,6 +101,14 @@ public class OrderItemEntity extends ModificationTimestampEntity {
 		this.itemStatus = OrderItemStatus.CANCELED;
 	}
 
+	public void cancel() {
+		Preconditions.domainValidate(
+			this.itemStatus == OrderItemStatus.PAID,
+			"PAID 상태에서만 주문 상세 취소가 가능합니다."
+		);
+		this.itemStatus = OrderItemStatus.CANCELED;
+	}
+
 	private static void validate(
 		UUID holdId,
 		TicketType ticketType,

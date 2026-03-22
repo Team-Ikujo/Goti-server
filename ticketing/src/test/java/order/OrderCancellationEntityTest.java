@@ -50,7 +50,7 @@ class OrderCancellationEntityTest {
 	void 주문취소_생성_성공() {
 		OrderCancellationEntity cancellation = OrderCancellationEntity.create(
 			order,
-			OrderCancellationRequestType.USER_FULL,
+			OrderCancellationRequestType.ORDER_CANCEL,
 			requestedBy,
 			refundAmountTotal,
 			feeAmountTotal,
@@ -59,7 +59,7 @@ class OrderCancellationEntityTest {
 
 		assertThat(cancellation.getOrder()).isEqualTo(order);
 		assertThat(cancellation.getStatus()).isEqualTo(OrderCancellationStatus.REQUESTED);
-		assertThat(cancellation.getRequestType()).isEqualTo(OrderCancellationRequestType.USER_FULL);
+		assertThat(cancellation.getRequestType()).isEqualTo(OrderCancellationRequestType.ORDER_CANCEL);
 		assertThat(cancellation.getDenyReasonCode()).isNull();
 		assertThat(cancellation.getRequestedBy()).isEqualTo(requestedBy);
 		assertThat(cancellation.getRefundAmountTotal()).isEqualTo(refundAmountTotal);
@@ -90,7 +90,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
-				OrderCancellationRequestType.USER_FULL,
+				OrderCancellationRequestType.ORDER_CANCEL,
 				null,
 				refundAmountTotal,
 				feeAmountTotal,
@@ -105,7 +105,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
-				OrderCancellationRequestType.USER_FULL,
+				OrderCancellationRequestType.ORDER_CANCEL,
 				requestedBy,
 				-1,
 				feeAmountTotal,
@@ -122,7 +122,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
-				OrderCancellationRequestType.USER_FULL,
+				OrderCancellationRequestType.ORDER_CANCEL,
 				requestedBy,
 				refundAmountTotal,
 				feeAmountTotal,
@@ -137,7 +137,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				null,
-				OrderCancellationRequestType.USER_FULL,
+				OrderCancellationRequestType.ORDER_CANCEL,
 				requestedBy,
 				refundAmountTotal,
 				feeAmountTotal,
@@ -145,5 +145,57 @@ class OrderCancellationEntityTest {
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("주문은 필수입니다.");
+	}
+
+	@Test
+	void 주문취소_검증_성공() {
+		OrderCancellationEntity cancellation = OrderCancellationEntity.create(
+			order,
+			OrderCancellationRequestType.ORDER_CANCEL,
+			requestedBy,
+			refundAmountTotal,
+			feeAmountTotal,
+			idempotencyKey
+		);
+
+		cancellation.validateRequest();
+
+		assertThat(cancellation.getStatus()).isEqualTo(OrderCancellationStatus.VALIDATED);
+	}
+
+	@Test
+	void 주문취소_환불시작_성공() {
+		OrderCancellationEntity cancellation = OrderCancellationEntity.create(
+			order,
+			OrderCancellationRequestType.ORDER_CANCEL,
+			requestedBy,
+			refundAmountTotal,
+			feeAmountTotal,
+			idempotencyKey
+		);
+		cancellation.validateRequest();
+
+		cancellation.startRefund();
+
+		assertThat(cancellation.getStatus()).isEqualTo(OrderCancellationStatus.REFUNDING);
+	}
+
+	@Test
+	void 주문취소_완료_성공() {
+		OrderCancellationEntity cancellation = OrderCancellationEntity.create(
+			order,
+			OrderCancellationRequestType.ORDER_CANCEL,
+			requestedBy,
+			refundAmountTotal,
+			feeAmountTotal,
+			idempotencyKey
+		);
+		cancellation.validateRequest();
+		cancellation.startRefund();
+
+		cancellation.complete();
+
+		assertThat(cancellation.getStatus()).isEqualTo(OrderCancellationStatus.COMPLETED);
+		assertThat(cancellation.getCompletedAt()).isNotNull();
 	}
 }
