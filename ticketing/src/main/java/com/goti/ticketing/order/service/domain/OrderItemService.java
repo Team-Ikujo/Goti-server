@@ -1,5 +1,6 @@
 package com.goti.ticketing.order.service.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.goti.ticketing.constants.TicketType;
@@ -15,4 +16,8 @@ public interface OrderItemService {
 		TicketType ticketType,
 		Integer ticketPrice
 	);
+
+	List<OrderItemEntity> get(UUID orderId);
+
+	void expire(OrderItemEntity orderItem);
 }

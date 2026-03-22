@@ -1,5 +1,6 @@
 package com.goti.ticketing.order.service.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -29,5 +30,16 @@ public class OrderItemServiceImpl implements OrderItemService {
 	) {
 		OrderItemEntity orderItem = OrderItemEntity.create(order, seat, holdId, ticketType, ticketPrice);
 		return orderItemRepository.save(orderItem);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<OrderItemEntity> get(UUID orderId) {
+		return orderItemRepository.findOrderItemsByOrderId(orderId);
+	}
+
+	@Override
+	public void expire(OrderItemEntity orderItem) {
+		orderItem.expire();
 	}
 }
