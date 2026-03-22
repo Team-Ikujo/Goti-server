@@ -18,7 +18,7 @@ import com.goti.ticketing.constants.SeatStatus;
 import com.goti.ticketing.seat.repository.dto.SeatGradeAvailableSeatCount;
 
 @Repository
-public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UUID> {
+public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UUID>, SeatStatusRepositoryCustom {
 
 	@Query("""
 		SELECT ss
@@ -29,18 +29,6 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 	List<SeatStatusEntity> findSeatStatuses(
 		@Param("gameId") UUID gameId,
 		@Param("sectionId") UUID sectionId
-	);
-
-	@Query("""
-		SELECT ss
-			FROM SeatStatusEntity ss
-		JOIN FETCH ss.seat seat
-		WHERE ss.game.id = :gameId
-		  AND seat.id IN :seatIds
-	""")
-	List<SeatStatusEntity> findAllByGameIdAndSeatIds(
-		@Param("gameId") UUID gameId,
-		@Param("seatIds") List<UUID> seatIds
 	);
 
 	Optional<SeatStatusEntity> findByGameAndSeat(GameScheduleEntity game, SeatEntity seat);

@@ -41,7 +41,7 @@ public class SeatStatusServiceImpl implements SeatStatusService {
 	@Override
 	@Transactional(readOnly = true)
 	public Map<UUID, SeatStatusEntity> getByGameIdAndSeatIds(UUID gameId, List<UUID> seatIds) {
-		return seatStatusRepository.findAllByGameIdAndSeatIds(gameId, seatIds)
+		return seatStatusRepository.findAllByGameAndSeatIds(gameId, seatIds)
 			.stream()
 			.collect(Collectors.toMap(seatStatus -> seatStatus.getSeat().getId(), seatStatus -> seatStatus));
 	}
