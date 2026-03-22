@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goti.exception.FieldValidationException;
+import com.goti.ticketing.constants.OrderCancellationRequestType;
 import com.goti.ticketing.order.service.domain.OrderCancellationRefundPolicy;
 
 @ActiveProfiles("test")
@@ -27,6 +28,7 @@ class OrderCancellationRefundPolicyTest {
 			canceledAt,
 			20000,
 			1000,
+			OrderCancellationRequestType.ORDER_FULL,
 			false
 		);
 
@@ -47,6 +49,7 @@ class OrderCancellationRefundPolicyTest {
 			canceledAt,
 			20000,
 			1000,
+			OrderCancellationRequestType.ORDER_FULL,
 			false
 		);
 
@@ -67,6 +70,7 @@ class OrderCancellationRefundPolicyTest {
 			canceledAt,
 			20000,
 			1000,
+			OrderCancellationRequestType.ORDER_FULL,
 			true
 		);
 
@@ -88,9 +92,31 @@ class OrderCancellationRefundPolicyTest {
 				canceledAt,
 				20000,
 				1000,
+				OrderCancellationRequestType.ORDER_FULL,
 				false
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("경기 시작 4시간 전까지만 취소할 수 있습니다.");
+	}
+
+	@Test
+	void 예매당일_부분취소면_예매수수료는_환불되지않는다() {
+		LocalDateTime paidAt = LocalDateTime.of(2026, 3, 22, 10, 0);
+		LocalDateTime canceledAt = LocalDateTime.of(2026, 3, 22, 18, 0);
+		LocalDateTime gameStartAt = LocalDateTime.of(2026, 3, 25, 18, 30);
+
+		OrderCancellationRefundPolicy.RefundAmount refundAmount = refundPolicy.calculate(
+			paidAt,
+			gameStartAt,
+			canceledAt,
+			20000,
+			1000,
+			OrderCancellationRequestType.ORDER_PARTIAL,
+			false
+		);
+
+		assertThat(refundAmount.refundAmount()).isEqualTo(20000);
+		assertThat(refundAmount.cancellationFeeAmount()).isZero();
+		assertThat(refundAmount.refundedBookingFeeAmount()).isZero();
 	}
 }
