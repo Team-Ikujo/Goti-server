@@ -4,8 +4,6 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 
 import java.util.UUID;
 
-import com.goti.payment.service.domain.PaymentService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +17,7 @@ import com.goti.global.api.ApiSuccessResponse;
 import com.goti.payment.dto.request.PaymentRequest;
 import com.goti.payment.dto.response.PaymentResponse;
 import com.goti.payment.service.application.OrderPaymentService;
+import com.goti.payment.service.application.PaymentQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
 	private final OrderPaymentService orderPaymentService;
-	private final PaymentService paymentService;
+	private final PaymentQueryService paymentQueryService;
 
 	@Operation(
 		summary = "결제 요청",
@@ -62,6 +61,6 @@ public class PaymentController {
 		@PathVariable UUID orderId,
 		@AuthenticationPrincipal(expression = "id") UUID memberId
 	) {
-		return wrap(paymentService.getByOrderId(orderId, memberId));
+		return wrap(paymentQueryService.getByOrderId(orderId, memberId));
 	}
 }

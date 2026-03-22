@@ -14,5 +14,5 @@ public interface PaymentService {
 		Integer paymentAmount
 	);
 
-	PaymentResponse getByOrderId(UUID orderId, UUID userId);
+	PaymentResponse getByOrderId(UUID orderId);
 }
