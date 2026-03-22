@@ -105,11 +105,21 @@ public class OrderEntity extends ModificationTimestampEntity {
 
 	public void cancel() {
 		Preconditions.domainValidate(
-			this.orderStatus == OrderStatus.CONFIRMED,
-			"CONFIRMED 상태에서만 주문 취소가 가능합니다."
+			this.orderStatus == OrderStatus.CONFIRMED
+				|| this.orderStatus == OrderStatus.PARTIALLY_CANCELED,
+			"CONFIRMED 또는 PARTIALLY_CANCELED 상태에서만 주문 취소가 가능합니다."
 		);
 		this.orderStatus = OrderStatus.CANCELED;
 		this.canceledAt = LocalDateTime.now();
+	}
+
+	public void partialCancel() {
+		Preconditions.domainValidate(
+			this.orderStatus == OrderStatus.CONFIRMED
+				|| this.orderStatus == OrderStatus.PARTIALLY_CANCELED,
+			"CONFIRMED 또는 PARTIALLY_CANCELED 상태에서만 부분 취소가 가능합니다."
+		);
+		this.orderStatus = OrderStatus.PARTIALLY_CANCELED;
 	}
 
 	private static void validate(
