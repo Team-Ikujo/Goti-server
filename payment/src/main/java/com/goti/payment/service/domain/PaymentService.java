@@ -3,7 +3,6 @@ package com.goti.payment.service.domain;
 import java.util.UUID;
 
 import com.goti.payment.constants.PaymentMethod;
-import com.goti.payment.domain.entity.payment.PaymentEntity;
 import com.goti.payment.dto.response.PaymentResponse;
 
 public interface PaymentService {
@@ -15,5 +14,5 @@ public interface PaymentService {
 		Integer paymentAmount
 	);
 
-	PaymentEntity getByOrderId(UUID orderId);
+	PaymentResponse getByOrderId(UUID orderId, UUID userId);
 }

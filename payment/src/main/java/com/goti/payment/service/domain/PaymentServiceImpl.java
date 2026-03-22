@@ -79,9 +79,27 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public PaymentEntity getByOrderId(UUID orderId) {
-		return paymentRepository.findLatestByOrderId(orderId)
+	public PaymentResponse getByOrderId(UUID orderId, UUID userId) {
+		Preconditions.validate(
+			userId != null,
+			ErrorCode.AUTH_INVALID
+		);
+
+		PaymentEntity payment = paymentRepository.findLatestByOrderId(orderId)
 			.orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
+
+		return PaymentResponse.from(
+			payment.getId(),
+			payment.getOrderId(),
+			payment.getPaymentType(),
+			payment.getPaymentMethod(),
+			payment.getPaymentAmount(),
+			payment.getPgProvider(),
+			payment.getPgTid(),
+			payment.getPaymentStatus(),
+			payment.getPaidAt(),
+			payment.getFailedReason()
+		);
 	}
 
 	private boolean shouldFail(String idempotencyKey) {
