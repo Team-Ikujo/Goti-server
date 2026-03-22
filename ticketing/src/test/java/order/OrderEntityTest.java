@@ -128,6 +128,23 @@ class OrderEntityTest {
 		assertThat(order.getCanceledAt()).isNotNull();
 	}
 
+	@Test
+	void 주문_부분취소_성공() {
+		OrderEntity order = OrderEntity.create(
+			orderNumber,
+			userId,
+			gameSchedule,
+			totalQuantity,
+			totalAmount
+		);
+		order.confirm();
+
+		order.partialCancel();
+
+		assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.PARTIALLY_CANCELED);
+		assertThat(order.getCanceledAt()).isNull();
+	}
+
 	@ParameterizedTest
 	@NullAndEmptySource
 	@ValueSource(strings = {" ", "   "})
