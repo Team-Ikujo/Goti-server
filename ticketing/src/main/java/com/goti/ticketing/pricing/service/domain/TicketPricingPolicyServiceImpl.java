@@ -9,6 +9,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.goti.exception.CustomException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +54,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 		ticketPricingPolicyRepository.save(policy);
 
 		Map<UUID, SeatGradeEntity> gradesById = getGrades(ticketPriceRequest);
-		validateDuplicateticketPrice(ticketPriceRequest);
+		validateDuplicateTicketPrice(ticketPriceRequest);
 
 		List<TicketPriceEntity> ticketPrices = ticketPriceRequest.stream()
 			.map(price -> TicketPriceEntity.create(
@@ -79,7 +81,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 
 		TicketPricingPolicyEntity policy = ticketPricingPolicyRepository
 			.findLatestActivePolicy(teamId)
-			.orElseThrow(() -> new com.goti.exception.CustomException(ErrorCode.TICKET_PRICING_POLICY_NOT_FOUND));
+			.orElseThrow(() -> new CustomException(ErrorCode.TICKET_PRICING_POLICY_NOT_FOUND));
 
 		List<TicketPriceEntity> prices = ticketPriceRepository.findAllByPolicyId(policy.getId());
 
@@ -102,7 +104,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 			.collect(Collectors.toMap(SeatGradeEntity::getId, Function.identity()));
 	}
 
-	private void validateDuplicateticketPrice(
+	private void validateDuplicateTicketPrice(
 		List<TicketPriceCreateCommand> ticketPriceRequest
 	) {
 		Set<TicketPriceCondition> uniqueConditions = new HashSet<>();
