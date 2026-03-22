@@ -146,11 +146,16 @@ public class PaymentEntity extends ModificationTimestampEntity {
 		this.failedReason = failedReason;
 	}
 
-	public void cancel() {
+	public void cancel(UUID cancellationId) {
 		Preconditions.domainValidate(
 			this.paymentStatus == PaymentStatus.SUCCESS,
 			"SUCCESS 상태에서만 결제 취소가 가능합니다."
 		);
+		Preconditions.domainValidate(
+			cancellationId != null,
+			"취소 ID는 필수입니다."
+		);
+		this.cancellationId = cancellationId;
 		this.paymentStatus = PaymentStatus.CANCELED;
 		this.failedReason = null;
 	}

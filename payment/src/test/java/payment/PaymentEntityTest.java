@@ -112,7 +112,7 @@ class PaymentEntityTest {
 		);
 		payment.succeed("mock-tid-001");
 
-		payment.cancel();
+		payment.cancel(UUID.randomUUID());
 
 		assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.CANCELED);
 		assertThat(payment.getPaidAt()).isNotNull();
