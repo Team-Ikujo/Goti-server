@@ -4,8 +4,11 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 
 import java.util.UUID;
 
+import com.goti.payment.service.domain.PaymentService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
 	private final OrderPaymentService orderPaymentService;
+	private final PaymentService paymentService;
 
 	@Operation(
 		summary = "결제 요청",
@@ -47,5 +51,17 @@ public class PaymentController {
 				request.idempotencyKey()
 			)
 		);
+	}
+
+	@Operation(
+		summary = "결제 정보 조회",
+		description = "특정 주문에 대한 결제 정보 조회 API"
+	)
+	@GetMapping("/orders/{orderId}")
+	public ResponseEntity<ApiSuccessResponse<PaymentResponse>> get(
+		@PathVariable UUID orderId,
+		@AuthenticationPrincipal(expression = "id") UUID memberId
+	) {
+		return wrap(paymentService.getByOrderId(orderId, memberId));
 	}
 }
