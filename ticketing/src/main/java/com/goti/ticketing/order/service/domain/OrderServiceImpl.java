@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
 import com.goti.ticketing.order.dto.response.OrderListResponse;
 
@@ -56,6 +57,30 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId).stream()
 			.map(OrderListResponse::from)
 			.toList();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public OrderEntity get(UUID orderId, UUID memberId) {
+		Preconditions.validate(
+			memberId != null,
+			ErrorCode.AUTH_INVALID
+		);
+
+		return orderRepository.findByIdAndMemberId(orderId, memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+	}
+
+	@Override
+	@Transactional
+	public void cancel(OrderEntity order) {
+		order.cancel();
+	}
+
+	@Override
+	@Transactional
+	public void partialCancel(OrderEntity order) {
+		order.partialCancel();
 	}
 
 	private String generateOrderNumber() {

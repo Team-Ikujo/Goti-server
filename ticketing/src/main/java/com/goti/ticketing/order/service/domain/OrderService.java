@@ -16,4 +16,10 @@ public interface OrderService {
 	);
 
 	List<OrderListResponse> getMyOrders(UUID memberId);
+
+	OrderEntity get(UUID orderId, UUID memberId);
+
+	void cancel(OrderEntity order);
+
+	void partialCancel(OrderEntity order);
 }
