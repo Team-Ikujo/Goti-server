@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.ticketing.order.dto.request.OrderCreateRequest;
+import com.goti.ticketing.order.dto.request.OrderCancelRequest;
 import com.goti.ticketing.order.dto.request.OrderPaymentConfirmRequest;
+import com.goti.ticketing.order.dto.response.OrderCancelResponse;
 import com.goti.ticketing.order.dto.response.OrderCreateResponse;
 import com.goti.ticketing.order.dto.response.OrderListResponse;
 import com.goti.ticketing.order.dto.response.OrderPaymentConfirmResponse;
 import com.goti.ticketing.order.service.application.OrderCreateService;
+import com.goti.ticketing.order.service.application.OrderCancellationService;
 import com.goti.ticketing.order.service.application.OrderPaymentConfirmService;
 import com.goti.ticketing.order.service.domain.OrderService;
 
@@ -35,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 	private final OrderCreateService orderCreateService;
+	private final OrderCancellationService orderCancellationService;
 	private final OrderService orderService;
 	private final OrderPaymentConfirmService orderPaymentConfirmService;
 
@@ -59,6 +63,19 @@ public class OrderController {
 		@AuthenticationPrincipal(expression = "id") UUID memberId
 	) {
 		return wrap(orderService.getMyOrders(memberId));
+	}
+
+	@Operation(
+		summary = "주문 취소",
+		description = "주문 전체 또는 부분 취소 API"
+	)
+	@PostMapping("/{orderId}/cancellations")
+	public ResponseEntity<ApiSuccessResponse<OrderCancelResponse>> cancel(
+		@PathVariable UUID orderId,
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
+		@Valid @RequestBody OrderCancelRequest request
+	) {
+		return wrap(orderCancellationService.cancel(orderId, memberId, request));
 	}
 
 	//TODO: 추후 내부 호출용 API Controller 분리
