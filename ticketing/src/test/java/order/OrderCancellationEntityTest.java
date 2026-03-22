@@ -2,9 +2,7 @@ package order;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 
 import com.goti.ticketing.constants.LeagueType;
@@ -52,7 +50,7 @@ class OrderCancellationEntityTest {
 	void 주문취소_생성_성공() {
 		OrderCancellationEntity cancellation = OrderCancellationEntity.create(
 			order,
-			OrderCancellationRequestType.USER_PARTIAL,
+			OrderCancellationRequestType.USER_FULL,
 			requestedBy,
 			refundAmountTotal,
 			feeAmountTotal,
@@ -61,7 +59,7 @@ class OrderCancellationEntityTest {
 
 		assertThat(cancellation.getOrder()).isEqualTo(order);
 		assertThat(cancellation.getStatus()).isEqualTo(OrderCancellationStatus.REQUESTED);
-		assertThat(cancellation.getRequestType()).isEqualTo(OrderCancellationRequestType.USER_PARTIAL);
+		assertThat(cancellation.getRequestType()).isEqualTo(OrderCancellationRequestType.USER_FULL);
 		assertThat(cancellation.getDenyReasonCode()).isNull();
 		assertThat(cancellation.getRequestedBy()).isEqualTo(requestedBy);
 		assertThat(cancellation.getRefundAmountTotal()).isEqualTo(refundAmountTotal);
@@ -92,7 +90,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
-				OrderCancellationRequestType.USER_PARTIAL,
+				OrderCancellationRequestType.USER_FULL,
 				null,
 				refundAmountTotal,
 				feeAmountTotal,
@@ -107,7 +105,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
-				OrderCancellationRequestType.USER_PARTIAL,
+				OrderCancellationRequestType.USER_FULL,
 				requestedBy,
 				-1,
 				feeAmountTotal,
@@ -124,7 +122,7 @@ class OrderCancellationEntityTest {
 		assertThatThrownBy(
 			() -> OrderCancellationEntity.create(
 				order,
-				OrderCancellationRequestType.USER_PARTIAL,
+				OrderCancellationRequestType.USER_FULL,
 				requestedBy,
 				refundAmountTotal,
 				feeAmountTotal,
@@ -132,5 +130,20 @@ class OrderCancellationEntityTest {
 			)
 		).isInstanceOf(FieldValidationException.class)
 			.hasMessageContaining("멱등 키는 비어 있을 수 없습니다.");
+	}
+
+	@Test
+	void 주문취소_생성_실패_주문_null() {
+		assertThatThrownBy(
+			() -> OrderCancellationEntity.create(
+				null,
+				OrderCancellationRequestType.USER_FULL,
+				requestedBy,
+				refundAmountTotal,
+				feeAmountTotal,
+				idempotencyKey
+			)
+		).isInstanceOf(FieldValidationException.class)
+			.hasMessageContaining("주문은 필수입니다.");
 	}
 }
