@@ -20,8 +20,10 @@ import com.goti.ticketing.domain.entity.pricing.TicketPricingPolicyEntity;
 import com.goti.ticketing.domain.entity.seat.SeatGradeEntity;
 import com.goti.global.validation.Preconditions;
 import com.goti.ticketing.pricing.dto.response.TicketPricingPolicyCreateResponse;
+import com.goti.ticketing.pricing.dto.response.TicketPricingPolicyResponse;
 import com.goti.ticketing.pricing.repository.TicketPriceRepository;
 import com.goti.ticketing.pricing.repository.TicketPricingPolicyRepository;
+import com.goti.ticketing.pricing.service.domain.command.TicketPriceCreateCommand;
 import com.goti.ticketing.seat.repository.SeatGradeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +41,7 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 		UUID teamId,
 		LocalDate policyStartAt,
 		LocalDate policyEndAt,
-		List<TicketPriceCreateParam> ticketPriceRequest
+		List<TicketPriceCreateCommand> ticketPriceRequest
 	) {
 		TicketPricingPolicyEntity policy = TicketPricingPolicyEntity.create(
 			teamId,
@@ -67,9 +69,26 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 		return TicketPricingPolicyCreateResponse.from(policy, ticketPrices);
 	}
 
-	private Map<UUID, SeatGradeEntity> getGrades(List<TicketPriceCreateParam> ticketPriceRequest) {
+	@Override
+	@Transactional(readOnly = true)
+	public TicketPricingPolicyResponse get(UUID teamId, UUID memberId) {
+		Preconditions.validate(
+			memberId != null,
+			ErrorCode.AUTH_INVALID
+		);
+
+		TicketPricingPolicyEntity policy = ticketPricingPolicyRepository
+			.findLatestActivePolicy(teamId)
+			.orElseThrow(() -> new com.goti.exception.CustomException(ErrorCode.TICKET_PRICING_POLICY_NOT_FOUND));
+
+		List<TicketPriceEntity> prices = ticketPriceRepository.findAllByPolicyId(policy.getId());
+
+		return TicketPricingPolicyResponse.from(policy, prices);
+	}
+
+	private Map<UUID, SeatGradeEntity> getGrades(List<TicketPriceCreateCommand> ticketPriceRequest) {
 		List<UUID> gradeIds = ticketPriceRequest.stream()
-			.map(TicketPriceCreateParam::gradeId)
+			.map(TicketPriceCreateCommand::gradeId)
 			.distinct()
 			.toList();
 
@@ -84,11 +103,11 @@ public class TicketPricingPolicyServiceImpl implements TicketPricingPolicyServic
 	}
 
 	private void validateDuplicateticketPrice(
-		List<TicketPriceCreateParam> ticketPriceRequest
+		List<TicketPriceCreateCommand> ticketPriceRequest
 	) {
 		Set<TicketPriceCondition> uniqueConditions = new HashSet<>();
 
-		for (TicketPriceCreateParam price : ticketPriceRequest) {
+		for (TicketPriceCreateCommand price : ticketPriceRequest) {
 			Preconditions.validate(
 				uniqueConditions.add(
 					new TicketPriceCondition(
