@@ -61,13 +61,18 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<OrderListResponse> getMyOrders(UUID memberId) {
+	public List<OrderListResponse> getMyOrders(
+		UUID memberId,
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	) {
 		Preconditions.validate(
 			memberId != null,
 			ErrorCode.AUTH_INVALID
 		);
 
-		return orderRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId).stream()
+		return orderRepository.findMyOrders(memberId, months, startDate, endDate).stream()
 			.map(OrderListResponse::from)
 			.toList();
 	}
