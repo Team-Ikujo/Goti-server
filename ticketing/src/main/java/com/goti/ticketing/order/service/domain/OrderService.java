@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.goti.ticketing.domain.entity.game.GameScheduleEntity;
 import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.order.dto.response.OrderListResponse;
+import com.goti.ticketing.order.dto.response.OrderPaymentInfoResponse;
 
 public interface OrderService {
 	OrderEntity create(
@@ -16,4 +17,6 @@ public interface OrderService {
 	);
 
 	List<OrderListResponse> getMyOrders(UUID memberId);
+
+	OrderPaymentInfoResponse getPaymentOrder(UUID orderId, UUID memberId);
 }
