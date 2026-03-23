@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,33 +51,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SocialVerifyApiTest {
 
 	@Autowired
-	public MockMvc mockMvc;
+	MockMvc mockMvc;
 
 	@Autowired
-	public ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 
 	@MockitoBean
-	private SocialClientProvider socialClientProvider;
+	SocialClientProvider socialClientProvider;
 
 	@Autowired
 	MemberRepository memberRepository;
 
 	@Autowired
 	SocialProviderRepository socialProviderRepository;
+
 	MemberEntity member;
 	SocialProviderEntity socialProvider;
 
-	@BeforeEach
-	void setup(TestInfo testInfo) {
-		if (testInfo.getDisplayName().equals("Present-socialProviderInfo")) {
-			saveMember();
-			saveSocialProvider();
-		}
-	}
-
 	@Test
 	@Disabled("개별적으로 테스트 시에만 @Disabled 주석 해제 후 테스트")
-	@DisplayName("Absent-SocialProviderInfo")
+	@DisplayName("소셜정보 미존재")
 	void verify_성공_200__OK_for_kakao_소셜_정보_미존재() throws Exception {
 		// 실제 브라우저단에서 code 발급 후 실제 code 정의
 		String realAuthCode = "";
@@ -107,67 +100,77 @@ public class SocialVerifyApiTest {
 		log.info("response : {}", responseJson);
 	}
 
-	@Test
-	// @Disabled("개별적으로 테스트 시에만 @Disabled 주석 해제 후 테스트")
-	@DisplayName("Present-socialProviderInfo")
-	void verify_성공__200__OK_for_kakao_소셜_정보_존재() throws Exception {
-		KakaoApiClient mockKakaoClient = mock(KakaoApiClient.class);
-		given(socialClientProvider.getClient(OAuthProvider.KAKAO)).willReturn(mockKakaoClient);
+	@Nested
+	@DisplayName("소셜 정보가 존재하는 경우")
+	class WithExistingSocialProvider {
 
-		given(mockKakaoClient.getAccessToken(anyString(), any()))
-			.willReturn("test_access_token");
+		@BeforeEach
+		void init() {
+			saveMember();
+			saveSocialProvider();
+		}
 
-		SocialUserInfoResponse mockResponse = new SocialUserInfoResponse(
-			socialProvider.getProviderId(),
-			member.getName(),
-			socialProvider.getEmail(),
-			member.getMobile(),
-			member.getBirthDate().toString(),
-			Gender.MALE
-		);
+		@Test
+		void verify_성공__200__OK_for_kakao_소셜_정보_존재() throws Exception {
+			KakaoApiClient mockKakaoClient = mock(KakaoApiClient.class);
+			given(socialClientProvider.getClient(OAuthProvider.KAKAO)).willReturn(mockKakaoClient);
 
-		given(mockKakaoClient.getSocialUserInfo(anyString()))
-			.willReturn(mockResponse);
+			given(mockKakaoClient.getAccessToken(anyString(), any()))
+				.willReturn("test_access_token");
 
-		SocialVerifyRequest request = new SocialVerifyRequest("test_code", null);
+			SocialUserInfoResponse mockResponse = new SocialUserInfoResponse(
+				socialProvider.getProviderId(),
+				member.getName(),
+				socialProvider.getEmail(),
+				member.getMobile(),
+				member.getBirthDate().toString(),
+				Gender.MALE
+			);
 
-		MvcResult result = mockMvc.perform(
-			post("/api/v1/auth/{provider}/social/verify", OAuthProvider.KAKAO)
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpectAll(
-				status().isOk(),
-				jsonPath("$.code").value("ok"),
-				jsonPath("$.message").value("성공"),
-				jsonPath("$.data").exists(),
-				jsonPath("$.data.isRegistered").exists(),
-				jsonPath("$.data.isRegistered").value(true),
-				jsonPath("$.data.socialVerifyToken").exists()
-			).andReturn();
+			given(mockKakaoClient.getSocialUserInfo(anyString()))
+				.willReturn(mockResponse);
 
-		String responseJson = result.getResponse().getContentAsString();
-		log.info("response : {}", responseJson);
+			SocialVerifyRequest request = new SocialVerifyRequest("test_code", null);
+
+			MvcResult result = mockMvc.perform(
+					post("/api/v1/auth/{provider}/social/verify", OAuthProvider.KAKAO)
+						.with(csrf())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(request)))
+				.andExpectAll(
+					status().isOk(),
+					jsonPath("$.code").value("ok"),
+					jsonPath("$.message").value("성공"),
+					jsonPath("$.data").exists(),
+					jsonPath("$.data.isRegistered").exists(),
+					jsonPath("$.data.isRegistered").value(true),
+					jsonPath("$.data.socialVerifyToken").exists()
+				).andReturn();
+
+			String responseJson = result.getResponse().getContentAsString();
+			log.info("response : {}", responseJson);
+		}
+
+		private void saveMember() {
+			member = MemberEntity.create(
+				"01012341234",
+				"테스트_회원",
+				Gender.MALE,
+				LocalDate.of(2000,02,10)
+			);
+			memberRepository.save(member);
+		}
+
+		private void saveSocialProvider() {
+			socialProvider = SocialProviderEntity.create(
+				member,
+				OAuthProvider.KAKAO,
+				"existing_kakao_provider_id",
+				"kakao_user@test.com"
+			);
+			socialProviderRepository.save(socialProvider);
+		}
+
 	}
 
-	private void saveMember() {
-		member = MemberEntity.create(
-			"01012341234",
-			"테스트_회원",
-			Gender.MALE,
-			LocalDate.of(2000,02,10)
-		);
-		memberRepository.save(member);
-	}
-
-	private void saveSocialProvider() {
-		socialProvider = SocialProviderEntity.create(
-			member,
-			OAuthProvider.KAKAO,
-			"existing_kakao_provider_id",
-			"kakao_user@test.com"
-		);
-
-		socialProviderRepository.save(socialProvider);
-	}
 }
