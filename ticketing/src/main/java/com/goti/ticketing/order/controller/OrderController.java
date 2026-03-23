@@ -2,6 +2,7 @@ package com.goti.ticketing.order.controller;
 
 import static com.goti.global.api.ApiSuccessResponse.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,9 +59,12 @@ public class OrderController {
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<List<OrderListResponse>>> getMyOrders(
-		@AuthenticationPrincipal(expression = "id") UUID memberId
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
+		@RequestParam(required = false) Integer months,
+		@RequestParam(required = false) LocalDate startDate,
+		@RequestParam(required = false) LocalDate endDate
 	) {
-		return wrap(orderService.getMyOrders(memberId));
+		return wrap(orderService.getMyOrders(memberId, months, startDate, endDate));
 	}
 
 	@Operation(
