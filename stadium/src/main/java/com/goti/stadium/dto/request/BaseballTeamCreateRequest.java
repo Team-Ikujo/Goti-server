@@ -16,7 +16,7 @@ public record BaseballTeamCreateRequest(
 	TeamCode teamCode,
 
 	@Schema(description = "구단명(표시명)", example = "SS")
-	@NotNull(message = "구단명(표시명)은 필수 항목입니다.")
+	@NotBlank(message = "구단명(표시명)은 필수 항목입니다.")
 	String displayName,
 
 	@Schema(description = "구단명", example = "삼성라이온즈")
