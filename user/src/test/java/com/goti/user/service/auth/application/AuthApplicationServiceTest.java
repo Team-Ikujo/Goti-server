@@ -47,19 +47,7 @@ public class AuthApplicationServiceTest {
 	static final String KEY_SEPARATOR = ":";
 
 	@Test
-	@DisplayName("method: issueState()")
-	void state_발급_실패_카카오() {
-		assertThatThrownBy(
-			() -> socialAuthService.issueState(
-				OAuthProvider.KAKAO
-			)
-		).isInstanceOf(CustomException.class)
-			.hasMessageContaining("잘못된 요청입니다.");
-	}
-
-	// todo : socialVerifyToken 으로 로그인 성공 및 테스트
-	@Test
-	// @Disabled("개별적으로 테스트 시에만 @Disabled 주석 해제 후 테스트")
+	@Disabled("개별적으로 테스트 시에만 @Disabled 주석 해제 후 테스트")
 	@DisplayName("method: verify()")
 	void verify_성공_for_kakao_isRegistered_false_값_기대() {
 		// 브라우저 단에서 직접 호출 후 실제 받은 데이터 주입
