@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.ticket.TicketEntity;
+import com.goti.ticketing.ticket.dto.response.TicketResponse;
 
 public interface TicketService {
 	TicketEntity create(
@@ -19,4 +20,11 @@ public interface TicketService {
 		String seatInfo,
 		Integer ticketPrice
 	);
+
+	TicketResponse getDetail(
+		UUID ticketId,
+		UUID userId
+	);
+
+	TicketEntity get(UUID ticketId);
 }
