@@ -59,9 +59,6 @@ public class SocialVerifyApiTest {
 	@MockitoBean
 	SocialClientProvider socialClientProvider;
 
-	@MockitoBean
-	KakaoApiClient kakaoApiClient;
-
 	@Autowired
 	MemberRepository memberRepository;
 
