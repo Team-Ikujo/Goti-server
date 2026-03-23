@@ -20,6 +20,7 @@ import com.goti.global.api.ApiSuccessResponse;
 import com.goti.ticketing.seat.dto.request.CreateSeatGradeRequest;
 import com.goti.ticketing.seat.dto.request.CreateSeatSectionRequest;
 import com.goti.ticketing.seat.dto.response.SeatGradeSearchResponse;
+import com.goti.ticketing.seat.dto.response.SeatGradeSearchResultResponse;
 import com.goti.ticketing.seat.dto.response.SeatSectionResponse;
 import com.goti.ticketing.seat.service.domain.SeatGradeService;
 import com.goti.ticketing.seat.service.domain.SeatSectionService;
@@ -59,7 +60,7 @@ public class StadiumSeatController {
 		description = "구장별 좌석 등급 조회 API"
 	)
 	@GetMapping("/stadiums/{stadiumId}/games/{gameId}/seat-grades")
-	public ResponseEntity<ApiSuccessResponse<List<SeatGradeSearchResponse>>> getSeatGrades(
+	public ResponseEntity<ApiSuccessResponse<SeatGradeSearchResultResponse>> getSeatGrades(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
 		@PathVariable UUID stadiumId,
 		@PathVariable UUID gameId
