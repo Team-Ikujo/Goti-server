@@ -66,6 +66,12 @@ public class OrderPaymentService {
 			ErrorCode.AUTH_INVALID
 		);
 
+		Preconditions.validate(
+			orderId != null,
+			ErrorCode.MISSING_PARAMETER,
+			"orderId"
+		);
+
 		PaymentOrderInfo order = ticketingOrderClient.getPaymentOrder(orderId, memberId);
 		Preconditions.validate(
 			order.memberId().equals(memberId),
