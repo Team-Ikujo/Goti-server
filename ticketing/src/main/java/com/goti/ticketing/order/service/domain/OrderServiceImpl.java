@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 	private static final DateTimeFormatter ORDER_NUMBER_FORMATTER = DateTimeFormatter.ofPattern("yyMMdd");
+	private static final List<Integer> ALLOWED_MONTHS = List.of(1, 3, 6);
 
 	private final OrderRepository orderRepository;
 
@@ -71,6 +72,7 @@ public class OrderServiceImpl implements OrderService {
 			memberId != null,
 			ErrorCode.AUTH_INVALID
 		);
+		validatePeriodFilter(months, startDate, endDate);
 
 		return orderRepository.findMyOrders(memberId, months, startDate, endDate).stream()
 			.map(OrderListResponse::from)
@@ -95,6 +97,34 @@ public class OrderServiceImpl implements OrderService {
 		return "ORD" + "-" +
 			LocalDate.now().format(ORDER_NUMBER_FORMATTER) +
 			tsidSuffix.substring(tsidSuffix.length() - 6);
+	}
+
+	private void validatePeriodFilter(
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	) {
+		Preconditions.validate(
+			(startDate == null) == (endDate == null),
+			ErrorCode.BAD_REQUEST,
+			"시작 날짜와 종료 날짜는 함께 요청되어야 합니다."
+		);
+
+		if (months != null) {
+			Preconditions.validate(
+				ALLOWED_MONTHS.contains(months),
+				ErrorCode.BAD_REQUEST,
+				"조회 기간은 1개월, 3개월, 6개월만 허용됩니다."
+			);
+		}
+
+		if (startDate != null && endDate != null) {
+			Preconditions.validate(
+				!startDate.isAfter(endDate),
+				ErrorCode.BAD_REQUEST,
+				"시작 날짜는 종료 날짜보다 이후일 수 없습니다."
+			);
+		}
 	}
 
 }
