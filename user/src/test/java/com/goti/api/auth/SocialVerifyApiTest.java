@@ -59,6 +59,9 @@ public class SocialVerifyApiTest {
 	@MockitoBean
 	SocialClientProvider socialClientProvider;
 
+	@MockitoBean
+	KakaoApiClient kakaoApiClient;
+
 	@Autowired
 	MemberRepository memberRepository;
 
@@ -74,10 +77,9 @@ public class SocialVerifyApiTest {
 	void verify_성공_200__OK_for_kakao_소셜_정보_미존재() throws Exception {
 		// 실제 브라우저단에서 code 발급 후 실제 code 정의
 		String realAuthCode = "";
-		String state = null;
 		SocialVerifyRequest request = new SocialVerifyRequest(
 			realAuthCode,
-			state
+			null
 		);
 		MvcResult result = mockMvc.perform(
 				post("/api/v1/auth/{provider}/social/verify", OAuthProvider.KAKAO)
@@ -136,7 +138,8 @@ public class SocialVerifyApiTest {
 					post("/api/v1/auth/{provider}/social/verify", OAuthProvider.KAKAO)
 						.with(csrf())
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(request)))
+						.content(objectMapper.writeValueAsString(request))
+				).andDo(print())
 				.andExpectAll(
 					status().isOk(),
 					jsonPath("$.code").value("ok"),
