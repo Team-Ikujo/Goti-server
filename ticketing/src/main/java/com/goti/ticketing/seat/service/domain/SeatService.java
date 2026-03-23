@@ -12,5 +12,7 @@ public interface SeatService {
 
 	List<SeatResponse> get(UUID sectionId, UUID userId);
 
+	List<SeatResponse> get(UUID sectionId, UUID gameId, UUID userId);
+
 	List<SeatEntity> getByStadiumId(UUID stadiumId);
 }
