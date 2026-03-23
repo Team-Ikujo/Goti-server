@@ -98,7 +98,7 @@ class OrderItemEntityTest {
 
 	@Test
 	void 주문상세_취소_성공() {
-		OrderItemEntity item = OrderItemEntity.create(order, seat, TicketType.ADULT, 12000);
+		OrderItemEntity item = OrderItemEntity.create(order, seat, holdId, TicketType.ADULT, 12000);
 		item.pay();
 
 		item.cancel();

@@ -48,7 +48,7 @@ class OrderCancellationItemEntityTest {
 		OrderEntity order = OrderEntity.create("ORD-20260309-0001", UUID.randomUUID(), gameSchedule, 2, 24000);
 		cancellation = OrderCancellationEntity.create(
 			order,
-			OrderCancellationRequestType.USER_PARTIAL,
+			OrderCancellationRequestType.ORDER_PARTIAL,
 			UUID.randomUUID(),
 			12000,
 			1000,
