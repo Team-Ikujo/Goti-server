@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
 import com.goti.infra.constants.redis.RedisKey;
 import com.goti.ticketing.session.model.ReservationSessionCache;
@@ -33,6 +34,28 @@ public class ReservationSessionService {
 
 		return reservationSessionRedisRepository.find(memberId, gameId)
 			.orElseGet(() -> create(memberId, gameId));
+	}
+
+	public void validateActiveSession(
+		UUID memberId,
+		UUID gameId
+	) {
+		Preconditions.validate(
+			memberId != null,
+			ErrorCode.AUTH_INVALID
+		);
+		Preconditions.validate(
+			gameId != null,
+			ErrorCode.BAD_REQUEST
+		);
+
+		ReservationSessionCache reservationSession = reservationSessionRedisRepository.find(memberId, gameId)
+			.orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_SESSION_EXPIRED));
+
+		if (reservationSession.expiresAt().isBefore(LocalDateTime.now())) {
+			reservationSessionRedisRepository.delete(memberId, gameId);
+			throw new CustomException(ErrorCode.RESERVATION_SESSION_EXPIRED);
+		}
 	}
 
 	private ReservationSessionCache create(UUID memberId, UUID gameId) {
