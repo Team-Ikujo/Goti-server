@@ -12,8 +12,6 @@ public interface TicketFreezeService {
 		TicketFreezeReason freezeReason
 	);
 
-	void unfreezeTicket(UUID ticketId);
-
 	boolean isFrozen(UUID ticketId);
 
 	TicketFreezeEntity getActiveFreeze(UUID ticketId);

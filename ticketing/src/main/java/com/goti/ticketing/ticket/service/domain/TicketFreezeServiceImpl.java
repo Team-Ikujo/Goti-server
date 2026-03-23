@@ -39,13 +39,6 @@ public class TicketFreezeServiceImpl implements TicketFreezeService {
 	}
 
 	@Override
-	@Transactional
-	public void unfreezeTicket(UUID ticketId) {
-		ticketFreezeRepository.findByTicketId(ticketId)
-			.ifPresent(ticketFreezeRepository::delete);
-	}
-
-	@Override
 	@Transactional(readOnly = true)
 	public boolean isFrozen(UUID ticketId) {
 		return ticketFreezeRepository.existsByTicketIdAndFrozenUntilAfter(
