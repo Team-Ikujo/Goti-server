@@ -1,0 +1,20 @@
+package com.goti.ticketing.ticket.service.domain;
+
+import java.util.UUID;
+
+import com.goti.ticketing.constants.TicketFreezeReason;
+import com.goti.ticketing.domain.entity.ticket.TicketEntity;
+import com.goti.ticketing.domain.entity.ticket.TicketFreezeEntity;
+
+public interface TicketFreezeService {
+	TicketFreezeEntity freezeTicket(
+		TicketEntity ticket,
+		TicketFreezeReason freezeReason
+	);
+
+	void unfreezeTicket(UUID ticketId);
+
+	boolean isFrozen(UUID ticketId);
+
+	TicketFreezeEntity getActiveFreeze(UUID ticketId);
+}
