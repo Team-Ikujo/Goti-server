@@ -93,7 +93,7 @@ class OrderItemEntityTest {
 
 		assertThatThrownBy(item::expire)
 			.isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("RESERVED 상태에서만 주문 상세 만료 처리가 가능합니다.");
+			.hasMessageContaining("예약 상태에서만 주문 상세 만료 처리가 가능합니다.");
 	}
 
 	@Test

@@ -112,7 +112,7 @@ class OrderCancellationEntityTest {
 				idempotencyKey
 			)
 		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("총 환불액은 0 이상이어야 합니다.");
+			.hasMessageContaining("총 환불액은 0원 이상이어야 합니다.");
 	}
 
 	@ParameterizedTest
@@ -144,7 +144,7 @@ class OrderCancellationEntityTest {
 				idempotencyKey
 			)
 		).isInstanceOf(FieldValidationException.class)
-			.hasMessageContaining("주문은 필수입니다.");
+			.hasMessageContaining("주문 정보는 필수입니다.");
 	}
 
 	@Test
