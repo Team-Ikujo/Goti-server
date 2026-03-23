@@ -8,7 +8,7 @@ import com.goti.ticketing.session.model.ReservationSessionCache;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "좌석 등급 조회 결과 응답")
+@Schema(description = "좌석 등급 및 세션 만료 조회 응답")
 public record SeatGradeSearchResultResponse(
 	@Schema(description = "예매 세션 ID")
 	UUID sessionId,
