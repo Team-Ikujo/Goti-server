@@ -34,7 +34,7 @@ public class TicketPricingPolicyController {
 
 	@Operation(
 		summary = "가격 정책 생성",
-		description = "가격 정책과 티켓 가격 상세 생성 API"
+		description = "가격 정책 및 티켓 가격 상세 생성 API"
 	)
 	@PostMapping
 	public ResponseEntity<ApiSuccessResponse<TicketPricingPolicyCreateResponse>> create(
@@ -61,7 +61,7 @@ public class TicketPricingPolicyController {
 
 	@Operation(
 		summary = "가격 정책 조회",
-		description = "가격 정책과 티켓 가격 조회 API"
+		description = "가격 정책 및 티켓 가격 조회 API"
 	)
 	@GetMapping
 	public ResponseEntity<ApiSuccessResponse<TicketPricingPolicyResponse>> get(
