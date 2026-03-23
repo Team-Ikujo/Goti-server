@@ -41,7 +41,7 @@ public class PaymentController {
 		@Valid @RequestBody PaymentRequest request
 	) {
 		return wrap(
-			orderPaymentService.create(
+			orderPaymentService.initPayment(
 				orderId,
 				memberId,
 				request.paymentMethod(),

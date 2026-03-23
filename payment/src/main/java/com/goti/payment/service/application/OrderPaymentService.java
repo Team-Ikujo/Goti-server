@@ -24,7 +24,7 @@ public class OrderPaymentService {
 	private final PaymentService paymentService;
 
 	@Transactional
-	public PaymentResponse create(
+	public PaymentResponse initPayment (
 		UUID orderId,
 		UUID memberId,
 		PaymentMethod paymentMethod,
