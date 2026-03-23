@@ -27,7 +27,6 @@ import lombok.NoArgsConstructor;
 @Table(
 	name = "ticket_freezes",
 	indexes = {
-		@Index(name = "idx_ticket_freezes_ticket_id", columnList = "ticket_id", unique = true),
 		@Index(name = "idx_ticket_freezes_frozen_until", columnList = "frozen_until")
 	}
 )
@@ -64,6 +63,19 @@ public class TicketFreezeEntity extends ModificationTimestampEntity {
 		return new TicketFreezeEntity(ticket, freezeReason, frozenUntil);
 	}
 
+	public boolean isActive() {
+		return LocalDateTime.now().isBefore(this.frozenUntil);
+	}
+
+	public void refreeze(
+		TicketFreezeReason freezeReason,
+		LocalDateTime frozenUntil
+	) {
+		validate(this.ticket, freezeReason, frozenUntil);
+		this.freezeReason = freezeReason;
+		this.frozenUntil = frozenUntil;
+	}
+
 	private static void validate(
 		TicketEntity ticket,
 		TicketFreezeReason freezeReason,
@@ -76,23 +88,5 @@ public class TicketFreezeEntity extends ModificationTimestampEntity {
 			frozenUntil.isAfter(LocalDateTime.now()),
 			"동결 종료 시각은 현재보다 이후여야 합니다."
 		);
-	}
-
-	public boolean isActive() {
-		return isActiveAt(LocalDateTime.now());
-	}
-
-	public boolean isActiveAt(LocalDateTime dateTime) {
-		Preconditions.domainValidate(dateTime != null, "확인 시각은 필수입니다.");
-		return dateTime.isBefore(this.frozenUntil);
-	}
-
-	public void refreeze(
-		TicketFreezeReason freezeReason,
-		LocalDateTime frozenUntil
-	) {
-		validate(this.ticket, freezeReason, frozenUntil);
-		this.freezeReason = freezeReason;
-		this.frozenUntil = frozenUntil;
 	}
 }
