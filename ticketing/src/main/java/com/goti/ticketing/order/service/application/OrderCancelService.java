@@ -20,6 +20,7 @@ import com.goti.ticketing.constants.GameStatus;
 import com.goti.ticketing.constants.OrderCancellationRequestType;
 import com.goti.ticketing.constants.OrderItemStatus;
 import com.goti.ticketing.constants.TicketStatus;
+import com.goti.ticketing.infra.api.dto.PaymentCancelResponse;
 import com.goti.ticketing.domain.entity.order.OrderCancellationEntity;
 import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
@@ -125,13 +126,17 @@ public class OrderCancelService {
 		}
 
 		updateOrderStatus(order, orderItems);
-		paymentApiClient.cancelPayment(orderId, cancellation.getId());
+		PaymentCancelResponse.PaymentResponseData paymentData =
+			paymentApiClient.cancelPayment(orderId, cancellation.getId());
 		orderCancellationService.complete(cancellation);
 
 		return OrderCancelResponse.from(
 			cancellation,
 			order,
 			BOOKING_FEE - refundAmount.refundedBookingFeeAmount(),
+			paymentData.paymentStatus(),
+			paymentData.paymentMethod(),
+			paymentData.paymentType(),
 			targetItems.size()
 		);
 	}

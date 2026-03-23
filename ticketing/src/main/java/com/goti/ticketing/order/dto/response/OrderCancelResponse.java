@@ -1,5 +1,6 @@
 package com.goti.ticketing.order.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.goti.constants.OrderStatus;
@@ -15,12 +16,19 @@ public record OrderCancelResponse(
 	Integer refundAmount,
 	Integer cancellationFeeAmount,
 	Integer bookingFeeAmount,
+	String paymentStatus,
+	String paymentMethod,
+	String paymentType,
+	LocalDateTime refundAt,
 	Integer canceledItemCount
 ) {
 	public static OrderCancelResponse from(
 		OrderCancellationEntity cancellation,
 		OrderEntity order,
 		Integer bookingFeeAmount,
+		String paymentStatus,
+		String paymentMethod,
+		String paymentType,
 		Integer canceledItemCount
 	) {
 		return new OrderCancelResponse(
@@ -31,6 +39,10 @@ public record OrderCancelResponse(
 			cancellation.getRefundAmountTotal(),
 			cancellation.getFeeAmountTotal(),
 			bookingFeeAmount,
+			paymentStatus,
+			paymentMethod,
+			paymentType,
+			cancellation.getCompletedAt(),
 			canceledItemCount
 		);
 	}

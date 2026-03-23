@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClient;
 
 import com.goti.config.properties.ApiEndpointProperties;
 import com.goti.infra.api.base.BaseRestClient;
+import com.goti.ticketing.infra.api.dto.PaymentCancelResponse;
 import com.goti.ticketing.order.dto.request.OrderPaymentCancelRequest;
 
 @Component
@@ -16,11 +17,12 @@ public class PaymentApiClient extends BaseRestClient {
 		super(builder, properties.payment());
 	}
 
-	public void cancelPayment(UUID orderId, UUID cancellationId) {
-		restClient.post()
-			.uri("/api/v1/payments/orders/{orderId}/cancellations", orderId)
-			.body(new OrderPaymentCancelRequest(cancellationId))
-			.retrieve()
-			.toBodilessEntity();
+	public PaymentCancelResponse.PaymentResponseData cancelPayment(UUID orderId, UUID cancellationId) {
+		PaymentCancelResponse response = post(
+			"/api/v1/payments/orders/" + orderId + "/cancellations",
+			new OrderPaymentCancelRequest(cancellationId),
+			PaymentCancelResponse.class
+		);
+		return response.data();
 	}
 }
