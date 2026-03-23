@@ -80,7 +80,7 @@ class OrderCancellationRefundPolicyTest {
 	}
 
 	@Test
-	void 경기시작_4시간전_이후면_취소불가() {
+	void 경기시작_4시간_이내_취소_불가() {
 		LocalDateTime paidAt = LocalDateTime.of(2026, 3, 22, 10, 0);
 		LocalDateTime canceledAt = LocalDateTime.of(2026, 3, 25, 14, 31);
 		LocalDateTime gameStartAt = LocalDateTime.of(2026, 3, 25, 18, 30);
