@@ -126,7 +126,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	) {
 		Preconditions.domainValidate(
 			order != null,
-			"주문은 필수입니다."
+			"주문 정보는 필수입니다."
 		);
 		Preconditions.domainValidate(
 			requestType != null,
