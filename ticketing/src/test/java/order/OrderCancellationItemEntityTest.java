@@ -6,13 +6,15 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.goti.domain.base.BaseUuidEntity;
+
+import com.goti.ticketing.constants.LeagueType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.goti.domain.base.BaseUuidEntity;
 import com.goti.exception.FieldValidationException;
-import com.goti.ticketing.constants.LeagueType;
 import com.goti.ticketing.constants.OrderCancellationRequestType;
 import com.goti.ticketing.domain.entity.game.GameScheduleEntity;
 import com.goti.ticketing.domain.entity.order.OrderCancellationEntity;

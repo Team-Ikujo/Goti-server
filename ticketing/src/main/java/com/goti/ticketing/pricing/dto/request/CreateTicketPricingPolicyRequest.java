@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record TicketPricingPolicyCreateRequest(
+public record CreateTicketPricingPolicyRequest(
 	@Schema(description = "정책 시작일", example = "2026-03-01")
 	@NotNull(message = "정책 시작일은 필수입니다.")
 	@JsonFormat(pattern = "yyyy-MM-dd")
@@ -27,9 +27,9 @@ public record TicketPricingPolicyCreateRequest(
 
 	@Schema(description = "가격 정책 상세 목록")
 	@NotEmpty(message = "가격 정책 상세 목록은 비어 있을 수 없습니다.")
-	List<@Valid TicketPriceCreateRequest> prices
+	List<@Valid CreateTicketPriceRequest> prices
 ) {
-	public record TicketPriceCreateRequest(
+	public record CreateTicketPriceRequest(
 		@Schema(description = "좌석 등급 ID", example = "22222222-2222-2222-2222-222222222222")
 		@NotNull(message = "좌석 등급 ID는 필수입니다.")
 		UUID gradeId,
