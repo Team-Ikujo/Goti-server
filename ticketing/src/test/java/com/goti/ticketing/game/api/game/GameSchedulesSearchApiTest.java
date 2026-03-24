@@ -30,12 +30,12 @@ import java.util.Map;
 
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @Slf4j
 @SpringBootTest(classes = GotiTicketingApplication.class)
@@ -62,32 +62,61 @@ public class GameSchedulesSearchApiTest {
 	BaseballTeamEntity samsung;
 	StadiumEntity stadium;
 
-	private static final String BASEBALL_GET_API_URI = "/api/v1/baseball-teams/";
-	private static final String STADIUM_GET_API_URI = "/api/v1/stadiums/";
+	private static final String BASEBALL_GET_API_URI = "/api/v1/baseball-teams";
+	private static final String STADIUM_GET_API_URI = "/api/v1/stadiums";
+
 
 	@BeforeEach
 	void setup() {
-
 		saveKia();
 		saveSamsung();
 		saveStadium();
 
 		stubFor(
-			WireMock.get(
-				urlEqualTo(BASEBALL_GET_API_URI + kia.getId())
-			).willReturn(aResponse().withStatus(200))
+			WireMock.get(urlPathMatching("/api/v1/baseball-teams/.*"))
+				.willReturn(aResponse().withStatus(200))
 		);
 
 		stubFor(
-			WireMock.get(
-				urlEqualTo(BASEBALL_GET_API_URI + samsung.getId())
-			).willReturn(aResponse().withStatus(200))
+			WireMock.get(urlPathMatching("/api/v1/stadiums/.*"))
+				.willReturn(aResponse().withStatus(200))
 		);
 
 		stubFor(
-			WireMock.get(
-				urlEqualTo(STADIUM_GET_API_URI + stadium.getId())
-			).willReturn(aResponse().withStatus(200))
+			WireMock.get(urlPathEqualTo(BASEBALL_GET_API_URI))
+				.withQueryParam("teamIds", matching(".*"))
+				.willReturn(aResponse()
+					.withStatus(200)
+					.withHeader("Content-Type", "application/json")
+					.withBody("""
+                {
+                    "code": "200",
+                    "message": "성공",
+                    "data": [
+                        {"teamId": "%s", "teamDisplayName": "KIA"},
+                        {"teamId": "%s", "teamDisplayName": "삼성"}
+                    ]
+                }
+                """.formatted(kia.getId(), samsung.getId()))
+				)
+		);
+
+		stubFor(
+			WireMock.get(urlPathEqualTo(STADIUM_GET_API_URI))
+				.withQueryParam("stadiumIds", matching(".*"))
+				.willReturn(aResponse()
+					.withStatus(200)
+					.withHeader("Content-Type", "application/json")
+					.withBody("""
+                {
+                    "code": "200",
+                    "message": "성공",
+                    "data": [
+                        {"stadiumId": "%s", "stadiumLocation": "광주"}
+                    ]
+                }
+                """.formatted(stadium.getId()))
+				)
 		);
 
 		gameManagementService.register(
