@@ -37,10 +37,12 @@ public class GameScheduleSearchService {
 
 		Set<UUID> teamIds = schedules.stream()
 			.flatMap(s -> Stream.of(s.homeTeamId(), s.awayTeamId()))
+			.filter(java.util.Objects::nonNull)
 			.collect(Collectors.toSet());
 
 		Set<UUID> stadiumIds = schedules.stream()
 			.map(GameScheduleSearchResponse::stadiumId)
+			.filter(java.util.Objects::nonNull)
 			.collect(Collectors.toSet());
 
 		Map<UUID, String> teamDisplayNameMap = getBaseballTeamDisplayNamesMap(teamIds);

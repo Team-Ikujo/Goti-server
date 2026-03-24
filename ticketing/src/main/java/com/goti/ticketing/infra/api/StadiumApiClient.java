@@ -11,6 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,12 +48,13 @@ public class StadiumApiClient extends BaseRestClient implements StadiumClient {
 				.collect(Collectors.joining(","))
 		);
 
-		return getGotiResponse(
+		var response = getGotiResponse(
 			BASEBALL_TEAM_GET_API,
 			null,
 			queryParams,
 			new ParameterizedTypeReference<ApiSuccessResponse<List<BaseballTeamDisplayNameResponse>>>() {}
 		);
+		return response != null ? response : Collections.emptyList();
 	}
 
 	@Override
@@ -62,11 +64,12 @@ public class StadiumApiClient extends BaseRestClient implements StadiumClient {
 				.map(UUID::toString)
 				.collect(Collectors.joining(","))
 		);
-		return getGotiResponse(
+		var response = getGotiResponse(
 			STADIUM_GET_API,
 			null,
 			queryParams,
 			new ParameterizedTypeReference<ApiSuccessResponse<List<StadiumLocationResponse>>>() {}
 		);
+		return response != null ? response : Collections.emptyList();
 	}
 }
