@@ -5,16 +5,20 @@ import static org.assertj.core.api.Assertions.*;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goti.exception.FieldValidationException;
 import com.goti.ticketing.constants.OrderCancellationRequestType;
 import com.goti.ticketing.order.service.domain.OrderCancellationRefundPolicy;
 
+@SpringBootTest(classes = OrderCancellationRefundPolicy.class)
 @ActiveProfiles("test")
 class OrderCancellationRefundPolicyTest {
 
-	private final OrderCancellationRefundPolicy refundPolicy = new OrderCancellationRefundPolicy();
+	@Autowired
+	private OrderCancellationRefundPolicy refundPolicy;
 
 	@Test
 	void 예매당일_취소면_수수료포함_전액환불() {
