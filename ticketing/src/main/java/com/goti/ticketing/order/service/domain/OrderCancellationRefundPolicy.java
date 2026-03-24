@@ -85,11 +85,11 @@ public class OrderCancellationRefundPolicy {
 		);
 		Preconditions.domainValidate(
 			ticketAmount != null && ticketAmount >= 0,
-			"티켓 금액은 0 이상이어야 합니다."
+			"티켓 금액은 0원 이상이어야 합니다."
 		);
 		Preconditions.domainValidate(
 			bookingFeeAmount != null && bookingFeeAmount >= 0,
-			"예매 수수료는 0 이상이어야 합니다."
+			"예매 수수료는 0원 이상이어야 합니다."
 		);
 		Preconditions.domainValidate(
 			requestType != null,
