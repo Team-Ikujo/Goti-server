@@ -42,26 +42,32 @@ public class WaitingQueueEventListener {
 			String lockKey = keyProvider.getLockKey(gameId);
 
 			lockManager.withLock(lockKey, () -> {
-				boolean shouldIncrementAllowedNum = false;
-
 				if (event.isFromActive()) {
 					waitingQueueRepository.incrementCurrentUsers(gameId, -1);
-
-					Long currentUsers = waitingQueueRepository.getCurrentUsers(gameId);
-					if (currentUsers < 0) {
-						log.error("현재 사용자 수가 음수가 되었습니다. gameId: {}", gameId);
-						waitingQueueRepository.incrementCurrentUsers(gameId, Math.abs(currentUsers.intValue()));
-					}
-					shouldIncrementAllowedNum = true;
-				} else if (event.queueNum() != null) {
-					Long allowedNum = waitingQueueRepository.getAllowedQueueNum(gameId);
-					if (event.queueNum() <= allowedNum) {
-						shouldIncrementAllowedNum = true;
-					}
 				}
 
-				if (shouldIncrementAllowedNum) {
-					waitingQueueRepository.incrementAllowedNum(gameId, 1);
+				Long maxCapacityRaw = waitingQueueRepository.getMaxCapacity(gameId);
+				long maxCapacity = maxCapacityRaw != null ? maxCapacityRaw : 0L;
+
+				Long currentUsersRaw = waitingQueueRepository.getCurrentUsers(gameId);
+				long currentUsers = currentUsersRaw != null ? currentUsersRaw : 0L;
+
+				if (currentUsers < 0) {
+					log.error("현재 사용자 수가 음수가 되었습니다. gameId: {}", gameId);
+					waitingQueueRepository.incrementCurrentUsers(gameId, (int)Math.abs(currentUsers));
+					currentUsers = 0L;
+				}
+
+				long availableSlots = maxCapacity - currentUsers;
+
+				if (availableSlots > 0) {
+					Long nextAllowedNum = waitingQueueRepository.getNthQueueNum(gameId, availableSlots);
+					if (nextAllowedNum != null) {
+						waitingQueueRepository.updateAllowedNum(gameId, nextAllowedNum);
+					} else {
+						Long lastIssued = waitingQueueRepository.getLastIssuedNum(gameId);
+						waitingQueueRepository.updateAllowedNum(gameId, lastIssued);
+					}
 				}
 
 				return null;

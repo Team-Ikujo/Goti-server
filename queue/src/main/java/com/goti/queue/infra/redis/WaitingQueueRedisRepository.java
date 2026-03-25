@@ -24,6 +24,7 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 	private static final String FIELD_LAST_ISSUED_NUM = "lastIssuedNum";
 	private static final String FIELD_ALLOWED_NUM = "allowedNum";
 	private static final String FIELD_CURRENT_USERS = "currentUsers";
+	private static final String FIELD_MAX_CAPACITY = "maxCapacity";
 
 	@Override
 	public Long issueNextQueueNum(UUID gameId) {
@@ -123,9 +124,15 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 	}
 
 	@Override
+	public void updateAllowedNum(UUID gameId, long allowedNum) {
+		redisTemplate.opsForHash().put(keyProvider.getStatusKey(gameId), FIELD_ALLOWED_NUM, String.valueOf(allowedNum));
+	}
+
+	@Override
 	public void initializeQueueStatus(UUID gameId, long maxCapacity) {
 		String statusKey = keyProvider.getStatusKey(gameId);
 		redisTemplate.opsForHash().put(statusKey, FIELD_ALLOWED_NUM, String.valueOf(maxCapacity));
+		redisTemplate.opsForHash().put(statusKey, FIELD_MAX_CAPACITY, String.valueOf(maxCapacity));
 		redisTemplate.opsForHash().put(statusKey, FIELD_CURRENT_USERS, "0");
 		redisTemplate.opsForHash().put(statusKey, FIELD_LAST_ISSUED_NUM, "0");
 	}
@@ -137,6 +144,36 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 		return Optional.ofNullable(currentUsers)
 			.map(obj -> Long.parseLong(obj.toString()))
 			.orElse(0L);
+	}
+
+	@Override
+	public Long getMaxCapacity(UUID gameId) {
+		Object maxCapacity = redisTemplate.opsForHash()
+			.get(keyProvider.getStatusKey(gameId), FIELD_MAX_CAPACITY);
+		return Optional.ofNullable(maxCapacity)
+			.map(obj -> Long.parseLong(obj.toString()))
+			.orElse(0L);
+	}
+
+	@Override
+	public Long getLastIssuedNum(UUID gameId) {
+		Object lastIssuedNum = redisTemplate.opsForHash()
+			.get(keyProvider.getStatusKey(gameId), FIELD_LAST_ISSUED_NUM);
+		return Optional.ofNullable(lastIssuedNum)
+			.map(obj -> Long.parseLong(obj.toString()))
+			.orElse(0L);
+	}
+
+	@Override
+	public Long getNthQueueNum(UUID gameId, long n) {
+		if (n <= 0)
+			return null;
+		String key = keyProvider.getWaitingKey(gameId);
+		var range = redisTemplate.opsForZSet().rangeWithScores(key, n - 1, n - 1);
+		if (range == null || range.isEmpty())
+			return null;
+		Double score = range.iterator().next().getScore();
+		return score != null ? score.longValue() : null;
 	}
 
 	private void validateNotBlank(String value, String paramName) {

@@ -28,7 +28,15 @@ public interface WaitingQueueRepository {
 
 	void incrementAllowedNum(UUID gameId, int delta);
 
+	void updateAllowedNum(UUID gameId, long allowedNum);
+
 	void initializeQueueStatus(UUID gameId, long maxCapacity);
 
 	Long getCurrentUsers(UUID gameId);
+
+	Long getMaxCapacity(UUID gameId);
+
+	Long getLastIssuedNum(UUID gameId);
+
+	Long getNthQueueNum(UUID gameId, long n);
 }
