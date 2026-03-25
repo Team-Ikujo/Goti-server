@@ -19,6 +19,13 @@ public enum ErrorCode {
 	INVALID_FORMAT(HttpStatus.BAD_REQUEST, "{0} 형식 오류"),
 	INVALID_PROVIDER_TYPE(HttpStatus.BAD_REQUEST, "{0} 은(는) 지원하지 않는 소셜 서비스입니다."),
 	INVALID_STATE(HttpStatus.BAD_REQUEST, "유효하지 않은 state입니다."),
+	INVALID_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰입니다."),
+	ALREADY_IN_QUEUE(HttpStatus.BAD_REQUEST, "이미 대기열에 진입을 시도한 유저입니다."),
+	QUEUE_NOT_ALLOWED_YET(HttpStatus.BAD_REQUEST, "아직 입장 순서가 아닙니다."),
+	QUEUE_SESSION_EXPIRED(HttpStatus.BAD_REQUEST, "대기열 세션이 만료되었습니다."),
+	TICKETING_SESSION_EXPIRED(HttpStatus.BAD_REQUEST, "티켓팅 세션이 만료되었습니다."),
+	QUEUE_KEY_PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "대기열 키 파싱 중 오류가 발생했습니다."),
+	QUEUE_INVALID_MESSAGE(HttpStatus.INTERNAL_SERVER_ERROR, "유효하지 않은 대기열 메시지입니다."),
 
 	RESALE_BLOCKED(HttpStatus.FORBIDDEN, "리셀이 차단되었습니다. 차단 해제일을 확인해주세요."),
 	DAILY_SELL_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "오늘의 판매 가능 횟수({0}회)를 초과했습니다."),
