@@ -14,6 +14,8 @@ public interface PaymentService {
 		Integer paymentAmount
 	);
 
+	PaymentResponse getByOrderId(UUID orderId);
+
 	PaymentResponse cancel(
 		UUID orderId,
 		UUID cancellationId

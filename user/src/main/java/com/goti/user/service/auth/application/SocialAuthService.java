@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -77,6 +78,7 @@ public class SocialAuthService {
 		return SocialVerifyResponse.of(isRegistered, socialVerifyToken);
 	}
 
+	@Transactional
 	public Pair<String, String> login(String socialVerifyToken) {
 		SocialInfo verifiedSocialInfo = getSocialInfoByToken(socialVerifyToken);
 		MemberEntity member = socialProviderService.findMemberBySocialInfo(
@@ -91,12 +93,10 @@ public class SocialAuthService {
 				return new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 			}
 		);
-		String accessToken = createToken(member, TokenType.ACCESS);
-		String refreshToken = createToken(member, TokenType.REFRESH);
-		saveRefreshTokenJti(member.getId(), refreshToken);
-		return Pair.of(accessToken, refreshToken);
+		return authService.issueTokens(member);
 	}
 
+	@Transactional
 	public Pair<String, String> signup(
 		String socialVerifyToken,
 		String name,
@@ -110,15 +110,18 @@ public class SocialAuthService {
 		MemberEntity member = getOrCreateMember(name, mobile, gender, birthDate);
 
 		createSocialProvider(member, verifiedSocialInfo);
-
-		String accessToken = createToken(member, TokenType.ACCESS);
-		String refreshToken = createToken(member, TokenType.REFRESH);
-		saveRefreshTokenJti(member.getId(), refreshToken);
-		return Pair.of(accessToken, refreshToken);
+		return authService.issueTokens(member);
 	}
 
 	public void sendSignupSmsCode(String socialVerifyToken, String mobile) {
 		authService.sendSmsCode(socialVerifyToken, mobile);
+	}
+
+	@Transactional
+	public Pair<String, String> reissueToken(String refreshToken) {
+		UUID memberId = authService.validateTokenAndGetMemberId(refreshToken);
+		MemberEntity member = memberService.getById(memberId);
+		return authService.issueTokens(member);
 	}
 
 	private void validateState(OAuthProvider provider, String state) {
@@ -190,20 +193,6 @@ public class SocialAuthService {
 				}
 			}
 		);
-	}
-
-	private String createToken(MemberEntity member, TokenType tokenType) {
-		return jwtTokenProvider.create(
-			member.getId(),
-			member.getMobile(),
-			member.getRole(),
-			tokenType
-		);
-	}
-
-	private void saveRefreshTokenJti(UUID memberId, String token) {
-		String refreshJti = jwtTokenProvider.extractJti(token);
-		redisCache.set(RedisKey.REFRESH_TOKEN, memberId, refreshJti);
 	}
 
 

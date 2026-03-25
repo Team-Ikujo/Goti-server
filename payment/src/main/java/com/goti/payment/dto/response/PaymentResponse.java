@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.goti.payment.constants.PaymentMethod;
 import com.goti.payment.constants.PaymentStatus;
 import com.goti.payment.constants.PaymentType;
+import com.goti.payment.domain.entity.payment.PaymentEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.goti.payment.domain.entity.payment.PaymentEntity;

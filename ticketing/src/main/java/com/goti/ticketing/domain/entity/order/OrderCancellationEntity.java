@@ -126,7 +126,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	) {
 		Preconditions.domainValidate(
 			order != null,
-			"주문은 필수입니다."
+			"주문 정보는 필수입니다."
 		);
 		Preconditions.domainValidate(
 			requestType != null,
@@ -138,11 +138,11 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 		);
 		Preconditions.domainValidate(
 			refundAmountTotal != null && refundAmountTotal >= 0,
-			"총 환불액은 0 이상이어야 합니다."
+			"총 환불액은 0원 이상이어야 합니다."
 		);
 		Preconditions.domainValidate(
 			feeAmountTotal != null && feeAmountTotal >= 0,
-			"총 수수료는 0 이상이어야 합니다."
+			"총 수수료는 0원 이상이어야 합니다."
 		);
 		Preconditions.domainValidate(
 			StringUtils.hasText(idempotencyKey),
@@ -153,7 +153,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	public void validateRequest() {
 		Preconditions.domainValidate(
 			this.status == OrderCancellationStatus.REQUESTED,
-			"REQUESTED 상태에서만 취소 요청 검증이 가능합니다."
+			"요청 접수 상태에서만 취소 요청 검증이 가능합니다."
 		);
 		this.status = OrderCancellationStatus.VALIDATED;
 	}
@@ -161,7 +161,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	public void startRefund() {
 		Preconditions.domainValidate(
 			this.status == OrderCancellationStatus.VALIDATED,
-			"VALIDATED 상태에서만 환불 시작 처리가 가능합니다."
+			"요청 검증 통과 상태에서만 환불 시작 처리가 가능합니다."
 		);
 		this.status = OrderCancellationStatus.REFUNDING;
 	}
@@ -169,7 +169,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	public void complete() {
 		Preconditions.domainValidate(
 			this.status == OrderCancellationStatus.REFUNDING,
-			"REFUNDING 상태에서만 취소 완료 처리가 가능합니다."
+			"PG 환불 중 상태에서만 취소 완료 처리가 가능합니다."
 		);
 		this.status = OrderCancellationStatus.COMPLETED;
 		this.completedAt = LocalDateTime.now();
@@ -178,7 +178,7 @@ public class OrderCancellationEntity extends ModificationTimestampEntity {
 	public void fail(OrderCancelDenyReason denyReasonCode) {
 		Preconditions.domainValidate(
 			this.status != OrderCancellationStatus.COMPLETED,
-			"COMPLETED 상태에서는 취소 실패 처리할 수 없습니다."
+			"취소/환불 완료 상태에서는 취소 실패 처리할 수 없습니다."
 		);
 		Preconditions.domainValidate(
 			denyReasonCode != null,

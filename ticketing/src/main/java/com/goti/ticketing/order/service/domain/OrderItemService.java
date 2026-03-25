@@ -12,11 +12,14 @@ public interface OrderItemService {
 	OrderItemEntity create(
 		OrderEntity order,
 		SeatEntity seat,
+		UUID holdId,
 		TicketType ticketType,
 		Integer ticketPrice
 	);
 
 	List<OrderItemEntity> get(UUID orderId);
+
+	void expire(OrderItemEntity orderItem);
 
 	void cancel(OrderItemEntity orderItem);
 }

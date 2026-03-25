@@ -67,6 +67,15 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public PaymentResponse getByOrderId(UUID orderId) {
+		PaymentEntity payment = paymentRepository.findLatestByOrderId(orderId)
+			.orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
+
+		return PaymentResponse.from(payment);
+	}
+
+	@Override
 	@Transactional
 	public PaymentResponse cancel(
 		UUID orderId,
