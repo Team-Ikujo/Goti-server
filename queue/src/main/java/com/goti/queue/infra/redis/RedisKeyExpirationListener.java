@@ -1,0 +1,66 @@
+package com.goti.queue.infra.redis;
+
+import java.util.UUID;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.stereotype.Component;
+
+import com.goti.queue.dto.WaitingQueueLeaveEvent;
+import com.goti.queue.repository.WaitingQueueRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class RedisKeyExpirationListener extends KeyExpirationEventMessageListener {
+
+	private final ApplicationEventPublisher eventPublisher;
+	private final WaitingQueueRepository waitingQueueRepository;
+	private final RedisKeyProvider keyProvider;
+
+	public RedisKeyExpirationListener(RedisMessageListenerContainer listenerContainer,
+		ApplicationEventPublisher eventPublisher,
+		com.goti.queue.repository.WaitingQueueRepository waitingQueueRepository, RedisKeyProvider keyProvider) {
+		super(listenerContainer);
+		this.eventPublisher = eventPublisher;
+		this.waitingQueueRepository = waitingQueueRepository;
+		this.keyProvider = keyProvider;
+	}
+
+	@Override
+	public void onMessage(Message message, byte[] pattern) {
+		String expiredKey = message.toString();
+
+		if (expiredKey.startsWith(RedisKeyProvider.PREFIX_WAITING_HEARTBEAT) ||
+			expiredKey.startsWith(RedisKeyProvider.PREFIX_ACTIVE)) {
+			handleExpiration(expiredKey);
+		}
+	}
+
+	private void handleExpiration(String key) {
+		RedisKeyProvider.ExpiredKeyInfo info = keyProvider.parseExpiredKey(key);
+
+		if (info == null) {
+			return;
+		}
+
+		try {
+			UUID gameId = info.gameId();
+			UUID userId = info.userId();
+			boolean isFromActive = info.isActive();
+			Long queueNum = null;
+
+			if (!isFromActive) {
+				queueNum = waitingQueueRepository.removeFromWaiting(gameId, userId);
+			}
+
+			eventPublisher.publishEvent(new WaitingQueueLeaveEvent(gameId, userId, isFromActive, queueNum));
+
+		} catch (Exception e) {
+			log.error("만료 키 처리 중 오류 발생: {}", key, e);
+		}
+	}
+}
