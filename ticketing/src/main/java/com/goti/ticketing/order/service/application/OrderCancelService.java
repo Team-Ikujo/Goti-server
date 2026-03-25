@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrderCancelService {
-	private static final int BOOKING_FEE = 1000;
+	private static final int BOOKING_FEE_PER_ITEM = 1000;
 
 	private final OrderService orderService;
 	private final OrderItemService orderItemService;
@@ -77,13 +77,14 @@ public class OrderCancelService {
 		int ticketAmount = targetItems.stream()
 			.mapToInt(OrderItemEntity::getTicketPrice)
 			.sum();
+		int bookingFeeAmount = targetItems.size() * BOOKING_FEE_PER_ITEM;
 
 		OrderCancellationRefundPolicy.RefundAmount refundAmount = refundPolicy.calculate(
 			order.getConfirmedAt(),
 			order.getGameSchedule().getStartAt(),
 			LocalDateTime.now(),
 			ticketAmount,
-			BOOKING_FEE,
+			bookingFeeAmount,
 			request.requestType(),
 			refundableByGameCanceled
 		);
@@ -133,7 +134,7 @@ public class OrderCancelService {
 		return OrderCancelResponse.from(
 			cancellation,
 			order,
-			BOOKING_FEE - refundAmount.refundedBookingFeeAmount(),
+			bookingFeeAmount - refundAmount.refundedBookingFeeAmount(),
 			paymentData.paymentStatus(),
 			paymentData.paymentMethod(),
 			paymentData.paymentType(),
