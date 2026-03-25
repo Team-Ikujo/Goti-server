@@ -14,15 +14,19 @@ import com.goti.ticketing.order.dto.request.OrderPaymentCancelRequest;
 
 @Component
 public class PaymentApiClient extends BaseRestClient {
+	private static final String PAYMENT_CANCEL_API = "/api/v1/payments/orders";
+	private static final String PATH_SEPARATOR = "/";
 
 	public PaymentApiClient(RestClient.Builder builder, ApiEndpointProperties properties) {
 		super(builder, properties.payment());
 	}
 
 	public PaymentCancelResponse cancelPayment(UUID orderId, UUID cancellationId) {
+		String uri = PAYMENT_CANCEL_API + PATH_SEPARATOR + orderId + "/cancellations";
+		OrderPaymentCancelRequest request = new OrderPaymentCancelRequest(cancellationId);
 		return postGotiResponse(
-			"/api/v1/payments/orders/" + orderId + "/cancellations",
-			new OrderPaymentCancelRequest(cancellationId),
+			uri,
+			request,
 			new ParameterizedTypeReference<ApiSuccessResponse<PaymentCancelResponse>>() {}
 		);
 	}
