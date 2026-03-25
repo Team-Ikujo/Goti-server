@@ -127,8 +127,7 @@ public class OrderCancelService {
 		}
 
 		updateOrderStatus(order, orderItems);
-		PaymentCancelResponse.PaymentResponseData paymentData =
-			paymentApiClient.cancelPayment(orderId, cancellation.getId());
+		PaymentCancelResponse paymentData = paymentApiClient.cancelPayment(orderId, cancellation.getId());
 		orderCancellationService.complete(cancellation);
 
 		return OrderCancelResponse.from(

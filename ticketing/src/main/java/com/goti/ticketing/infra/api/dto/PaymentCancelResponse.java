@@ -1,12 +1,8 @@
 package com.goti.ticketing.infra.api.dto;
 
 public record PaymentCancelResponse(
-	PaymentResponseData data
+	String paymentStatus,
+	String paymentMethod,
+	String paymentType
 ) {
-	public record PaymentResponseData(
-		String paymentStatus,
-		String paymentMethod,
-		String paymentType
-	) {
-	}
 }
