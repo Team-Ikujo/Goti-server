@@ -34,12 +34,11 @@ public class SocialStateApiTest {
 	public MockMvc mockMvc;
 
 	@Test
-	@DisplayName("Naver 및 Google 한정, Kakao 미발급")
+	@DisplayName("Naver 및 Google 발급, Kakao 미발급")
 	void state_발급_성공__200_OK() throws Exception{
 		MvcResult result = mockMvc.perform(
 				get("/api/v1/auth/{provider}/state", OAuthProvider.NAVER)
 					.with(csrf())
-					.contentType(MediaType.APPLICATION_JSON)
 			)
 			.andDo(print())
 			.andExpectAll(
