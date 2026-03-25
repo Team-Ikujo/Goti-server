@@ -103,7 +103,7 @@ public class WaitingQueueController {
 		summary = "대기열 이탈",
 		description = "직접 대기열에서 이탈하거나 결제를 완료했을 때 호출 API"
 	)
-	@DeleteMapping("/{gameId}")
+	@DeleteMapping("/games/{gameId}")
 	public ResponseEntity<ApiSuccessResponse<Void>> leaveQueue(
 		@PathVariable UUID gameId,
 		@AuthenticationPrincipal(expression = "id") UUID userId
