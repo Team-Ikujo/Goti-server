@@ -56,7 +56,7 @@ logging:
 
 queue:
   token:
-    secret-key: "goti-queue-secret-key-1234567890" # 32자리
+    secret-key: ${QUEUE_TOKEN_SECRET_KEY:goti-queue-secret-key-1234567890" # 32자리
   policy:
     active-ttl: 30
     waiting-ttl: 30
