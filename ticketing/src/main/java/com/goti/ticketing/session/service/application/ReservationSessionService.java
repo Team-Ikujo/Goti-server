@@ -41,8 +41,10 @@ public class ReservationSessionService {
 			ErrorCode.BAD_REQUEST
 		);
 
-		return reservationSessionRedisRepository.find(memberId, gameId)
+		ReservationSessionCache reservationSession = reservationSessionRedisRepository.find(memberId, gameId)
 			.orElseGet(() -> create(memberId, gameId));
+
+		return reservationSession;
 	}
 
 	@Transactional
