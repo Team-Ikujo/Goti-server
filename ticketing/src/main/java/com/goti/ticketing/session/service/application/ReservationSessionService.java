@@ -44,7 +44,7 @@ public class ReservationSessionService {
 			ErrorCode.BAD_REQUEST
 		);
 
-		ReservationSessionCache reservationSession = find(memberId, gameId)
+		ReservationSessionCache reservationSession = findReservationSession(memberId, gameId)
 			.orElseGet(() -> create(memberId, gameId));
 
 		return reservationSession;
@@ -64,7 +64,7 @@ public class ReservationSessionService {
 			ErrorCode.BAD_REQUEST
 		);
 
-		ReservationSessionCache reservationSession = find(memberId, gameId)
+		ReservationSessionCache reservationSession = findReservationSession(memberId, gameId)
 			.orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_SESSION_EXPIRED));
 
 		if (reservationSession.expiresAt().isBefore(LocalDateTime.now())) {
@@ -87,7 +87,7 @@ public class ReservationSessionService {
 		return reservationSession;
 	}
 
-	private Optional<ReservationSessionCache> find(UUID memberId, UUID gameId) {
+	private Optional<ReservationSessionCache> findReservationSession(UUID memberId, UUID gameId) {
 		return Optional.ofNullable(
 			redisCache.get(
 				RedisKey.RESERVATION_SESSION.getKey(generateKeyParam(memberId, gameId)),
@@ -103,7 +103,7 @@ public class ReservationSessionService {
 	}
 
 	private void releaseHeldSeats(UUID memberId, UUID gameId) {
-		List<SeatHoldEntity> seatHolds = seatHoldRepository.findAllActiveByGameIdAndUserId(gameId, memberId);
+		List<SeatHoldEntity> seatHolds = seatHoldRepository.findAllHoldingSeats(gameId, memberId);
 		if (seatHolds.isEmpty()) {
 			return;
 		}

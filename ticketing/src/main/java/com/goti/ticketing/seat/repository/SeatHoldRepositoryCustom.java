@@ -12,7 +12,7 @@ import com.goti.ticketing.domain.entity.seat.SeatHoldEntity;
 public interface SeatHoldRepositoryCustom {
 	List<SeatHoldEntity> findAllWithDetailsByIdIn(List<UUID> holdIds);
 
-	List<SeatHoldEntity> findAllActiveByGameIdAndUserId(UUID gameId, UUID userId);
+	List<SeatHoldEntity> findAllHoldingSeats(UUID gameId, UUID userId);
 
 	Optional<SeatHoldEntity> findLatestActiveHold(
 		GameScheduleEntity gameSchedule,

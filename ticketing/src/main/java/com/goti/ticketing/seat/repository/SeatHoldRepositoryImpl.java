@@ -43,7 +43,7 @@ public class SeatHoldRepositoryImpl implements SeatHoldRepositoryCustom {
 	}
 
 	@Override
-	public List<SeatHoldEntity> findAllActiveByGameIdAndUserId(UUID gameId, UUID userId) {
+	public List<SeatHoldEntity> findAllHoldingSeats(UUID gameId, UUID userId) {
 		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
 		QGameScheduleEntity gameSchedule = QGameScheduleEntity.gameScheduleEntity;
 		QSeatEntity seat = QSeatEntity.seatEntity;
