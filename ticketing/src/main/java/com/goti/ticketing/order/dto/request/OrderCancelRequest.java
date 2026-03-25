@@ -9,8 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record OrderCancelRequest(
-	@NotNull OrderCancellationRequestType requestType,
+	@NotNull(message = "취소 요청 타입은 필수입니다.")
+	OrderCancellationRequestType requestType,
 	List<UUID> orderItemIds,
-	@NotBlank String idempotencyKey
+	@NotBlank(message = "멱등키는 비어 있을 수 없습니다.")
+	String idempotencyKey
 ) {
 }
