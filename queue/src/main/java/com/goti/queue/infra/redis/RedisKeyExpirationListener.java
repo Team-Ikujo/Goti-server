@@ -59,6 +59,8 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 
 			eventPublisher.publishEvent(new WaitingQueueLeaveEvent(gameId, userId, isFromActive, queueNum));
 
+			log.info("action=LEAVE gameId={} userId={} reason={}", gameId, userId,
+				isFromActive ? "ACTIVE_EXPIRED" : "HEARTBEAT_EXPIRED");
 		} catch (Exception e) {
 			log.error("만료 키 처리 중 오류 발생: {}", key, e);
 		}

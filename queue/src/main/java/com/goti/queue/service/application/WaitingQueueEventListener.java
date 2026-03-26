@@ -43,7 +43,7 @@ public class WaitingQueueEventListener {
 
 			lockManager.withLock(lockKey, () -> {
 				if (event.isFromActive()) {
-					waitingQueueRepository.incrementCurrentUsers(gameId, -1);
+					waitingQueueRepository.updateCurrentUsers(gameId, -1);
 				}
 
 				Long maxCapacityRaw = waitingQueueRepository.getMaxCapacity(gameId);
@@ -54,22 +54,30 @@ public class WaitingQueueEventListener {
 
 				if (currentUsers < 0) {
 					log.error("현재 사용자 수가 음수가 되었습니다. gameId: {}", gameId);
-					waitingQueueRepository.incrementCurrentUsers(gameId, (int)Math.abs(currentUsers));
+					waitingQueueRepository.updateCurrentUsers(gameId, (int)Math.abs(currentUsers));
 					currentUsers = 0L;
 				}
 
 				long availableSlots = maxCapacity - currentUsers;
 
+				log.info("action=SLOT_RELEASE gameId={} activeCount={} maxCapacity={} availableSlots={}", gameId,
+					currentUsers, maxCapacity, availableSlots);
+
 				if (availableSlots > 0) {
 					Long nextAllowedNum = waitingQueueRepository.getNthQueueNum(gameId, availableSlots);
 					if (nextAllowedNum != null) {
+						// 대기 인원이 빈 자리보다 많을 때
 						waitingQueueRepository.updateAllowedNum(gameId, nextAllowedNum);
+						log.info("action=ADMIT_BATCH gameId={} newAllowedNum={}", gameId, nextAllowedNum);
 					} else {
+						// 대기 인원이 빈 자리보다 적을 때
 						Long lastIssued = waitingQueueRepository.getLastIssuedNum(gameId);
 						waitingQueueRepository.updateAllowedNum(gameId, lastIssued);
+						log.info("action=ADMIT_BATCH gameId={} newAllowedNum={}", gameId, lastIssued);
 					}
 				}
-
+				log.info("action=SLOT_RELEASE gameId={} activeCount={} maxCapacity={} availableSlots={}", gameId,
+					currentUsers, maxCapacity, availableSlots);
 				return null;
 			});
 		} catch (Exception e) {

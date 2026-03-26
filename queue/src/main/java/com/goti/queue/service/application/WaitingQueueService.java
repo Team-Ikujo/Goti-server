@@ -46,6 +46,8 @@ public class WaitingQueueService {
 		String rawPayload = domainService.createTokenPayload(gameId, userId, queueNumber, activeUuid, issuedAt);
 		String secureToken = tokenEncryptor.encrypt(rawPayload);
 
+		log.info("action=ENTER gameId={} userId={} queueNumber={}", gameId, userId, queueNumber);
+
 		return new QueueEnterResponse(secureToken, queueNumber, gameId);
 	}
 
@@ -76,8 +78,9 @@ public class WaitingQueueService {
 
 		Long removedQueueNum = waitingQueueRepository.removeFromWaiting(gameId, userId);
 		if (removedQueueNum != null) {
+			log.info("action=SEAT_ENTER gameId={} userId={} queueNumber={}", gameId, userId, queueNumber);
 			waitingQueueRepository.moveToActive(gameId, userId, activeUuid, queueProperties.activeTtl());
-			waitingQueueRepository.incrementCurrentUsers(gameId, 1);
+			waitingQueueRepository.updateCurrentUsers(gameId, 1);
 		} else {
 			boolean isAlreadyActive = waitingQueueRepository.isActiveSessionExist(gameId, userId);
 			if (!isAlreadyActive) {
@@ -85,6 +88,7 @@ public class WaitingQueueService {
 				throw new CustomException(ErrorCode.QUEUE_SESSION_EXPIRED);
 			}
 		}
+
 	}
 
 	public void heartbeatWaiting(UUID gameId, UUID userId) {
@@ -97,7 +101,7 @@ public class WaitingQueueService {
 	public void leaveQueue(UUID gameId, UUID userId) {
 		Long removedQueueNum = waitingQueueRepository.removeFromWaiting(gameId, userId);
 		boolean removedFromActive = waitingQueueRepository.removeFromActive(gameId, userId);
-
+		log.info("action=LEAVE gameId={} userId={} reason=VOLUNTARY fromActive={}", gameId, userId, removedFromActive);
 		eventPublisher.publishEvent(new WaitingQueueLeaveEvent(gameId, userId, removedFromActive, removedQueueNum));
 	}
 

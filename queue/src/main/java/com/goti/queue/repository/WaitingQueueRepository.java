@@ -24,7 +24,7 @@ public interface WaitingQueueRepository {
 
 	boolean checkDuplicateEventProcess(UUID gameId, UUID userId, long ttlSeconds);
 
-	void incrementCurrentUsers(UUID gameId, int delta);
+	void updateCurrentUsers(UUID gameId, int delta);
 
 	void updateAllowedNum(UUID gameId, long allowedNum);
 

@@ -113,10 +113,10 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 	}
 
 	@Override
-	public void incrementCurrentUsers(UUID gameId, int delta) {
+	public void updateCurrentUsers(UUID gameId, int delta) {
 		redisTemplate.opsForHash().increment(keyProvider.getStatusKey(gameId), FIELD_CURRENT_USERS, delta);
 	}
-	
+
 	@Override
 	public void updateAllowedNum(UUID gameId, long allowedNum) {
 		redisTemplate.opsForHash().put(keyProvider.getStatusKey(gameId), FIELD_ALLOWED_NUM, String.valueOf(allowedNum));
