@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.goti.exception.CustomException;
 
 import org.springframework.stereotype.Service;
@@ -16,11 +18,13 @@ import com.goti.global.validation.Preconditions;
 import com.goti.ticketing.domain.entity.game.GameScheduleEntity;
 import com.goti.ticketing.domain.entity.seat.SeatEntity;
 import com.goti.ticketing.domain.entity.seat.SeatStatusEntity;
+import com.goti.ticketing.constants.SeatStatus;
 import com.goti.ticketing.seat.dto.response.GameSeatStatusResponse;
 import com.goti.ticketing.seat.repository.SeatStatusRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SeatStatusServiceImpl implements SeatStatusService {
@@ -38,9 +42,37 @@ public class SeatStatusServiceImpl implements SeatStatusService {
 			ErrorCode.AUTH_INVALID
 		);
 
-		return seatStatusRepository.findSeatStatuses(gameId, sectionId).stream()
+		List<GameSeatStatusResponse> seatStatuses = seatStatusRepository.findSeatStatuses(gameId, sectionId).stream()
 			.map(GameSeatStatusResponse::from)
 			.toList();
+
+		long total = seatStatuses.size();
+		long availableCount = seatStatuses.stream()
+			.filter(seatStatus -> seatStatus.status() == SeatStatus.AVAILABLE)
+			.count();
+		long heldCount = seatStatuses.stream()
+			.filter(seatStatus -> seatStatus.status() == SeatStatus.HELD)
+			.count();
+		long soldCount = seatStatuses.stream()
+			.filter(seatStatus -> seatStatus.status() == SeatStatus.SOLD)
+			.count();
+		long blockedCount = seatStatuses.stream()
+			.filter(seatStatus -> seatStatus.status() == SeatStatus.BLOCKED)
+			.count();
+
+		log.info(
+			"action=SEAT_STATUS gameId={} userId={} sectionId={} total={} available={} held={} sold={} blocked={}",
+			gameId,
+			userId,
+			sectionId,
+			total,
+			availableCount,
+			heldCount,
+			soldCount,
+			blockedCount
+		);
+
+		return seatStatuses;
 	}
 
 	@Override
