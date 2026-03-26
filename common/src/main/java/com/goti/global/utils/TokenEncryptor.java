@@ -59,7 +59,7 @@ public class TokenEncryptor {
 
 		} catch (Exception e) {
 			log.error("토큰 암호화 중 오류 발생", e);
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR); // 에러코드 지정 필요
+			throw new CustomException(ErrorCode.QUEUE_TOKEN_ENCRYPTION_FAILED);
 		}
 	}
 

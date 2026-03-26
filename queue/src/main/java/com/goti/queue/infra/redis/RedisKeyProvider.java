@@ -61,7 +61,7 @@ public class RedisKeyProvider {
 				);
 			}
 		} catch (Exception e) {
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR); // 지정 필요
+			throw new CustomException(ErrorCode.QUEUE_KEY_PARSE_ERROR);
 		}
 		return null;
 	}
