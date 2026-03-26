@@ -5,6 +5,8 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.goti.ticketing.domain.entity.order.OrderEntity;
+import com.goti.ticketing.infra.api.dto.response.GameIdResponse;
 import com.goti.ticketing.order.dto.request.OrderCancelRequest;
 import com.goti.ticketing.order.dto.response.OrderCancelResponse;
 
@@ -112,4 +114,19 @@ public class OrderController {
 			request.pgTid()
 		));
 	}
+
+	@Operation(
+		summary = "주문 참조 게임 조회(내부용)",
+		description = "주문 참조 게임 일정 ID 조회 API"
+	)
+	@GetMapping("/{orderId}")
+	public ResponseEntity<ApiSuccessResponse<GameIdResponse>> getGameId(
+		@PathVariable UUID orderId
+	) {
+		OrderEntity order = orderService.get(orderId);
+		UUID gameId = order.getGameSchedule().getId();
+		var response = new GameIdResponse(gameId);
+		return wrap(response);
+	}
+
 }
