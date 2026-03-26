@@ -16,17 +16,15 @@ public interface WaitingQueueRepository {
 
 	void moveToActive(UUID gameId, UUID userId, String uuid, long ttlSeconds);
 
-	boolean renewWaitingStatus(UUID gameId, UUID userId, long ttlSeconds);
+	boolean isActiveSessionExist(UUID gameId, UUID userId);
 
-	boolean renewActiveStatus(UUID gameId, UUID userId, long ttlSeconds);
+	boolean renewWaitingStatus(UUID gameId, UUID userId, long ttlSeconds);
 
 	boolean checkDuplicateEnqueue(UUID gameId, UUID userId, long ttlSeconds);
 
 	boolean checkDuplicateEventProcess(UUID gameId, UUID userId, long ttlSeconds);
 
 	void incrementCurrentUsers(UUID gameId, int delta);
-
-	void incrementAllowedNum(UUID gameId, int delta);
 
 	void updateAllowedNum(UUID gameId, long allowedNum);
 

@@ -79,8 +79,7 @@ public class WaitingQueueService {
 			waitingQueueRepository.moveToActive(gameId, userId, activeUuid, queueProperties.activeTtl());
 			waitingQueueRepository.incrementCurrentUsers(gameId, 1);
 		} else {
-			boolean isAlreadyActive = waitingQueueRepository
-				.renewActiveStatus(gameId, userId, queueProperties.activeTtl());
+			boolean isAlreadyActive = waitingQueueRepository.isActiveSessionExist(gameId, userId);
 			if (!isAlreadyActive) {
 				log.warn("대기열 세션이 만료되었거나 비정상입니다.");
 				throw new CustomException(ErrorCode.QUEUE_SESSION_EXPIRED);
@@ -92,13 +91,6 @@ public class WaitingQueueService {
 		boolean renewed = waitingQueueRepository.renewWaitingStatus(gameId, userId, queueProperties.waitingTtl());
 		if (!renewed) {
 			throw new CustomException(ErrorCode.QUEUE_SESSION_EXPIRED);
-		}
-	}
-
-	public void heartbeatActive(UUID gameId, UUID userId) {
-		boolean renewed = waitingQueueRepository.renewActiveStatus(gameId, userId, queueProperties.activeTtl());
-		if (!renewed) {
-			throw new CustomException(ErrorCode.TICKETING_SESSION_EXPIRED);
 		}
 	}
 

@@ -83,6 +83,14 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 	}
 
 	@Override
+	public boolean isActiveSessionExist(UUID gameId, UUID userId) {
+		validateNotNull(gameId, "gameId");
+		validateNotNull(userId, "userId");
+
+		return BooleanUtils.isTrue(redisTemplate.hasKey(keyProvider.getActiveKey(gameId, userId)));
+	}
+
+	@Override
 	public boolean renewWaitingStatus(UUID gameId, UUID userId, long ttlSeconds) {
 		validateNotNull(gameId, "gameId");
 		validateNotNull(userId, "userId");
@@ -90,15 +98,6 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 		String key = keyProvider.getWaitingHeartbeatKey(gameId, userId);
 		redisTemplate.opsForValue().set(key, "stay", ttlSeconds, TimeUnit.SECONDS);
 		return true;
-	}
-
-	@Override
-	public boolean renewActiveStatus(UUID gameId, UUID userId, long ttlSeconds) {
-		validateNotNull(gameId, "gameId");
-		validateNotNull(userId, "userId");
-
-		return BooleanUtils.isTrue(
-			redisTemplate.expire(keyProvider.getActiveKey(gameId, userId), ttlSeconds, TimeUnit.SECONDS));
 	}
 
 	@Override
@@ -117,12 +116,7 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 	public void incrementCurrentUsers(UUID gameId, int delta) {
 		redisTemplate.opsForHash().increment(keyProvider.getStatusKey(gameId), FIELD_CURRENT_USERS, delta);
 	}
-
-	@Override
-	public void incrementAllowedNum(UUID gameId, int delta) {
-		redisTemplate.opsForHash().increment(keyProvider.getStatusKey(gameId), FIELD_ALLOWED_NUM, delta);
-	}
-
+	
 	@Override
 	public void updateAllowedNum(UUID gameId, long allowedNum) {
 		redisTemplate.opsForHash().put(keyProvider.getStatusKey(gameId), FIELD_ALLOWED_NUM, String.valueOf(allowedNum));

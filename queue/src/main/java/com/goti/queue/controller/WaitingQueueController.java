@@ -87,19 +87,6 @@ public class WaitingQueueController {
 	}
 
 	@Operation(
-		summary = "입장후 Heartbeat",
-		description = "입장 후(좌석 선택 등) 세션 유지를 위해 주기적으로 호출 API"
-	)
-	@PostMapping("/heartbeat/active")
-	public ResponseEntity<ApiSuccessResponse<Void>> heartbeatActive(
-		@RequestParam UUID gameId,
-		@AuthenticationPrincipal(expression = "id") UUID userId
-	) {
-		waitingQueueService.heartbeatActive(gameId, userId);
-		return wrap(null);
-	}
-
-	@Operation(
 		summary = "대기열 이탈",
 		description = "직접 대기열에서 이탈하거나 결제를 완료했을 때 호출 API"
 	)
