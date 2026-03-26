@@ -12,6 +12,8 @@ import com.goti.queue.infra.config.QueueProperties;
 import com.goti.queue.infra.redis.RedisKeyProvider;
 import com.goti.queue.repository.WaitingQueueRepository;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +26,7 @@ public class WaitingQueueEventListener {
 	private final DistributedLockManager lockManager;
 	private final RedisKeyProvider keyProvider;
 	private final QueueProperties queueProperties;
+	private final MeterRegistry meterRegistry;
 
 	@Async
 	@EventListener
@@ -38,6 +41,12 @@ public class WaitingQueueEventListener {
 				log.debug("이미 처리된 이탈 이벤트입니다. gameId: {}, userId: {}", gameId, userId);
 				return;
 			}
+
+			// 이탈 처리
+			meterRegistry.counter("queue.leave.total",
+				"gameId", gameId.toString(),
+				"reason",
+				event.isFromActive() ? "active_expired" : "heartbeat_expired").increment();
 
 			String lockKey = keyProvider.getLockKey(gameId);
 
@@ -76,6 +85,11 @@ public class WaitingQueueEventListener {
 						log.info("action=ADMIT_BATCH gameId={} newAllowedNum={}", gameId, lastIssued);
 					}
 				}
+
+				// 슬롯 반환
+				Long waitingSize = waitingQueueRepository.getWaitingSize(gameId);
+				meterRegistry.gauge("queue.waiting.size", Tags.of("gameId", gameId.toString()), waitingSize);
+
 				log.info("action=SLOT_RELEASE gameId={} activeCount={} maxCapacity={} availableSlots={}", gameId,
 					currentUsers, maxCapacity, availableSlots);
 				return null;
