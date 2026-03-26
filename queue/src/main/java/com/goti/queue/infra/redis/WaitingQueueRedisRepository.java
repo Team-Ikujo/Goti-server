@@ -170,6 +170,13 @@ public class WaitingQueueRedisRepository implements WaitingQueueRepository {
 		return score != null ? score.longValue() : null;
 	}
 
+	@Override
+	public Long getWaitingSize(UUID gameId) {
+		validateNotNull(gameId, "gameId");
+		String key = keyProvider.getWaitingKey(gameId);
+		return redisTemplate.opsForZSet().size(key);
+	}
+
 	private void validateNotBlank(String value, String paramName) {
 		if (value == null || value.isBlank()) {
 			throw new CustomException(ErrorCode.MISSING_PARAMETER, paramName);

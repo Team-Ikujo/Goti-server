@@ -37,4 +37,6 @@ public interface WaitingQueueRepository {
 	Long getLastIssuedNum(UUID gameId);
 
 	Long getNthQueueNum(UUID gameId, long n);
+
+	Long getWaitingSize(UUID gameId);
 }

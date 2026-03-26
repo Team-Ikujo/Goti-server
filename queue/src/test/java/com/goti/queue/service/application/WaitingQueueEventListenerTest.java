@@ -58,7 +58,7 @@ class WaitingQueueEventListenerTest {
 		waitingQueueEventListener.handleUserLeave(event);
 
 		// Then
-		verify(waitingQueueRepository).incrementCurrentUsers(gameId, -1);
+		verify(waitingQueueRepository).updateCurrentUsers(gameId, -1);
 		verify(waitingQueueRepository).updateAllowedNum(gameId, 150L);
 	}
 
@@ -85,7 +85,7 @@ class WaitingQueueEventListenerTest {
 
 		waitingQueueEventListener.handleUserLeave(event);
 
-		verify(waitingQueueRepository, never()).incrementCurrentUsers(any(), anyInt());
+		verify(waitingQueueRepository, never()).updateCurrentUsers(any(), anyInt());
 		verify(waitingQueueRepository).updateAllowedNum(gameId, 300L);
 	}
 

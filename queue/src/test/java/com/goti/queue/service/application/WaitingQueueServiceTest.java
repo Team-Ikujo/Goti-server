@@ -82,7 +82,7 @@ class WaitingQueueServiceTest {
 		waitingQueueService.enterSeat("token");
 
 		verify(waitingQueueRepository).moveToActive(eq(gameId), eq(userId), eq("active-uuid"), anyLong());
-		verify(waitingQueueRepository).incrementCurrentUsers(gameId, 1);
+		verify(waitingQueueRepository).updateCurrentUsers(gameId, 1);
 	}
 
 	@Test
