@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ import com.goti.ticketing.seat.repository.SeatHoldRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderCreateService {
@@ -117,10 +120,16 @@ public class OrderCreateService {
 				hold.getStatus() == SeatHoldStatus.HOLDING,
 				ErrorCode.SEAT_HOLD_STATUS_INVALID
 			);
-			Preconditions.validate(
-				hold.getExpiredAt().isAfter(LocalDateTime.now()),
-				ErrorCode.SEAT_HOLD_EXPIRED
-			);
+			if (!hold.getExpiredAt().isAfter(LocalDateTime.now())) {
+				log.info(
+					"action=SESSION_BLOCK gameId={} userId={} stage=ORDER_CREATE holdId={} reason={}",
+					gameId,
+					userId,
+					hold.getId(),
+					ErrorCode.SEAT_HOLD_EXPIRED.name()
+				);
+				throw new CustomException(ErrorCode.SEAT_HOLD_EXPIRED);
+			}
 		}
 	}
 

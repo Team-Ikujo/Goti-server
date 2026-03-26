@@ -90,9 +90,16 @@ public class OrderPaymentConfirmService {
 			.filter(seatHold -> seatHold.getExpiredAt().isAfter(LocalDateTime.now()))
 			.isPresent();
 
-		Preconditions.validate(
-			activeHoldExists,
-			ErrorCode.SEAT_HOLD_EXPIRED
-		);
+		if (!activeHoldExists) {
+			log.info(
+				"action=SESSION_BLOCK gameId={} userId={} stage=PAYMENT_CONFIRM orderId={} seatId={} reason={}",
+				order.getGameSchedule().getId(),
+				order.getMemberId(),
+				order.getId(),
+				orderItem.getSeat().getId(),
+				ErrorCode.SEAT_HOLD_EXPIRED.name()
+			);
+			throw new CustomException(ErrorCode.SEAT_HOLD_EXPIRED);
+		}
 	}
 }
