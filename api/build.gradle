@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":ticketing"))
     implementation(project(":resale"))
     implementation(project(":payment"))
+    implementation(project(":queue"))
 }
 
 // 메인 애플리케이션만 실행 가능한 JAR 생성
