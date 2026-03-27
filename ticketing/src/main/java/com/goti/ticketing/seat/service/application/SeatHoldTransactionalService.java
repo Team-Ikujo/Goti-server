@@ -34,49 +34,39 @@ public class SeatHoldTransactionalService {
 
 	@Transactional
 	public UUID hold(UUID gameId, UUID seatId, UUID userId, String queueTokenJti) {
-		try {
-			SeatStatusEntity seatStatus = seatStatusRepository.findByGameAndSeat(
-					gameScheduleRepository.getReferenceById(gameId),
-					seatRepository.getReferenceById(seatId)
-				)
-				.orElseThrow(() -> new CustomException(ErrorCode.SEAT_STATUS_NOT_FOUND));
+		SeatStatusEntity seatStatus = seatStatusRepository.findByGameAndSeat(
+				gameScheduleRepository.getReferenceById(gameId),
+				seatRepository.getReferenceById(seatId)
+			)
+			.orElseThrow(() -> blocked(gameId, userId, seatId, ErrorCode.SEAT_STATUS_NOT_FOUND));
 
-			Preconditions.validate(
-				seatStatus.getStatus() == SeatStatus.AVAILABLE,
-				ErrorCode.SEAT_ALREADY_SELECTED
-			);
-
-			seatStatus.hold();
-			seatStatusRepository.save(seatStatus);
-
-			// TODO: 좌석 점유 시 game_seat_inventories 카운트 반영
-			SeatHoldEntity seatHold = SeatHoldEntity.create(
-				seatStatus.getSeat(),
-				seatStatus.getGame(),
-				userId,
-				queueTokenJti,
-				LocalDateTime.now().plus(seatHoldProperties.ttl())
-			);
-
-			UUID holdId = seatHoldRepository.save(seatHold).getId();
-			log.info(
-				"action=SEAT_HOLD gameId={} userId={} seatId={} holdId={}",
-				gameId,
-				userId,
-				seatId,
-				holdId
-			);
-			return holdId;
-		} catch (CustomException e) {
-			log.info(
-				"action=SEAT_HOLD_BLOCKED gameId={} userId={} seatId={} reason={}",
-				gameId,
-				userId,
-				seatId,
-				e.error().name()
-			);
-			throw e;
+		if (seatStatus.getStatus() != SeatStatus.AVAILABLE) {
+			throw blocked(gameId, userId, seatId, ErrorCode.SEAT_ALREADY_SELECTED);
 		}
+
+		seatStatus.hold();
+		seatStatusRepository.save(seatStatus);
+
+		// TODO: 좌석 점유 시 game_seat_inventories 카운트 반영
+		SeatHoldEntity seatHold = SeatHoldEntity.create(
+			seatStatus.getSeat(),
+			seatStatus.getGame(),
+			userId,
+			queueTokenJti,
+			LocalDateTime.now().plus(seatHoldProperties.ttl())
+		);
+
+		UUID holdId = seatHoldRepository.save(seatHold).getId();
+		log.info("action=SEAT_HOLD gameId={} userId={} seatId={} holdId={}", gameId, userId, seatId, holdId);
+		return holdId;
+	}
+
+	private CustomException blocked(UUID gameId, UUID userId, UUID seatId, ErrorCode errorCode) {
+		return new CustomException(errorCode)
+			.withContext("action", "SEAT_HOLD_BLOCKED")
+			.withContext("gameId", gameId)
+			.withContext("userId", userId)
+			.withContext("seatId", seatId);
 	}
 
 	@Transactional

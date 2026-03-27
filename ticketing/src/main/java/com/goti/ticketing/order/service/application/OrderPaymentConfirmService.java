@@ -99,15 +99,13 @@ public class OrderPaymentConfirmService {
 			.isPresent();
 
 		if (!activeHoldExists) {
-			log.info(
-				"action=SESSION_BLOCK gameId={} userId={} stage=PAYMENT_CONFIRM orderId={} seatId={} reason={}",
-				order.getGameSchedule().getId(),
-				order.getMemberId(),
-				order.getId(),
-				orderItem.getSeat().getId(),
-				ErrorCode.SEAT_HOLD_EXPIRED.name()
-			);
-			throw new CustomException(ErrorCode.SEAT_HOLD_EXPIRED);
+			throw new CustomException(ErrorCode.SEAT_HOLD_EXPIRED)
+				.withContext("action", "SESSION_BLOCK")
+				.withContext("stage", "PAYMENT_CONFIRM")
+				.withContext("gameId", order.getGameSchedule().getId())
+				.withContext("userId", order.getMemberId())
+				.withContext("orderId", order.getId())
+				.withContext("seatId", orderItem.getSeat().getId());
 		}
 	}
 }
