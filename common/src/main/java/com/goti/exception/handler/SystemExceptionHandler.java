@@ -32,20 +32,22 @@ public class SystemExceptionHandler extends BaseExceptionHandler {
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<ApiErrorResponse> handleCustomException(CustomException ex) {
 		ErrorCode error = ex.error();
-		String contextLog = formatContext(ex.context());
-		String tag = contextLog.isEmpty()
-			? String.format("[%s Error]", error.isSystemError() ? "System" : "Business")
-			: contextLog;
-		String message = String.format(
-			"code=%s message=%s",
+		Map<String, Object> context = ex.context();
+		String action = String.valueOf(context.getOrDefault("action", "ERROR_OCCURRED"));
+		String contextLog = formatContext(context);
+
+		String logMessage = String.format(
+			"action=%s errorCode=%s message=%s %s",
+			action,
 			error.name(),
-			ex.getMessage()
-		);
+			ex.getMessage(),
+			contextLog
+		).trim();
 
 		if (error.isSystemError()) {
-			log.error("{} {}", tag, message, ex);
+			log.error(logMessage, ex);
 		} else {
-			log.warn("{} {}", tag, message);
+			log.warn(logMessage);
 		}
 		return toResponse(ex);
 	}
@@ -89,6 +91,7 @@ public class SystemExceptionHandler extends BaseExceptionHandler {
 			return "";
 		}
 		return context.entrySet().stream()
+			.filter(entry -> !"action".equals(entry.getKey()))
 			.map(entry -> entry.getKey() + "=" + entry.getValue())
 			.collect(Collectors.joining(" "));
 	}
