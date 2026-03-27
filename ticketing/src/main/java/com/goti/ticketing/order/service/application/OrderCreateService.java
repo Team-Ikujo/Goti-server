@@ -79,6 +79,15 @@ public class OrderCreateService {
 
 		createOrderItems(order, pricingResult.pricedHolds());
 
+		log.info(
+			"action=ORDER_CREATE gameId={} userId={} orderId={} quantity={} totalAmount={}",
+			command.gameId(),
+			command.memberId(),
+			order.getId(),
+			order.getTotalQuantity(),
+			order.getTotalAmount()
+		);
+
 		return OrderCreateResponse.from(
 			order.getId(),
 			order.getOrderNumber(),

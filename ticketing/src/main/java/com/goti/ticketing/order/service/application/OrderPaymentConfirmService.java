@@ -43,7 +43,7 @@ public class OrderPaymentConfirmService {
 		String pgTid
 	) {
 		log.info(
-			"주문 결제 완료 처리 시작 - orderId: {}, userId: {}, paymentId: {}, pgTid: {}",
+			"action=PAYMENT_CONFIRM_START orderId={} userId={} paymentId={} pgTid={}",
 			orderId,
 			userId,
 			paymentId,
@@ -71,6 +71,14 @@ public class OrderPaymentConfirmService {
 		}
 
 		List<TicketResponse> tickets = ticketCreateService.create(order);
+
+		log.info(
+			"action=PAYMENT_CONFIRM gameId={} userId={} orderId={} ticketCount={}",
+			order.getGameSchedule().getId(),
+			order.getMemberId(),
+			order.getId(),
+			tickets.size()
+		);
 
 		return OrderPaymentConfirmResponse.from(
 			order.getId(),

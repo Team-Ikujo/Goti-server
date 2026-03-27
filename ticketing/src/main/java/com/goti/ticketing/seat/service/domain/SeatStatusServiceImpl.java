@@ -46,30 +46,19 @@ public class SeatStatusServiceImpl implements SeatStatusService {
 			.map(GameSeatStatusResponse::from)
 			.toList();
 
-		long total = seatStatuses.size();
-		long availableCount = seatStatuses.stream()
-			.filter(seatStatus -> seatStatus.status() == SeatStatus.AVAILABLE)
-			.count();
-		long heldCount = seatStatuses.stream()
-			.filter(seatStatus -> seatStatus.status() == SeatStatus.HELD)
-			.count();
-		long soldCount = seatStatuses.stream()
-			.filter(seatStatus -> seatStatus.status() == SeatStatus.SOLD)
-			.count();
-		long blockedCount = seatStatuses.stream()
-			.filter(seatStatus -> seatStatus.status() == SeatStatus.BLOCKED)
-			.count();
+		Map<SeatStatus, Long> counts = seatStatuses.stream()
+			.collect(Collectors.groupingBy(GameSeatStatusResponse::status, Collectors.counting()));
 
 		log.info(
 			"action=SEAT_STATUS gameId={} userId={} sectionId={} total={} available={} held={} sold={} blocked={}",
 			gameId,
 			userId,
 			sectionId,
-			total,
-			availableCount,
-			heldCount,
-			soldCount,
-			blockedCount
+			seatStatuses.size(),
+			counts.getOrDefault(SeatStatus.AVAILABLE, 0L),
+			counts.getOrDefault(SeatStatus.HELD, 0L),
+			counts.getOrDefault(SeatStatus.SOLD, 0L),
+			counts.getOrDefault(SeatStatus.BLOCKED, 0L)
 		);
 
 		return seatStatuses;
