@@ -197,6 +197,14 @@ public class TicketEntity extends ModificationTimestampEntity {
 		);
 	}
 
+	public void invalidate() {
+		Preconditions.domainValidate(
+			this.ticketStatus == TicketStatus.ISSUED,
+			"발행 완료 상태의 티켓만 취소할 수 있습니다."
+		);
+		this.ticketStatus = TicketStatus.INVALID;
+	}
+
 	public boolean isFrozen() {
 		return freeze != null && freeze.isActive();
 	}
