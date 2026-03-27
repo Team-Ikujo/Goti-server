@@ -33,18 +33,19 @@ public class SystemExceptionHandler extends BaseExceptionHandler {
 	public ResponseEntity<ApiErrorResponse> handleCustomException(CustomException ex) {
 		ErrorCode error = ex.error();
 		String contextLog = formatContext(ex.context());
+		String tag = contextLog.isEmpty()
+			? String.format("[%s Error]", error.isSystemError() ? "System" : "Business")
+			: contextLog;
+		String message = String.format(
+			"code=%s message=%s",
+			error.name(),
+			ex.getMessage()
+		);
+
 		if (error.isSystemError()) {
-			if (contextLog.isEmpty()) {
-				log.error("[System Error] code={} message={}", error.name(), ex.getMessage(), ex);
-			} else {
-				log.error("{} reason={} message={}", contextLog, error.name(), ex.getMessage(), ex);
-			}
+			log.error("{} {}", tag, message, ex);
 		} else {
-			if (contextLog.isEmpty()) {
-				log.warn("[Business Error] code={} message={}", error.name(), ex.getMessage());
-			} else {
-				log.warn("{} reason={} message={}", contextLog, error.name(), ex.getMessage());
-			}
+			log.warn("{} {}", tag, message);
 		}
 		return toResponse(ex);
 	}
