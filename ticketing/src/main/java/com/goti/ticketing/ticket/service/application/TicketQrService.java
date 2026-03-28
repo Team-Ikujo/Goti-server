@@ -24,7 +24,7 @@ public class TicketQrService {
 	private static final String QR_PREFIX = "QR";
 
 	private final TicketRepository ticketRepository;
-	private final TicketFreezeManageService ticketFreezeManageService;
+	private final TicketFreezeManagementService ticketFreezeManagementService;
 	private final RedisCache redisCache;
 
 	@Transactional(readOnly = true)
@@ -41,7 +41,7 @@ public class TicketQrService {
 			.orElseThrow(() -> new CustomException(ErrorCode.TICKET_NOT_FOUND));
 
 		Preconditions.validate(
-			!ticketFreezeManageService.isFrozen(ticketId),
+			!ticketFreezeManagementService.isFrozen(ticketId),
 			ErrorCode.TICKET_FROZEN
 		);
 

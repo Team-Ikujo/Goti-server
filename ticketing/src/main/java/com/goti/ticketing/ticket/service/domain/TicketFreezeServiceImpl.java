@@ -41,20 +41,23 @@ public class TicketFreezeServiceImpl implements TicketFreezeService {
 	@Override
 	@Transactional(readOnly = true)
 	public boolean isFrozen(UUID ticketId) {
-		return ticketFreezeRepository.existsByTicketIdAndFrozenUntilAfter(
-			ticketId,
-			LocalDateTime.now()
-		);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public TicketFreezeEntity getActiveFreeze(UUID ticketId) {
 		return ticketFreezeRepository
 			.findByTicketIdAndFrozenUntilAfter(
 				ticketId,
 				LocalDateTime.now()
 			)
+			.isPresent();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public TicketFreezeInfo getCurrentFreeze(UUID ticketId) {
+		return ticketFreezeRepository
+			.findByTicketIdAndFrozenUntilAfter(
+				ticketId,
+				LocalDateTime.now()
+			)
+			.map(TicketFreezeInfo::from)
 			.orElse(null);
 	}
 }

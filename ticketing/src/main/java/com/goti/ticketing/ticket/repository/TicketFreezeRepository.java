@@ -11,11 +11,6 @@ import com.goti.ticketing.domain.entity.ticket.TicketFreezeEntity;
 
 @Repository
 public interface TicketFreezeRepository extends JpaRepository<TicketFreezeEntity, UUID> {
-	boolean existsByTicketIdAndFrozenUntilAfter(
-		UUID ticketId,
-		LocalDateTime dateTime
-	);
-
 	Optional<TicketFreezeEntity> findByTicketId(UUID ticketId);
 
 	Optional<TicketFreezeEntity> findByTicketIdAndFrozenUntilAfter(

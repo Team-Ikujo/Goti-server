@@ -14,5 +14,5 @@ public interface TicketFreezeService {
 
 	boolean isFrozen(UUID ticketId);
 
-	TicketFreezeEntity getActiveFreeze(UUID ticketId);
+	TicketFreezeInfo getCurrentFreeze(UUID ticketId);
 }

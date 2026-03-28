@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.goti.ticketing.constants.TicketFreezeReason;
 import com.goti.ticketing.domain.entity.ticket.TicketEntity;
 import com.goti.ticketing.domain.entity.ticket.TicketFreezeEntity;
+import com.goti.ticketing.ticket.service.domain.TicketFreezeInfo;
 import com.goti.ticketing.ticket.service.domain.TicketFreezeService;
 import com.goti.ticketing.ticket.service.domain.TicketService;
 
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TicketFreezeManageService {
+public class TicketFreezeManagementService {
 	private final TicketService ticketService;
 	private final TicketFreezeService ticketFreezeService;
 
@@ -34,7 +35,7 @@ public class TicketFreezeManageService {
 	}
 
 	@Transactional(readOnly = true)
-	public TicketFreezeEntity getActiveFreeze(UUID ticketId) {
-		return ticketFreezeService.getActiveFreeze(ticketId);
+	public TicketFreezeInfo getCurrentFreeze(UUID ticketId) {
+		return ticketFreezeService.getCurrentFreeze(ticketId);
 	}
 }
