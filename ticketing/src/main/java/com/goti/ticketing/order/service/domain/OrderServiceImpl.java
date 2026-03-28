@@ -105,24 +105,26 @@ public class OrderServiceImpl implements OrderService {
 		LocalDate endDate
 	) {
 		Preconditions.validate(
+			months == null || (startDate == null && endDate == null),
+			ErrorCode.ORDER_HISTORY_PERIOD_FILTER_CONFLICT
+		);
+
+		Preconditions.validate(
 			(startDate == null) == (endDate == null),
-			ErrorCode.BAD_REQUEST,
-			"시작 날짜와 종료 날짜는 함께 요청되어야 합니다."
+			ErrorCode.ORDER_HISTORY_PERIOD_DATE_REQUIRED
 		);
 
 		if (months != null) {
 			Preconditions.validate(
 				ALLOWED_MONTHS.contains(months),
-				ErrorCode.BAD_REQUEST,
-				"조회 기간은 1개월, 3개월, 6개월만 허용됩니다."
+				ErrorCode.ORDER_HISTORY_PERIOD_MONTHS_INVALID
 			);
 		}
 
 		if (startDate != null && endDate != null) {
 			Preconditions.validate(
 				!startDate.isAfter(endDate),
-				ErrorCode.BAD_REQUEST,
-				"시작 날짜는 종료 날짜보다 이후일 수 없습니다."
+				ErrorCode.ORDER_HISTORY_PERIOD_INVALID_RANGE
 			);
 		}
 	}

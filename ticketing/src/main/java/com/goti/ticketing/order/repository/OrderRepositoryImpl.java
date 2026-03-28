@@ -50,19 +50,24 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 	) {
 		if (startDate != null && endDate != null) {
 			return order.createdAt.between(
-				startDate.atStartOfDay().toInstant(ZoneOffset.UTC),
-				endDate.plusDays(1).atStartOfDay().minusNanos(1).toInstant(ZoneOffset.UTC)
+				toStartInstant(startDate),
+				toEndInstant(endDate)
 			);
 		}
 
 		if (months != null) {
-			Instant from = LocalDate.now()
-				.minusMonths(months)
-				.atStartOfDay()
-				.toInstant(ZoneOffset.UTC);
+			Instant from = toStartInstant(LocalDate.now().minusMonths(months));
 			return order.createdAt.goe(from);
 		}
 
 		return null;
+	}
+
+	private Instant toStartInstant(LocalDate date) {
+		return date.atStartOfDay().toInstant(ZoneOffset.UTC);
+	}
+
+	private Instant toEndInstant(LocalDate date) {
+		return date.plusDays(1).atStartOfDay().minusNanos(1).toInstant(ZoneOffset.UTC);
 	}
 }
