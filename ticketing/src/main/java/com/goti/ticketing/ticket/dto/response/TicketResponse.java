@@ -59,7 +59,7 @@ public record TicketResponse(
 	LocalDateTime frozenUntil,
 
 	@Schema(description = "티켓 발급 일시", example = "2026-03-13 10:15")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	Instant issuedAt,
 
 	@Schema(description = "티켓 사용 일시", example = "2026-03-15 18:55")
