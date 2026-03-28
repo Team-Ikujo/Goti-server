@@ -21,7 +21,7 @@ public record OrderListResponse(
 	Integer totalQuantity,
 	@Schema(description = "총 결제 금액", example = "42000")
 	Integer totalAmount,
-	@Schema(description = "주문 일시", example = "2026-03-28T10:15:30Z")
+	@Schema(description = "주문 일시", example = "2026-03-16 10:15")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	Instant orderedAt,
 	@Schema(description = "경기 ID", example = "62c73f2d-87ab-4f5c-9d66-97d4d7771111")
