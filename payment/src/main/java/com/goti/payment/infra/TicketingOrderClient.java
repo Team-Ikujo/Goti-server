@@ -18,7 +18,6 @@ import com.goti.payment.service.dto.PaymentOrderInfo;
 @Component
 public class TicketingOrderClient extends BaseRestClient {
 	private static final String ORDER_API = "/api/v1/orders";
-	private static final String PATH_SEPARATOR = "/";
 
 	public TicketingOrderClient(RestClient.Builder builder, TicketingApiProperties properties) {
 		super(builder, properties.baseUrl());
@@ -28,12 +27,12 @@ public class TicketingOrderClient extends BaseRestClient {
 		UUID orderId,
 		OrderPaymentConfirmApiRequest request
 	) {
-		String uri = ORDER_API + PATH_SEPARATOR + orderId + "/payment-confirmations";
+		String uri = String.format("%s/%s/payment-confirmations", ORDER_API, orderId);
 		postVoid(uri, request);
 	}
 
 	public PaymentOrderInfo getPaymentOrder(UUID orderId, UUID memberId) {
-		String uri = ORDER_API + PATH_SEPARATOR + orderId + "/payment-order";
+		String uri = String.format("%s/%s/payment-order", ORDER_API, orderId);
 		var response = getGotiResponse(
 			uri,
 			null,
