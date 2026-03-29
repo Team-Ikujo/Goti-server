@@ -90,6 +90,20 @@ public class QueueService {
 		return new QueueValidateResponse(gameId, true, 0L, token);
 	}
 
+	public void complete(UUID gameId, UUID memberId) {
+		String passedKey = RedisKey.QUEUE_PASSED.getKey(gameId, memberId);
+		redisCache.delete(passedKey);
+
+		log.info("action=LEAVE gameId={} userId={} reason=BOOKING_COMPLETED",
+			gameId, memberId);
+
+		meterRegistry.counter(
+			"queue.leave.total",
+			"gameId", gameId.toString(),
+			"reason", "booking_completed"
+		).increment();
+	}
+
 	public QueueStatusResponse getStatus(UUID gameId, UUID memberId) {
 		String memberIdStr = memberId.toString();
 		String pendingKey = RedisKey.QUEUE_PENDING.getKey(gameId);

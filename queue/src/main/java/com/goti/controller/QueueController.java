@@ -62,6 +62,20 @@ public class QueueController {
 		return wrap(queueService.getStatus(gameId, memberId));
 	}
 
+	@Operation(
+		summary = "대기열 슬롯 반환 (예매 완료)",
+		description = "예매 완료 후 대기열 슬롯을 반환하여 다음 사용자를 승격시킨다. "
+			+ "MSA 환경에서 BookingCompletedEvent 대체용."
+	)
+	@PostMapping("/complete/games/{gameId}")
+	public ResponseEntity<Void> complete(
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
+		@PathVariable UUID gameId
+	) {
+		queueService.complete(gameId, memberId);
+		return ResponseEntity.ok().build();
+	}
+
 
 
 
