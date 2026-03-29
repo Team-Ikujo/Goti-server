@@ -25,7 +25,7 @@ public class QueueService {
 	public QueueValidateResponse validate(UUID gameId, UUID memberId) {
 		// 메트릭: 전체 진입 시도 횟수 카운트
 		meterRegistry.counter(
-			"queue.enter.total", "gameId", gameId.toString()
+			"queue.enter.total", "match_id", gameId.toString()
 		).increment();
 
 		String pendingKey = RedisKey.QUEUE_PENDING.getKey(gameId);
@@ -80,7 +80,7 @@ public class QueueService {
 		redisCache.incrementActiveCount(gameId);
 
 		meterRegistry.counter(
-			"queue.admit.total", "gameId", gameId.toString()
+			"queue.admit.total", "match_id", gameId.toString()
 		).increment();
 
 		log.info(
@@ -101,7 +101,7 @@ public class QueueService {
 
 		meterRegistry.counter(
 			"queue.leave.total",
-			"gameId", gameId.toString(),
+			"match_id", gameId.toString(),
 			"reason", "booking_completed"
 		).increment();
 	}

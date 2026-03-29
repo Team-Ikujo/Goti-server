@@ -37,7 +37,7 @@ public class QueueEventListener {
 		// 메트릭 기록 (정상 이탈 카운트, '정상 완료' 지표로 활용 가능)
 		meterRegistry.counter(
 			"queue.leave.total",
-			"gameId",
+			"match_id",
 			event.gameId().toString(),
 			"reason",
 			"booking_completed"

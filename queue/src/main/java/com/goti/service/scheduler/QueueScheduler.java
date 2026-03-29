@@ -13,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Component
@@ -26,6 +29,10 @@ public class QueueScheduler {
 
 	private static final long MAX_ALLOWED_COUNT = 100;
 	private static final String COLON = ":";
+
+	private final Map<String, AtomicLong> waitingGauges = new ConcurrentHashMap<>();
+	private final Map<String, AtomicLong> activeGauges = new ConcurrentHashMap<>();
+	private final Map<String, AtomicLong> maxEntryGauges = new ConcurrentHashMap<>();
 
 	@Scheduled(fixedDelay = 1000)
 	public void processQueue() {
@@ -53,17 +60,11 @@ public class QueueScheduler {
 
 		long pendingSize = redisCache.zSize(pendingKey);
 
-		// 메트릭: 실시간 대기 인원 및 통과 인원 (Gauge)
-		meterRegistry.gauge(
-			"queue.waiting.size",
-			Tags.of("gameId", gameId.toString()),
-			pendingSize
-		);
-		meterRegistry.gauge(
-			"queue.active.size",
-			Tags.of("gameId", gameId.toString()),
-			currentPassedCount
-		);
+		// 메트릭: 실시간 대기 인원, 통과 인원, 최대 수용 (Gauge)
+		String matchId = gameId.toString();
+		getOrCreateGauge(waitingGauges, "queue.waiting.total", matchId).set(pendingSize);
+		getOrCreateGauge(activeGauges, "queue.active.size", matchId).set(currentPassedCount);
+		getOrCreateGauge(maxEntryGauges, "queue.max.entry", matchId).set(MAX_ALLOWED_COUNT);
 
 		log.info(
 			"action=SLOT_RELEASE gameId={} currentPassed={} availableSlots={} maxCapacity={}",
@@ -93,7 +94,7 @@ public class QueueScheduler {
 
 				meterRegistry.counter(
 					"queue.leave.total",
-					"gameId",
+					"match_id",
 					gameId.toString(),
 					"reason",
 					"heartbeat_expired"
@@ -102,6 +103,14 @@ public class QueueScheduler {
 				redisCache.zRemove(pendingKey, memberIdStr);
 			}
 		}
+	}
+
+	private AtomicLong getOrCreateGauge(Map<String, AtomicLong> store, String metricName, String matchId) {
+		return store.computeIfAbsent(matchId, id -> {
+			AtomicLong gauge = new AtomicLong(0);
+			meterRegistry.gauge(metricName, Tags.of("match_id", id), gauge);
+			return gauge;
+		});
 	}
 
 	private void promoteToPassed(UUID gameId, String memberIdStr) {
@@ -119,7 +128,7 @@ public class QueueScheduler {
 			gameId, memberIdStr
 		);
 		meterRegistry.counter(
-			"queue.admit.total", "gameId", gameId.toString()
+			"queue.admit.total", "match_id", gameId.toString()
 		).increment();
 	}
 
