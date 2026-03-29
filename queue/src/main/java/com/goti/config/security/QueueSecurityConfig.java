@@ -7,6 +7,7 @@ import com.goti.security.MeshSecuritySupport;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "spring.application.name", havingValue = "goti-queue-service")
 public class QueueSecurityConfig {
 
 	private final MeshProperties meshProperties;
