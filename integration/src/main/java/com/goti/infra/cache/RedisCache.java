@@ -93,6 +93,25 @@ public class RedisCache {
 		redisTemplate.opsForZSet().remove(key, values);
 	}
 
+	// --- 원자적 카운터 (O(1)) ---
+
+	private static final String ACTIVE_COUNT_PREFIX = "queue:active-count:";
+
+	public long getActiveCount(Object gameId) {
+		Object val = redisTemplate.opsForValue().get(ACTIVE_COUNT_PREFIX + gameId);
+		return val != null ? ((Number) val).longValue() : 0L;
+	}
+
+	public long incrementActiveCount(Object gameId) {
+		Long result = redisTemplate.opsForValue().increment(ACTIVE_COUNT_PREFIX + gameId);
+		return result != null ? result : 0L;
+	}
+
+	public long decrementActiveCount(Object gameId) {
+		Long result = redisTemplate.opsForValue().decrement(ACTIVE_COUNT_PREFIX + gameId);
+		return result != null ? Math.max(0L, result) : 0L;
+	}
+
 	public long countKeys(String pattern) {
 		Long count = redisTemplate.execute((RedisCallback<Long>) connection -> {
 			long result = 0;

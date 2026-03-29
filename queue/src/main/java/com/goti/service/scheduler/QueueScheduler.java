@@ -47,8 +47,8 @@ public class QueueScheduler {
 	}
 
 	private void processGameQueue(UUID gameId, String pendingKey) {
-		String passedPattern = RedisKey.QUEUE_PASSED.getPrefix() + gameId + COLON;
-		long currentPassedCount = redisCache.countKeys(passedPattern);
+		// O(1) 카운터 사용 (SCAN 제거)
+		long currentPassedCount = redisCache.getActiveCount(gameId);
 		long availableSlots = MAX_ALLOWED_COUNT - currentPassedCount;
 
 		long pendingSize = redisCache.zSize(pendingKey);
@@ -111,6 +111,7 @@ public class QueueScheduler {
 
 		redisCache.zRemove(pendingKey, memberIdStr);
 		redisCache.set(passedKey, token, RedisKey.QUEUE_PASSED.getTtl());
+		redisCache.incrementActiveCount(gameId);
 
 		// 승격 로그 및 메트릭
 		log.info(

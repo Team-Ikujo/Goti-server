@@ -39,6 +39,7 @@ public class QueueService {
 				gameId, memberId
 			);
 			redisCache.delete(passedKey);
+			redisCache.decrementActiveCount(gameId);
 		}
 
 		// 대기열 페널티 (새로고침 시)
@@ -56,9 +57,8 @@ public class QueueService {
 			return new QueueValidateResponse(gameId, false, currentRank, null);
 		}
 
-		// 수용량 체크
-		String passedPattern = RedisKey.QUEUE_PASSED.getPrefix() + gameId;
-		long currentPassedCount = redisCache.countKeys(passedPattern);
+		// 수용량 체크 — O(1) 카운터 (SCAN 제거)
+		long currentPassedCount = redisCache.getActiveCount(gameId);
 		long waitingSize = redisCache.zSize(pendingKey);
 
 		if (currentPassedCount >= MAX_ALLOWED_COUNT || waitingSize > 0) {
@@ -77,6 +77,7 @@ public class QueueService {
 		// 즉시 통과
 		String token = UUID.randomUUID().toString();
 		redisCache.set(passedKey, token, RedisKey.QUEUE_PASSED.getTtl());
+		redisCache.incrementActiveCount(gameId);
 
 		meterRegistry.counter(
 			"queue.admit.total", "gameId", gameId.toString()
@@ -93,6 +94,7 @@ public class QueueService {
 	public void complete(UUID gameId, UUID memberId) {
 		String passedKey = RedisKey.QUEUE_PASSED.getKey(gameId, memberId);
 		redisCache.delete(passedKey);
+		redisCache.decrementActiveCount(gameId);
 
 		log.info("action=LEAVE gameId={} userId={} reason=BOOKING_COMPLETED",
 			gameId, memberId);
