@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ConfigurationPropertiesScan(basePackages = "com.goti")
 @SpringBootApplication(scanBasePackages = {
 	"com.goti.queue",
+	"com.goti.controller",
+	"com.goti.service",
 	"com.goti.config",
 	"com.goti.infra",
 	"com.goti.domain.base",
