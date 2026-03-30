@@ -68,7 +68,8 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 					gameStatus.gameResult,
 					ticketingStatus.status,
 					ticketingStatus.ticketingOpenedAt,
-					ticketingStatus.ticketingEndAt
+					ticketingStatus.ticketingEndAt,
+					Expressions.nullExpression(Long.class)
 				)
 			)
 			.from(gameSchedule)
