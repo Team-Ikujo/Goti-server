@@ -1,6 +1,7 @@
 package com.goti.payment.infra;
 
 import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,6 +13,7 @@ import com.goti.exception.CustomException;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.infra.api.base.BaseRestClient;
 import com.goti.payment.config.properties.TicketingApiProperties;
+import com.goti.payment.dto.response.TicketingOrderListItemResponse;
 import com.goti.payment.service.dto.OrderPaymentConfirmApiRequest;
 import com.goti.payment.service.dto.PaymentOrderInfo;
 
@@ -38,6 +40,21 @@ public class TicketingOrderClient extends BaseRestClient {
 			null,
 			Map.of("memberId", memberId),
 			new ParameterizedTypeReference<ApiSuccessResponse<PaymentOrderInfo>>() {}
+		);
+
+		if (response == null) {
+			throw new CustomException(ErrorCode.INTERNAL_API_INVALID_RESPONSE);
+		}
+
+		return response;
+	}
+
+	public List<TicketingOrderListItemResponse> getOrders(UUID memberId) {
+		var response = getGotiResponse(
+			ORDER_API + "/internal",
+			null,
+			Map.of("memberId", memberId),
+			new ParameterizedTypeReference<ApiSuccessResponse<List<TicketingOrderListItemResponse>>>() {}
 		);
 
 		if (response == null) {
