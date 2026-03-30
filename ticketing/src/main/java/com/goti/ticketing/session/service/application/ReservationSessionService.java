@@ -33,7 +33,8 @@ public class ReservationSessionService {
 
 	public ReservationSessionCache getOrCreate(
 		UUID memberId,
-		UUID gameId
+		UUID gameId,
+		boolean forceNewSession
 	) {
 		Preconditions.validate(
 			memberId != null,
@@ -44,8 +45,20 @@ public class ReservationSessionService {
 			ErrorCode.BAD_REQUEST
 		);
 
+		if (forceNewSession) {
+			releaseHeldSeats(memberId, gameId);
+			delete(memberId, gameId);
+			return create(memberId, gameId);
+		}
+
 		ReservationSessionCache reservationSession = findReservationSession(memberId, gameId)
-			.orElseGet(() -> create(memberId, gameId));
+			.orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_SESSION_EXPIRED));
+
+		if (reservationSession.expiresAt().isBefore(LocalDateTime.now())) {
+			releaseHeldSeats(memberId, gameId);
+			delete(memberId, gameId);
+			throw new CustomException(ErrorCode.RESERVATION_SESSION_EXPIRED);
+		}
 
 		return reservationSession;
 	}
