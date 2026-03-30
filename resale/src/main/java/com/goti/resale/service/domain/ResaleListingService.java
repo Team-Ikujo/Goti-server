@@ -10,7 +10,7 @@ import com.goti.resale.dto.response.ResaleListingOrderCreateResponse;
 import com.goti.resale.dto.response.ResaleListingResponse;
 import com.goti.resale.dto.response.ResaleTicketResponse;
 
-public interface ListingService {
+public interface ResaleListingService {
 	String generateListingOrderNumber();
 
 	ResaleListingOrderCreateResponse createListingOrder(
@@ -27,6 +27,10 @@ public interface ListingService {
 		UUID sellerId,
 		UUID orderId
 	);
+
+	Long countListings(UUID sellerId);
+
+	Long countSold(UUID sellerId);
 
 	void validateListingCreation(
 		ResaleTicketResponse ticketInfo,
