@@ -86,12 +86,10 @@ public class WaitingQueueEventListener {
 					}
 				}
 
-				// 슬롯 반환
 				Long waitingSize = waitingQueueRepository.getWaitingSize(gameId);
 				meterRegistry.gauge("queue.waiting.size", Tags.of("gameId", gameId.toString()), waitingSize);
-
-				log.info("action=SLOT_RELEASE gameId={} activeCount={} maxCapacity={} availableSlots={}", gameId,
-					currentUsers, maxCapacity, availableSlots);
+				log.info("action=SLOT_PROCESSED gameId={} activeCount={} waitingCount={} availableSlots={}",
+					gameId, currentUsers, waitingSize, availableSlots);
 				return null;
 			});
 		} catch (Exception e) {

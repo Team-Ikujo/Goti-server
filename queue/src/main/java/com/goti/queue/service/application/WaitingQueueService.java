@@ -53,7 +53,9 @@ public class WaitingQueueService {
 		String rawPayload = domainService.createTokenPayload(gameId, userId, queueNumber, activeUuid, issuedAt);
 		String secureToken = tokenEncryptor.encrypt(rawPayload);
 
-		log.info("action=ENTER gameId={} userId={} queueNumber={}", gameId, userId, queueNumber);
+		Long waitingCount = waitingQueueRepository.getWaitingSize(gameId);
+		log.info("action=ENTER gameId={} userId={} queueNumber={} waitingCount={}",
+			gameId, userId, queueNumber, waitingCount);
 
 		return new QueueEnterResponse(secureToken, queueNumber, gameId);
 	}
@@ -80,6 +82,8 @@ public class WaitingQueueService {
 
 		Long allowedNum = waitingQueueRepository.getAllowedQueueNum(gameId);
 		if (queueNumber > allowedNum) {
+			log.info("action=SEAT_ENTER_BLOCKED gameId={} userId={} queueNumber={} allowedNum={} reason=NOT_ALLOWED_YET",
+				gameId, userId, queueNumber, allowedNum);
 			throw new CustomException(ErrorCode.QUEUE_NOT_ALLOWED_YET);
 		}
 
@@ -113,8 +117,10 @@ public class WaitingQueueService {
 	public void heartbeatWaiting(UUID gameId, UUID userId) {
 		boolean renewed = waitingQueueRepository.renewWaitingStatus(gameId, userId, queueProperties.waitingTtl());
 		if (!renewed) {
+			log.info("action=HEARTBEAT_EXPIRED gameId={} userId={}", gameId, userId);
 			throw new CustomException(ErrorCode.QUEUE_SESSION_EXPIRED);
 		}
+		log.debug("action=HEARTBEAT gameId={} userId={}", gameId, userId);
 	}
 
 	public void leaveQueue(UUID gameId, UUID userId) {
@@ -126,6 +132,6 @@ public class WaitingQueueService {
 
 	public void initQueue(UUID gameId, long maxCapacity) {
 		waitingQueueRepository.initializeQueueStatus(gameId, maxCapacity);
-		log.info("대기열 초기화 완료. gameId: {}, maxCapacity: {}", gameId, maxCapacity);
+		log.info("action=INIT gameId={} maxCapacity={}", gameId, maxCapacity);
 	}
 }
