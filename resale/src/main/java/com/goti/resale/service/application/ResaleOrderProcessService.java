@@ -1,5 +1,6 @@
 package com.goti.resale.service.application;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import com.goti.resale.dto.request.ResaleOrderRequest;
 import com.goti.resale.dto.response.ResaleOrderCompleteResponse;
 import com.goti.resale.dto.response.ResaleOrderCreateResponse;
 import com.goti.resale.dto.response.ResaleOrderListResponse;
+import com.goti.resale.dto.response.ResalePurchaseListResponse;
 import com.goti.resale.repository.ResaleOrderRepository;
 import com.goti.resale.repository.ResaleTransactionRepository;
 import com.goti.resale.repository.hold.ResaleHoldRepository;
@@ -100,6 +102,16 @@ public class ResaleOrderProcessService {
 			.toList();
 
 		return new ResaleOrderListResponse(transactions);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ResalePurchaseListResponse> getMyPurchaseOrders(
+		UUID buyerId,
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	) {
+		return resaleOrderService.getMyPurchaseOrders(buyerId, months, startDate, endDate);
 	}
 
 	private List<ResaleHoldEntity> validateAndGetHolds(UUID buyerId, List<UUID> holdIds) {
