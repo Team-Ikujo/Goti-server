@@ -41,6 +41,7 @@ public class AccountEntity extends ModificationTimestampEntity {
 		final String bankName,
 		final String accountHolder
 	) {
+		validate(accountNumber, bankName, accountHolder, member);
 		this.accountNumber = accountNumber;
 		this.bankName = bankName;
 		this.accountHolder = accountHolder;
