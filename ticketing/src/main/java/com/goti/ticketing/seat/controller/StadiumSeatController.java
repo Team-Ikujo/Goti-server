@@ -60,13 +60,12 @@ public class StadiumSeatController {
 		summary = "좌석 등급 조회",
 		description = "구장별 좌석 등급 조회 API"
 	)
-	@GetMapping("/stadiums/{stadiumId}/games/{gameId}/seat-grades")
+	@GetMapping("/games/{gameId}/seat-grades")
 	public ResponseEntity<ApiSuccessResponse<SeatGradeSearchResultResponse>> getSeatGrades(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@PathVariable UUID stadiumId,
 		@PathVariable UUID gameId
 	) {
-		return wrap(seatGradeService.get(stadiumId, gameId, userId));
+		return wrap(seatGradeService.get(gameId, userId));
 	}
 
 	@Operation(
