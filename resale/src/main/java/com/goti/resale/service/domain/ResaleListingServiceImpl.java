@@ -371,6 +371,5 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 		}
 
 		listingOrderRepository.saveAll(listingOrders);
-		log.info("✅ ListingOrder 저장 완료 - {} 건", listingOrders.size());
 	}
 }
