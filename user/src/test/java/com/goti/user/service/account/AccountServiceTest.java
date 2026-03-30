@@ -21,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 @Transactional
@@ -64,6 +65,36 @@ public class AccountServiceTest {
 		assertNotNull(account);
 		log.info("AccountCreateResponse: accountId :: {}", response.accountId());
 		log.info("account: accountId :: {}", account.getId());
-
 	}
+
+	@Test
+	void 계좌_생성_성공_기존_계좌_존재() {
+		String updateAccountNumber = "1002-876-543211";
+		String updateAccountHolder = "테스트예금주1";
+		AccountEntity account = AccountEntity.create(
+			"1002-876-543210",
+			"우리은행",
+			"테스트예금주",
+			member
+		);
+		accountRepository.save(account);
+
+		AccountCreateResponse response = accountService.create(
+			updateAccountNumber,
+			"우리은행",
+			updateAccountHolder,
+			member
+		);
+		assertNotNull(response);
+		assertEquals(account.getId(), response.accountId());
+		assertEquals(account.getAccountNumber(), updateAccountNumber);
+		assertEquals(account.getAccountHolder(), updateAccountHolder);
+
+		log.info("AccountCreateResponse: accountId :: {}", response.accountId());
+		log.info("account: accountId :: {}", account.getId());
+		log.info("account accountNumber :: {}", account.getAccountNumber());
+		log.info("account accountHolder :: {}", account.getAccountHolder());
+	}
+
+
 }
