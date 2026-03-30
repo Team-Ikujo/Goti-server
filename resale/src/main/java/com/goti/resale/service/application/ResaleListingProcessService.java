@@ -12,10 +12,12 @@ import com.goti.resale.domain.entity.resale.ResaleListingEntity;
 import com.goti.resale.domain.entity.resale.ResaleRestrictionEntity;
 import com.goti.resale.dto.request.ResaleListingCancelRequest;
 import com.goti.resale.dto.request.ResaleListingOrderCreateRequest;
+import com.goti.resale.dto.response.ResaleListingMyPageCountResponse;
 import com.goti.resale.dto.response.ResaleListingOrderCreateResponse;
 import com.goti.resale.dto.response.ResaleListingResponse;
+import com.goti.resale.repository.ResaleRestrictionRepository;
 import com.goti.resale.repository.listing.ResaleListingRepository;
-import com.goti.resale.service.domain.ListingService;
+import com.goti.resale.service.domain.ResaleListingService;
 import com.goti.resale.service.domain.ResaleRestrictionService;
 import com.goti.resale.utils.ResaleRestrictionHandler;
 
@@ -23,12 +25,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ResaleListingService {
+public class ResaleListingProcessService {
 	private final ResaleListingRepository listingRepository;
-	private final com.goti.resale.repository.ResaleRestrictionRepository restrictionRepository;
+	private final ResaleRestrictionRepository restrictionRepository;
 	private final ResaleRestrictionHandler restrictionHandler;
 	private final ResaleRestrictionService restrictionService;
-	private final ListingService listingService;
+	private final ResaleListingService listingService;
 
 	@Transactional
 	public ResaleListingOrderCreateResponse createListingOrder(UUID sellerId, ResaleListingOrderCreateRequest request) {
@@ -52,6 +54,14 @@ public class ResaleListingService {
 		return resaleListings.stream()
 			.map(ResaleListingResponse::from)
 			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public ResaleListingMyPageCountResponse getCountListings(UUID sellerId) {
+		long listingCount = listingService.countListings(sellerId);
+		long soldCount = listingService.countSold(sellerId);
+
+		return new ResaleListingMyPageCountResponse(listingCount, soldCount);
 	}
 
 	@Transactional(readOnly = true)
