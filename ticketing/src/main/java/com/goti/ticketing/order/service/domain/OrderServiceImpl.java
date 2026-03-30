@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 	private static final DateTimeFormatter ORDER_NUMBER_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-	private static final int ORDER_SUFFIX_LENGTH = 6;
 	private static final List<Integer> ALLOWED_MONTHS = List.of(1, 3, 6);
 
 	private final OrderRepository orderRepository;
@@ -121,14 +120,10 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private String generateOrderNumber() {
-		return "ORD-" +
+		String tsidSuffix = TsidCreator.getTsid().toString();
+		return "ORD" + "-" +
 			LocalDate.now().format(ORDER_NUMBER_FORMATTER) +
-			generateRandomSuffix();
-	}
-
-	private String generateRandomSuffix() {
-		String tsid = TsidCreator.getTsid().toString();
-		return tsid.substring(tsid.length() - ORDER_SUFFIX_LENGTH);
+			tsidSuffix.substring(tsidSuffix.length() - 6);
 	}
 
 	private void validatePeriodFilter(
