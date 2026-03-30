@@ -30,8 +30,10 @@ public interface GameTicketingStatusRepository extends JpaRepository<GameTicketi
 		"SELECT ticketing_status " +
 			"FROM GameTicketingStatusEntity ticketing_status " +
 		 "WHERE ticketing_status.status " +
-			  "IN (com.goti.ticketing.constants.TicketingStatus.AVAILABLE, " +
-						"com.goti.ticketing.constants.TicketingStatus.EXHAUSTED) " +
+			  "IN :statuses " +
 			 "AND ticketing_status.ticketingEndAt <= :now ")
-	List<GameTicketingStatusEntity> findTerminatableSchedules(@Param("now") LocalDateTime now);
+	List<GameTicketingStatusEntity> findTerminatableSchedules(
+		@Param("statuses") List<TicketingStatus> statuses,
+		@Param("now") LocalDateTime now
+	);
 }

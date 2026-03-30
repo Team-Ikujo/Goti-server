@@ -37,13 +37,19 @@ public class GameTicketingStatusScheduler {
 	@Scheduled(cron = "0 0 14,15,18 * * *")
 	@Scheduled(cron = "0 30 19 * * *")
 	public void terminateExpiredTicketing() {
+		List<TicketingStatus> statuses = List.of(
+			TicketingStatus.AVAILABLE, TicketingStatus.EXHAUSTED
+		);
 		LocalDateTime now = LocalDateTime.now();
 		List<GameTicketingStatusEntity> list =
-			ticketingStatusRepository.findTerminatableSchedules(now);
+			ticketingStatusRepository.findTerminatableSchedules(statuses, now);
 
-		list.forEach(
-			ticketingStatus -> ticketingStatus.updateStatus(TicketingStatus.TERMINATED)
-		);
+		if (!list.isEmpty()) {
+			list.forEach(
+				ticketingStatus -> ticketingStatus.updateStatus(TicketingStatus.TERMINATED)
+			);
+		}
+
 
 	}
 
