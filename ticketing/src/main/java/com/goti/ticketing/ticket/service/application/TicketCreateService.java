@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TicketCreateService {
-	private static final String ORDER_NUMBER_PREFIX = "ORD-";
 	private static final String TICKET_NUMBER_PREFIX = "TKT-";
 	private static final int ORDER_SUFFIX_START_INDEX = 12;
 
