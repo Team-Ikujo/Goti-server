@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
+import com.goti.ticketing.ticket.dto.response.TicketPurchaseInfoResponse;
 import com.goti.ticketing.ticket.dto.response.TicketQrResponse;
 import com.goti.ticketing.ticket.dto.response.TicketResponse;
 import com.goti.ticketing.ticket.service.application.TicketQrService;
@@ -39,6 +40,17 @@ public class TicketController {
 		@AuthenticationPrincipal(expression = "id") UUID userId
 	) {
 		return wrap(ticketService.getDetail(ticketId, userId));
+	}
+
+	@Operation(
+		summary = "티켓 구매 내역 정보 조회 (내부용)",
+		description = "구매 내역 티켓 정보 조회 내부용 API"
+	)
+	@GetMapping("/{ticketId}/purchase-info")
+	public ResponseEntity<ApiSuccessResponse<TicketPurchaseInfoResponse>> getPurchaseInfo(
+		@PathVariable UUID ticketId
+	) {
+		return wrap(ticketService.getPurchaseInfo(ticketId));
 	}
 
 	@Operation(
