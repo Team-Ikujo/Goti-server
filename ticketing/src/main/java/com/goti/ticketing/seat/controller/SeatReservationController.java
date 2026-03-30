@@ -41,14 +41,13 @@ public class SeatReservationController {
 		@Valid @RequestBody HoldSeatRequest request
 	) {
 		// TODO: 대기열 구현 완료 후 queueTokenJti를 요청값이 아닌 queue token claim(jti)에서 추출하도록 변경
-		HoldSeatResponse response = HoldSeatResponse.from(
-			seatHoldManageService.hold(
-				request.gameId(),
-				seatId,
-				memberId,
-				request.queueTokenJti()
-			)
+		UUID holdId = seatHoldManageService.hold(
+			request.gameId(),
+			seatId,
+			memberId,
+			request.queueTokenJti()
 		);
+		HoldSeatResponse response = HoldSeatResponse.from(holdId);
 		return wrap(response);
 	}
 
@@ -61,9 +60,8 @@ public class SeatReservationController {
 		@PathVariable UUID holdId,
 		@AuthenticationPrincipal(expression = "id") UUID memberId
 	) {
-		ReleaseSeatResponse response = ReleaseSeatResponse.from(
-			seatHoldManageService.release(holdId, memberId)
-		);
+		UUID releasedHoldId = seatHoldManageService.release(holdId, memberId);
+		ReleaseSeatResponse response = ReleaseSeatResponse.from(releasedHoldId);
 		return wrap(response);
 	}
 }

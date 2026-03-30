@@ -32,14 +32,14 @@ public class SeatHoldManageService {
 	}
 
 	public UUID release(UUID holdId, UUID userId) {
-		SeatHoldEntity seatHold = seatHoldService.get(holdId);
+		SeatHoldEntity seatHold = seatHoldService.findSeatHold(holdId);
 
 		String lockKey = buildLockKey(seatHold.getGameSchedule().getId(), seatHold.getSeat().getId());
 		return distributedLockManager.withLock(lockKey, () -> seatHoldTransactionalService.release(holdId, userId));
 	}
 
 	public UUID release(UUID gameId, UUID holdId, UUID userId) {
-		SeatHoldEntity seatHold = seatHoldService.get(holdId);
+		SeatHoldEntity seatHold = seatHoldService.findSeatHold(holdId);
 
 		Preconditions.validate(
 			seatHold.getGameSchedule().getId().equals(gameId),

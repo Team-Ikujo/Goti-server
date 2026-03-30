@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface SeatHoldService {
-	SeatHoldEntity get(UUID holdId);
+	SeatHoldEntity findSeatHold(UUID holdId);
 
 	List<SeatHoldEntity> getHoldingSeats(UUID gameId, UUID userId);
 
