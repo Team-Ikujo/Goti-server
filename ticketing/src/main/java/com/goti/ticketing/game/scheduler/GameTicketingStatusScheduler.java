@@ -22,7 +22,7 @@ public class GameTicketingStatusScheduler {
 
 	@Transactional
 	@Scheduled(cron = "0 0 11 * * *")
-	public void updateTicketingStatus() {
+	public void openScheduledTicketing() {
 		List<GameTicketingStatusEntity> list = ticketingStatusRepository.findOpenableSchedules(
 			TicketingStatus.SCHEDULED,
 			LocalDateTime.now()
@@ -31,8 +31,20 @@ public class GameTicketingStatusScheduler {
 		list.forEach(
 			ticketingStatus -> ticketingStatus.updateStatus(TicketingStatus.AVAILABLE)
 		);
-
 	}
 
+	@Transactional
+	@Scheduled(cron = "0 0 14,15,18 * * *")
+	@Scheduled(cron = "0 30 19 * * *")
+	public void terminateExpiredTicketing() {
+		LocalDateTime now = LocalDateTime.now();
+		List<GameTicketingStatusEntity> list =
+			ticketingStatusRepository.findTerminatableSchedules(now);
+
+		list.forEach(
+			ticketingStatus -> ticketingStatus.updateStatus(TicketingStatus.TERMINATED)
+		);
+
+	}
 
 }

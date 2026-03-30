@@ -15,12 +15,23 @@ import java.util.UUID;
 @Repository
 public interface GameTicketingStatusRepository extends JpaRepository<GameTicketingStatusEntity, UUID> {
 
-	@Query("SELECT ticketing_status " +
-		  		 "FROM GameTicketingStatusEntity ticketing_status " +
-					"WHERE ticketing_status.status = :status " +
-						"AND ticketing_status.ticketingOpenedAt <= :now")
+	@Query(
+		"SELECT ticketing_status " +
+			"FROM GameTicketingStatusEntity ticketing_status " +
+		 "WHERE ticketing_status.status = :status " +
+			 "AND ticketing_status.ticketingOpenedAt <= :now"
+	)
 	List<GameTicketingStatusEntity> findOpenableSchedules(
 		@Param("status") TicketingStatus status,
 		@Param("now") LocalDateTime now
 	);
+
+	@Query(
+		"SELECT ticketing_status " +
+			"FROM GameTicketingStatusEntity ticketing_status " +
+		 "WHERE ticketing_status.status " +
+			  "IN (com.goti.ticketing.constants.TicketingStatus.AVAILABLE, " +
+						"com.goti.ticketing.constants.TicketingStatus.EXHAUSTED) " +
+			 "AND ticketing_status.ticketingEndAt <= :now ")
+	List<GameTicketingStatusEntity> findTerminatableSchedules(@Param("now") LocalDateTime now);
 }
