@@ -87,7 +87,8 @@ public record GameScheduleSearchResponse(
 		final String awayTeamDisplayName,
 		final String stadiumLocation,
 		final GameStatusEntity status,
-		final GameTicketingStatusEntity ticketing
+		final GameTicketingStatusEntity ticketing,
+		final Long remainingSeatCount
 	) {
 		return new GameScheduleSearchResponse(
 			game.getId(),
@@ -106,7 +107,7 @@ public record GameScheduleSearchResponse(
 			ticketing.getStatus(),
 			ticketing.getTicketingOpenedAt(),
 			ticketing.getTicketingEndAt(),
-			null
+			remainingSeatCount
 		);
 	}
 
