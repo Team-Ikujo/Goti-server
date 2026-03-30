@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.goti.ticketing.domain.entity.seat.SeatStatusEntity;
 import com.goti.ticketing.constants.SeatStatus;
-import com.goti.ticketing.seat.repository.dto.GameAvailableSeatCount;
 import com.goti.ticketing.seat.repository.dto.SeatGradeAvailableSeatCount;
 
 @Repository
@@ -48,21 +47,6 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 	List<SeatGradeAvailableSeatCount> countSeatGradeAvailableSeats(
 		@Param("gameId") UUID gameId,
 		@Param("seatGradeIds") List<UUID> seatGradeIds,
-		@Param("status") SeatStatus status
-	);
-
-	@Query("""
-		SELECT new com.goti.ticketing.seat.repository.dto.GameAvailableSeatCount(
-			ss.game.id,
-			COUNT(ss)
-		)
-			FROM SeatStatusEntity ss
-		WHERE ss.game.id IN :gameIds
-		  AND ss.status = :status
-		GROUP BY ss.game.id
-	""")
-	List<GameAvailableSeatCount> countGameAvailableSeats(
-		@Param("gameIds") List<UUID> gameIds,
 		@Param("status") SeatStatus status
 	);
 }

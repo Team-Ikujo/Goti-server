@@ -123,14 +123,4 @@ public record GameScheduleSearchResponse(
 			ticketingStatus, ticketingOpenedAt, ticketingEndAt, remainingSeatCount
 		);
 	}
-
-	public GameScheduleSearchResponse withRemainingSeatCount(Long remainingSeatCount) {
-		return new GameScheduleSearchResponse(
-			gameId, startAt, leagueType,
-			homeTeamId, awayTeamId, stadiumId,
-			homeTeamDisplayName, awayTeamDisplayName, stadiumLocation,
-			gameStatus, homeTeamScore, awayTeamScore, gameResult,
-			ticketingStatus, ticketingOpenedAt, ticketingEndAt, remainingSeatCount
-		);
-	}
 }

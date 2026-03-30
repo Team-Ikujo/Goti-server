@@ -9,7 +9,6 @@ import com.goti.ticketing.infra.api.StadiumApiClient;
 import com.goti.ticketing.infra.api.dto.response.BaseballTeamDisplayNameResponse;
 
 import com.goti.ticketing.infra.api.dto.response.StadiumLocationResponse;
-import com.goti.ticketing.seat.service.domain.SeatStatusService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +28,6 @@ import java.util.stream.Stream;
 public class GameScheduleSearchService {
 	private final GameScheduleRepository gameScheduleRepository;
 	private final StadiumApiClient stadiumApiClient;
-	private final SeatStatusService seatStatusService;
 
 	@Transactional(readOnly = true)
 	public List<GameScheduleSearchResponse> searchSchedules(GameScheduleSearchCondition condition) {
@@ -47,22 +45,15 @@ public class GameScheduleSearchService {
 			.filter(java.util.Objects::nonNull)
 			.collect(Collectors.toSet());
 
-		List<UUID> gameIds = schedules.stream()
-			.map(GameScheduleSearchResponse::gameId)
-			.toList();
-
 		Map<UUID, String> teamDisplayNameMap = getBaseballTeamDisplayNamesMap(teamIds);
 		Map<UUID, String> stadiumLocationMap = getStadiumLocationsMap(stadiumIds);
-		Map<UUID, Long> remainingSeatCountMap = seatStatusService.countAvailableSeatsByGameIds(gameIds);
 
 		return schedules.stream().map(
-			schedule -> schedule
-				.withExternalInfo(
-					teamDisplayNameMap.get(schedule.homeTeamId()),
-					teamDisplayNameMap.get(schedule.awayTeamId()),
-					stadiumLocationMap.get(schedule.stadiumId())
-				)
-				.withRemainingSeatCount(remainingSeatCountMap.getOrDefault(schedule.gameId(), 0L))
+			schedule -> schedule.withExternalInfo(
+				teamDisplayNameMap.get(schedule.homeTeamId()),
+				teamDisplayNameMap.get(schedule.awayTeamId()),
+				stadiumLocationMap.get(schedule.stadiumId())
+			)
 		).toList();
 	}
 

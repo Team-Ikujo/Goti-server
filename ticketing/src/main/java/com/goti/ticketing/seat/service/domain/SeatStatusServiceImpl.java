@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.goti.ticketing.seat.repository.dto.GameAvailableSeatCount;
-
 import lombok.extern.slf4j.Slf4j;
 
 import com.goti.exception.CustomException;
@@ -72,17 +70,6 @@ public class SeatStatusServiceImpl implements SeatStatusService {
 		return seatStatusRepository.findAllByGameAndSeatIds(gameId, seatIds)
 			.stream()
 			.collect(Collectors.toMap(seatStatus -> seatStatus.getSeat().getId(), seatStatus -> seatStatus));
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Map<UUID, Long> countAvailableSeatsByGameIds(List<UUID> gameIds) {
-		return seatStatusRepository.countGameAvailableSeats(gameIds, SeatStatus.AVAILABLE)
-			.stream()
-			.collect(Collectors.toMap(
-				GameAvailableSeatCount::gameId,
-				GameAvailableSeatCount::availableSeatCount
-			));
 	}
 
 	@Override
