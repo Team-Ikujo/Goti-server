@@ -32,11 +32,6 @@ public class AccountServiceImpl implements AccountService {
 
 		accountRepository.save(account);
 
-		return AccountCreateResponse.from(
-			account.getId(),
-			account.getAccountNumber(),
-			account.getBankName(),
-			account.getAccountHolder()
-		);
+		return AccountCreateResponse.from(account);
 	}
 }

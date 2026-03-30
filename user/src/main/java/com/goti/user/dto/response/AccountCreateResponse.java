@@ -1,5 +1,7 @@
 package com.goti.user.dto.response;
 
+import com.goti.user.domain.entity.user.AccountEntity;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.UUID;
@@ -7,7 +9,7 @@ import java.util.UUID;
 @Schema(description = "계좌 생성 응답")
 public record AccountCreateResponse(
 
-	@Schema(description = "계좌번호 Id", example = "5as48400-e39b-4as4-a716-41265cs40000")
+	@Schema(description = "계좌번호 Id", example = "5a484000-e39b-4a44-a716-41265c400000")
 	UUID accountId,
 
 	@Schema(description = "계좌번호", example = "1002-876-543210")
@@ -19,11 +21,12 @@ public record AccountCreateResponse(
 	@Schema(description = "계좌 예금주", example = "홍길동")
 	String accountHolder
 ) {
-	public static AccountCreateResponse from(
-		UUID accountId, String accountNumber, String bankName, String accountHolder
-	) {
+	public static AccountCreateResponse from(AccountEntity account) {
 		return new AccountCreateResponse(
-			accountId, accountNumber, bankName, accountHolder
+			account.getId(),
+			account.getAccountNumber(),
+			account.getBankName(),
+			account.getAccountHolder()
 		);
 	}
 }
