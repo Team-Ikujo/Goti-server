@@ -21,10 +21,15 @@ public class AccountServiceImpl implements AccountService {
 	public AccountCreateResponse create(
 		String accountNumber, String bankName, String accountHolder, MemberEntity member
 	) {
-		accountRepository.deleteByMember(member);
-		AccountEntity account = AccountEntity.create(
-			accountNumber, bankName, accountHolder, member
-		);
+		AccountEntity account = accountRepository.findByMember(member)
+			.map(existingAccount -> {
+				existingAccount.updateDetails(accountNumber, bankName, accountHolder);
+				return existingAccount;
+			})
+			.orElseGet(() -> AccountEntity.create(
+				accountNumber, bankName, accountHolder, member
+			));
+
 		accountRepository.save(account);
 
 		return AccountCreateResponse.from(
