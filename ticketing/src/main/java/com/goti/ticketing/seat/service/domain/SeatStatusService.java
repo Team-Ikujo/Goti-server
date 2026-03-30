@@ -15,6 +15,8 @@ public interface SeatStatusService {
 
 	Map<UUID, SeatStatusEntity> getByGameIdAndSeatIds(UUID gameId, List<UUID> seatIds);
 
+	Map<UUID, Long> countAvailableSeatsByGameIds(List<UUID> gameIds);
+
 	Set<UUID> getSeatIdsByGameId(UUID gameId);
 
 	List<SeatStatusEntity> createMissingStatuses(GameScheduleEntity game, List<SeatEntity> seats, Set<UUID> existingSeatIds);
