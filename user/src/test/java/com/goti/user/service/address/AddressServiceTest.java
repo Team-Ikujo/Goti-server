@@ -57,7 +57,7 @@ public class AddressServiceTest {
 		);
 		assertNotNull(response);
 		assertNotNull(response.addressId());
-		AddressEntity address = addressService.findByMember(member).orElse(null);
+		AddressEntity address = addressService.findAddress(member).orElse(null);
 		assertNotNull(address);
 		assertEquals(response.addressId(), address.getId());
 		log.info("response addressId : {}", response.addressId());
@@ -87,7 +87,7 @@ public class AddressServiceTest {
 		assertEquals("123123", address.getZipCode());
 		assertEquals("서울특별시 관악구 낙성대역 8길 50-4", address.getBaseAddress());
 		assertEquals("104호", address.getDetailAddress());
-		AddressEntity savedAddress = addressService.findByMember(member).orElse(null);
+		AddressEntity savedAddress = addressService.findAddress(member).orElse(null);
 		assertNotNull(savedAddress);
 	}
 }

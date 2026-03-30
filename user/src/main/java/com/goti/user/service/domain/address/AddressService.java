@@ -12,5 +12,5 @@ public interface AddressService {
 		String zipCode, String baseAddress, String detailAddress, MemberEntity member
 	);
 
-	Optional<AddressEntity> findByMember(MemberEntity member);
+	Optional<AddressEntity> findAddress(MemberEntity member);
 }

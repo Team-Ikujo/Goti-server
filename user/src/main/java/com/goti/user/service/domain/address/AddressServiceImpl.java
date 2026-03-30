@@ -24,7 +24,7 @@ public class AddressServiceImpl implements AddressService {
 	public AddressCreateResponse create(
 		String zipCode, String baseAddress, String detailAddress, MemberEntity member
 	) {
-		AddressEntity address = findByMember(member).map(
+		AddressEntity address = findAddress(member).map(
 			entity -> {
 				entity.updateDetails(
 					zipCode, baseAddress, detailAddress
@@ -41,7 +41,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public Optional<AddressEntity> findByMember(MemberEntity member) {
+	public Optional<AddressEntity> findAddress(MemberEntity member) {
 		return addressRepository.findByMember(member);
 	}
 }
