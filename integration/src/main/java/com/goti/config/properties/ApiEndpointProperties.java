@@ -7,6 +7,7 @@ public record ApiEndpointProperties(
 	String ticketing,
 	String stadium,
 	String payment,
-	String resale
+	String resale,
+	String ticketing
 ) {
 }
