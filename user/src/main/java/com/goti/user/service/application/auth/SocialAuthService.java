@@ -92,7 +92,7 @@ public class SocialAuthService {
 				return new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 			}
 		);
-		return authService.issueTokens(member);
+		return authService.issueTokens(member, verifiedSocialInfo.email());
 	}
 
 	@Transactional
@@ -109,7 +109,7 @@ public class SocialAuthService {
 		MemberEntity member = getOrCreateMember(name, mobile, gender, birthDate);
 
 		createSocialProvider(member, verifiedSocialInfo);
-		return authService.issueTokens(member);
+		return authService.issueTokens(member, verifiedSocialInfo.email());
 	}
 
 	public void sendSignupSmsCode(String socialVerifyToken, String mobile) {
@@ -119,8 +119,9 @@ public class SocialAuthService {
 	@Transactional
 	public Pair<String, String> reissueToken(String refreshToken) {
 		UUID memberId = authService.validateTokenAndGetMemberId(refreshToken);
+		String email = jwtTokenProvider.extractEmail(refreshToken);
 		MemberEntity member = memberService.getMember(memberId);
-		return authService.issueTokens(member);
+		return authService.issueTokens(member, email);
 	}
 
 	private void validateState(OAuthProvider provider, String state) {

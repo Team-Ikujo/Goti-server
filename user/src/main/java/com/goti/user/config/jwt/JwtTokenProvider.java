@@ -45,6 +45,7 @@ public class JwtTokenProvider {
 	private static final String TOKEN_PREFIX = "Bearer ";
 	private static final String ROLE_CLAIM_KEY = "role";
 	private static final String MOBILE_CLAIM_KEY = "mobile";
+	private static final String EMAIL_CLAIM_KEY = "email";
 
 	private static final String PROVIDER_TYPE_KEY = "provider_type";
 	private static final String PROVIDER_ID_KEY = "provider_id";
@@ -79,7 +80,9 @@ public class JwtTokenProvider {
 		}
 	}
 
-	public String create(UUID id, String mobile, UserRole role, TokenType tokenType) {
+	public String create(
+		UUID id, String mobile, UserRole role, String email, TokenType tokenType
+	) {
 		Date issuedAt = new Date();
 		Duration validTime = tokenType == TokenType.ACCESS ?
 			jwtProperties.accessValidTime() : jwtProperties.refreshValidTime();
@@ -92,6 +95,7 @@ public class JwtTokenProvider {
 			.issuer(jwtProperties.issuer())
 			.claim(ROLE_CLAIM_KEY, role.name())
 			.claim(MOBILE_CLAIM_KEY, mobile)
+			.claim(EMAIL_CLAIM_KEY, email)
 			.issuedAt(issuedAt)
 			.expiration(expireAt);
 
@@ -167,6 +171,10 @@ public class JwtTokenProvider {
 
 	public String extractJti(String token) {
 		return getClaims(token).getId();
+	}
+
+	public String extractEmail(String token) {
+		return getClaims(token).get(EMAIL_CLAIM_KEY, String.class);
 	}
 
 	/**

@@ -86,7 +86,9 @@ class JwtTokenProviderRs256Test {
 			UUID userId = UUID.randomUUID();
 
 			// When
-			String token = provider.create(userId, "01012345678", UserRole.MEMBER, TokenType.ACCESS);
+			String token = provider.create(
+				userId, "01012345678", UserRole.MEMBER, "test@test.com", TokenType.ACCESS
+			);
 
 			// Then
 			assertThatCode(() -> provider.validateToken(token))
@@ -98,7 +100,9 @@ class JwtTokenProviderRs256Test {
 		void should_extractClaims_when_rs256Token() {
 			// Given
 			UUID userId = UUID.randomUUID();
-			String token = provider.create(userId, "01012345678", UserRole.ADMIN, TokenType.ACCESS);
+			String token = provider.create(
+				userId, "01012345678", UserRole.ADMIN, "test@test.com", TokenType.ACCESS
+			);
 
 			// When
 			String jti = provider.extractJti(token);
@@ -148,7 +152,9 @@ class JwtTokenProviderRs256Test {
 			UUID userId = UUID.randomUUID();
 
 			// When
-			String token = provider.create(userId, "01012345678", UserRole.MEMBER, TokenType.ACCESS);
+			String token = provider.create(
+				userId, "01012345678", UserRole.MEMBER, "test@test.com", TokenType.ACCESS
+			);
 
 			// Then
 			assertThatCode(() -> provider.validateToken(token))
@@ -189,7 +195,9 @@ class JwtTokenProviderRs256Test {
 			expiredProvider.initKeys();
 
 			UUID userId = UUID.randomUUID();
-			String token = expiredProvider.create(userId, "01012345678", UserRole.MEMBER, TokenType.ACCESS);
+			String token = expiredProvider.create(
+				userId, "01012345678", UserRole.MEMBER, "test@test.com", TokenType.ACCESS
+			);
 
 			// When & Then
 			assertThatThrownBy(() -> expiredProvider.validateToken(token))

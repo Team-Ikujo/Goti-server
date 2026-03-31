@@ -48,19 +48,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SocialAuthReissueTokenApiTest {
 
 	@Autowired MockMvc mockMvc;
-	@Autowired ObjectMapper objectMapper;
 	@Autowired JwtTokenProvider jwtTokenProvider;
 	@Autowired RedisCache redisCache;
 	@Autowired MemberRepository memberRepository;
 	@Autowired SocialProviderRepository socialProviderRepository;
+	static final String EMAIL = "test@test.com";
 
 	MemberEntity member;
 	SocialProviderEntity socialProvider;
-
+	String email;
 	@BeforeEach
 	void setup() {
 		saveMember();
 		saveSocialProvider();
+
 	}
 
 	@Test
@@ -69,12 +70,14 @@ public class SocialAuthReissueTokenApiTest {
 			member.getId(),
 			member.getMobile(),
 			member.getRole(),
+			EMAIL,
 			TokenType.ACCESS
 		);
 		String loginRefreshToken = jwtTokenProvider.create(
 			member.getId(),
 			member.getMobile(),
 			member.getRole(),
+			EMAIL,
 			TokenType.REFRESH
 		);
 

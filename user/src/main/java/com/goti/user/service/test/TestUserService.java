@@ -39,12 +39,14 @@ public class TestUserService {
 	private final TestUserPersistenceHelper persistenceHelper;
 	private final JwtTokenProvider jwtTokenProvider;
 
+	private static final String EMAIL = "test@test.com";
+
 	@Transactional
 	public TestUserResponse createUser(CreateTestUserRequest request) {
 		MemberEntity member = findOrCreateMember(request);
 
 		String accessToken = jwtTokenProvider.create(
-			member.getId(), member.getMobile(), UserRole.MEMBER, TokenType.ACCESS
+			member.getId(), member.getMobile(), UserRole.MEMBER, EMAIL, TokenType.ACCESS
 		);
 
 		return new TestUserResponse(
@@ -106,7 +108,7 @@ public class TestUserService {
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
 		String accessToken = jwtTokenProvider.create(
-			member.getId(), member.getMobile(), UserRole.MEMBER, TokenType.ACCESS
+			member.getId(), member.getMobile(), UserRole.MEMBER, EMAIL, TokenType.ACCESS
 		);
 
 		return new TokenResponse(accessToken);
