@@ -3,7 +3,7 @@ package com.goti.user.controller;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.user.dto.request.AccountRegisterRequest;
 import com.goti.user.dto.response.AccountRegisterResponse;
-import com.goti.user.service.auth.application.member.MemberProfileService;
+import com.goti.user.service.application.member.MemberProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

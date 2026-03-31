@@ -1,4 +1,4 @@
-package com.goti.user.service.auth.application.member;
+package com.goti.user.service.application.member;
 
 import com.goti.user.domain.entity.user.MemberEntity;
 import com.goti.user.dto.response.AccountRegisterResponse;
