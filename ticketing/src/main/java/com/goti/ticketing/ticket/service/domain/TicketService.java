@@ -33,7 +33,7 @@ public interface TicketService {
 		UUID userId
 	);
 
-	TicketPurchaseInfoResponse getPurchaseInfo(UUID ticketId);
+	List<TicketPurchaseInfoResponse> getPurchaseInfos(List<UUID> ticketIds);
 
 	TicketEntity get(UUID ticketId);
 }

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.f4b6a3.tsid.TsidCreator;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.domain.vo.TransactionItemVO;
-import com.goti.dto.internal.ResaleOrderCreatedEvent;
 import com.goti.global.validation.Preconditions;
 import com.goti.resale.constants.ResaleTransactionStatus;
 import com.goti.resale.domain.entity.resale.ResaleHoldEntity;
@@ -27,9 +27,10 @@ import com.goti.resale.domain.entity.resale.ResaleTransactionEntity;
 import com.goti.resale.dto.request.ResaleTransactionItemRequest;
 import com.goti.resale.dto.response.ResaleOrderCreateResponse;
 import com.goti.resale.dto.response.ResalePurchaseListResponse;
-import com.goti.resale.dto.response.ResaleTicketPurchaseInfoResponse;
-import com.goti.resale.infra.TicketingClient;
+import com.goti.resale.infra.dto.ResaleTicketPurchaseInfo;
+import com.goti.resale.infra.TicketApiClient;
 import com.goti.resale.infra.TicketClient;
+import com.goti.resale.infra.dto.ResaleOrderCreatedEvent;
 import com.goti.resale.repository.ResaleOrderRepository;
 import com.goti.resale.repository.ResaleTransactionRepository;
 import com.goti.resale.utils.ResalePricePolicy;
@@ -50,7 +51,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 	private final ResaleRestrictionHandler resaleRestrictionHandler;
 	private final ResalePricePolicy resalePricePolicy;
 	private final TicketClient ticketClient;
-	private final TicketingClient ticketingClient;
+	private final TicketApiClient ticketApiClient;
 	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
@@ -95,7 +96,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 	@Transactional
 	public ResaleOrderCreateResponse initOrder(UUID buyerId, List<ResaleHoldEntity> holds, UUID gameId) {
 		int ownedCount = ticketClient.getOwnedTicketCount(buyerId, gameId);
-		int pendingCount = resaleTransactionRepository.countByBuyerIdAndListing_GameIdAndTransactionStatus(
+		int pendingCount = resaleTransactionRepository.countTransactions(
 			buyerId, gameId, ResaleTransactionStatus.PENDING);
 
 		validatePossessionLimit(ownedCount, pendingCount, holds.size());
@@ -142,7 +143,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ResalePurchaseListResponse> getMyPurchaseOrders(
+	public List<ResalePurchaseListResponse> getPurchasesByMember(
 		UUID buyerId,
 		Integer months,
 		LocalDate startDate,
@@ -169,7 +170,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			.map(ResaleOrderEntity::getId)
 			.toList();
 
-		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findAllWithListingByResaleOrderIds(orderIds);
+		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findByOrderIdsWithListing(orderIds);
 		Map<UUID, List<ResaleTransactionEntity>> transactionsByOrderId = transactions.stream()
 			.collect(Collectors.groupingBy(
 				transaction -> transaction.getResaleOrder().getId(),
@@ -224,12 +225,23 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 		List<ResaleTransactionEntity> transactions
 	) {
 		UUID gameId = transactions.getFirst().getListing().getGameId();
-		List<ResaleTicketPurchaseInfoResponse> ticketInfos = transactions.stream()
-			.map(transaction -> ticketingClient.getPurchaseInfo(transaction.getListing().getTicketId()))
+
+		List<UUID> ticketIds = transactions.stream()
+			.map(transaction -> transaction.getListing().getTicketId())
 			.toList();
-		ResaleTicketPurchaseInfoResponse representativeTicket = ticketInfos.getFirst();
-		List<String> seatInfos = ticketInfos.stream()
-			.map(ResaleTicketPurchaseInfoResponse::seatInfo)
+
+		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap = ticketApiClient.getPurchaseInfos(ticketIds).stream()
+			.collect(Collectors.toMap(
+				ResaleTicketPurchaseInfo::ticketId,
+				ticketInfo -> ticketInfo
+			));
+
+		ResaleTicketPurchaseInfo representativeTicket = ticketInfoMap.get(ticketIds.getFirst());
+
+		List<String> seatInfos = ticketIds.stream()
+			.map(ticketInfoMap::get)
+			.filter(Objects::nonNull)
+			.map(ResaleTicketPurchaseInfo::seatInfo)
 			.toList();
 
 		return ResalePurchaseListResponse.of(

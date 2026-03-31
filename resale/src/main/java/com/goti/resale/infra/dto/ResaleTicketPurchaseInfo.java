@@ -1,9 +1,9 @@
-package com.goti.resale.dto.response;
+package com.goti.resale.infra.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ResaleTicketPurchaseInfoResponse(
+public record ResaleTicketPurchaseInfo(
 	UUID ticketId,
 	String gameTitle,
 	LocalDateTime gameDate,

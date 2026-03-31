@@ -95,11 +95,10 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public TicketPurchaseInfoResponse getPurchaseInfo(UUID ticketId) {
-		TicketEntity ticket = ticketRepository.findById(ticketId)
-			.orElseThrow(() -> new CustomException(ErrorCode.TICKET_NOT_FOUND));
-
-		return TicketPurchaseInfoResponse.from(ticket);
+	public List<TicketPurchaseInfoResponse> getPurchaseInfos(List<UUID> ticketIds) {
+		return ticketRepository.findAllByIdIn(ticketIds).stream()
+			.map(TicketPurchaseInfoResponse::from)
+			.toList();
 	}
 
 	@Override

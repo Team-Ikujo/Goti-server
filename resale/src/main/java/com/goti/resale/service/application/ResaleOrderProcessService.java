@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.goti.constants.messages.ErrorCode;
-import com.goti.dto.internal.ResaleOrderPaymentCompletedEvent;
-import com.goti.dto.internal.SettlementCompletedEvent;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
 import com.goti.infra.lock.DistributedLockManager;
@@ -25,6 +23,8 @@ import com.goti.resale.dto.response.ResaleOrderCompleteResponse;
 import com.goti.resale.dto.response.ResaleOrderCreateResponse;
 import com.goti.resale.dto.response.ResaleOrderListResponse;
 import com.goti.resale.dto.response.ResalePurchaseListResponse;
+import com.goti.resale.infra.dto.ResaleOrderPaymentCompletedEvent;
+import com.goti.resale.infra.dto.SettlementCompletedEvent;
 import com.goti.resale.repository.ResaleOrderRepository;
 import com.goti.resale.repository.ResaleTransactionRepository;
 import com.goti.resale.repository.hold.ResaleHoldRepository;
@@ -111,7 +111,7 @@ public class ResaleOrderProcessService {
 		LocalDate startDate,
 		LocalDate endDate
 	) {
-		return resaleOrderService.getMyPurchaseOrders(buyerId, months, startDate, endDate);
+		return resaleOrderService.getPurchasesByMember(buyerId, months, startDate, endDate);
 	}
 
 	private List<ResaleHoldEntity> validateAndGetHolds(UUID buyerId, List<UUID> holdIds) {
