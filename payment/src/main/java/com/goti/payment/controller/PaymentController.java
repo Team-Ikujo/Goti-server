@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.payment.dto.request.PaymentCancelRequest;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.payment.dto.request.PaymentRequest;
+import com.goti.payment.dto.request.PurchaseHistorySearchRequest;
 import com.goti.payment.dto.response.PaymentResponse;
 import com.goti.payment.dto.response.PurchaseHistoryResponse;
 import com.goti.payment.service.application.OrderPaymentService;
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 
 @Tag(name = "Payment", description = "결제 API")
 @RestController
@@ -75,9 +77,17 @@ public class PaymentController {
 	)
 	@GetMapping("/purchases")
 	public ResponseEntity<ApiSuccessResponse<List<PurchaseHistoryResponse>>> getPurchases(
-		@AuthenticationPrincipal(expression = "id") UUID memberId
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
+		@ParameterObject PurchaseHistorySearchRequest request
 	) {
-		return wrap(purchaseHistoryService.getAll(memberId));
+		return wrap(
+			purchaseHistoryService.getAll(
+			memberId,
+			request.type(),
+			request.months(),
+			request.startDate(),
+			request.endDate()
+		));
 	}
 
 
