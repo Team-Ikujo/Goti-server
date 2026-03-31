@@ -92,7 +92,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 	@Transactional
 	public ResaleOrderCreateResponse initOrder(UUID buyerId, List<ResaleHoldEntity> holds, UUID gameId) {
 		int ownedCount = ticketClient.getOwnedTicketCount(buyerId, gameId);
-		int pendingCount = resaleTransactionRepository.countByBuyerIdAndListing_GameIdAndTransactionStatus(
+		int pendingCount = resaleTransactionRepository.countTransactions(
 			buyerId, gameId, ResaleTransactionStatus.PENDING);
 
 		validatePossessionLimit(ownedCount, pendingCount, holds.size());
