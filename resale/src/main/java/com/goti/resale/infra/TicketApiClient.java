@@ -15,18 +15,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import com.goti.constants.messages.ErrorCode;
+import com.goti.config.properties.ApiEndpointProperties;
 import com.goti.exception.CustomException;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.infra.api.base.BaseRestClient;
-import com.goti.resale.config.properties.TicketingApiProperties;
 import com.goti.resale.infra.dto.ResaleTicketPurchaseInfo;
 
 @Component
 public class TicketApiClient extends BaseRestClient implements TicketClient {
 	private static final String TICKET_API = "/api/v1/tickets";
 
-	public TicketApiClient(RestClient.Builder builder, TicketingApiProperties properties) {
-		super(builder, properties.baseUrl());
+	public TicketApiClient(RestClient.Builder builder, ApiEndpointProperties properties) {
+		super(builder, properties.ticketing());
 	}
 
 	@Override

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import com.goti.constants.messages.ErrorCode;
+import com.goti.config.properties.ApiEndpointProperties;
 import com.goti.exception.CustomException;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.infra.api.base.BaseRestClient;
-import com.goti.payment.config.properties.TicketingApiProperties;
 import com.goti.payment.dto.response.TicketingOrderListItemResponse;
 import com.goti.payment.service.dto.OrderPaymentConfirmApiRequest;
 import com.goti.payment.service.dto.PaymentOrderInfo;
@@ -21,8 +21,8 @@ import com.goti.payment.service.dto.PaymentOrderInfo;
 public class TicketingOrderClient extends BaseRestClient {
 	private static final String ORDER_API = "/api/v1/orders";
 
-	public TicketingOrderClient(RestClient.Builder builder, TicketingApiProperties properties) {
-		super(builder, properties.baseUrl());
+	public TicketingOrderClient(RestClient.Builder builder, ApiEndpointProperties properties) {
+		super(builder, properties.ticketing());
 	}
 
 	public void confirmPayment(
