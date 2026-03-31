@@ -1,5 +1,7 @@
 package com.goti.payment.infra;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -49,14 +51,33 @@ public class ResaleOrderApiClient extends BaseRestClient implements ResaleOrderC
 	}
 
 	@Override
-	public List<ResalePurchaseListItemResponse> getPurchases(UUID buyerId) {
+	public List<ResalePurchaseListItemResponse> getPurchases(
+		UUID buyerId,
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	) {
 		List<ResalePurchaseListItemResponse> response = getGotiResponse(
 			RESALE_ORDER_API + "/purchases",
 			null,
-			Map.of("buyerId", buyerId),
+			createPurchaseQueryParams(buyerId, months, startDate, endDate),
 			new ParameterizedTypeReference<>() {
 			}
 		);
 		return response != null ? response : List.of();
+	}
+
+	private Map<String, Object> createPurchaseQueryParams(
+		UUID buyerId,
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	) {
+		Map<String, Object> queryParams = new HashMap<>();
+		queryParams.put("buyerId", buyerId);
+		queryParams.put("months", months);
+		queryParams.put("startDate", startDate);
+		queryParams.put("endDate", endDate);
+		return queryParams;
 	}
 }

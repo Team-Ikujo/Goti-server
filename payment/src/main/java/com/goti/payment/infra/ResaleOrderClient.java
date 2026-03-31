@@ -1,5 +1,6 @@
 package com.goti.payment.infra;
 
+import java.time.LocalDate;
 import com.goti.payment.dto.response.ResalePurchaseListItemResponse;
 
 import java.util.List;
@@ -12,5 +13,10 @@ public interface ResaleOrderClient {
 
 	void completeSettlement(UUID orderId);
 
-	List<ResalePurchaseListItemResponse> getPurchases(UUID buyerId);
+	List<ResalePurchaseListItemResponse> getPurchases(
+		UUID buyerId,
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	);
 }
