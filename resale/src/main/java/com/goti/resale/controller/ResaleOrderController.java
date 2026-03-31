@@ -102,7 +102,7 @@ public class ResaleOrderController {
 		@ParameterObject ResaleOrderPeriodFilterRequest request
 	) {
 		return wrap(
-			resaleOrderProcessService.getMyPurchaseOrders(
+			resaleOrderProcessService.getPurchasesByMember(
 			buyerId,
 			request.months(),
 			request.startDate(),
