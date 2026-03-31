@@ -2,7 +2,6 @@ package domain.address;
 
 import com.goti.constants.Gender;
 import com.goti.exception.FieldValidationException;
-import com.goti.user.domain.entity.user.AccountEntity;
 import com.goti.user.domain.entity.user.AddressEntity;
 import com.goti.user.domain.entity.user.MemberEntity;
 
