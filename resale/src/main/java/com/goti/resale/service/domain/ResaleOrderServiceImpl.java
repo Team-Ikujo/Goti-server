@@ -26,8 +26,8 @@ import com.goti.resale.domain.entity.resale.ResaleTransactionEntity;
 import com.goti.resale.dto.request.ResaleTransactionItemRequest;
 import com.goti.resale.dto.response.ResaleOrderCreateResponse;
 import com.goti.resale.dto.response.ResalePurchaseListResponse;
-import com.goti.resale.dto.response.ResaleTicketPurchaseInfoResponse;
-import com.goti.resale.infra.TicketingClient;
+import com.goti.resale.infra.dto.ResaleTicketPurchaseInfo;
+import com.goti.resale.infra.TicketApiClient;
 import com.goti.resale.infra.TicketClient;
 import com.goti.resale.infra.dto.ResaleOrderCreatedEvent;
 import com.goti.resale.repository.ResaleOrderRepository;
@@ -50,7 +50,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 	private final ResaleRestrictionHandler resaleRestrictionHandler;
 	private final ResalePricePolicy resalePricePolicy;
 	private final TicketClient ticketClient;
-	private final TicketingClient ticketingClient;
+	private final TicketApiClient ticketApiClient;
 	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
@@ -224,12 +224,12 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 		List<ResaleTransactionEntity> transactions
 	) {
 		UUID gameId = transactions.getFirst().getListing().getGameId();
-		List<ResaleTicketPurchaseInfoResponse> ticketInfos = transactions.stream()
-			.map(transaction -> ticketingClient.getPurchaseInfo(transaction.getListing().getTicketId()))
+		List<ResaleTicketPurchaseInfo> ticketInfos = transactions.stream()
+			.map(transaction -> ticketApiClient.getPurchaseInfo(transaction.getListing().getTicketId()))
 			.toList();
-		ResaleTicketPurchaseInfoResponse representativeTicket = ticketInfos.getFirst();
+		ResaleTicketPurchaseInfo representativeTicket = ticketInfos.getFirst();
 		List<String> seatInfos = ticketInfos.stream()
-			.map(ResaleTicketPurchaseInfoResponse::seatInfo)
+			.map(ResaleTicketPurchaseInfo::seatInfo)
 			.toList();
 
 		return ResalePurchaseListResponse.of(
