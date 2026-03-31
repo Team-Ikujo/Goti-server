@@ -2,7 +2,9 @@ package com.goti.user.controller;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.user.dto.request.AccountRegisterRequest;
+import com.goti.user.dto.request.AddressRegisterRequest;
 import com.goti.user.dto.response.AccountRegisterResponse;
+import com.goti.user.dto.response.AddressRegisterResponse;
 import com.goti.user.service.application.member.MemberProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +45,25 @@ public class MemberController {
 				request.accountNumber(),
 				request.bankName(),
 				request.accountHolder(),
+				memberId
+			)
+		);
+	}
+
+	@Operation(
+		summary = "주소 등록",
+		description = "회원 주소 등록 API"
+	)
+	@PostMapping("/address")
+	public ResponseEntity<ApiSuccessResponse<AddressRegisterResponse>> registerAddress(
+		@AuthenticationPrincipal(expression = "id") UUID memberId,
+		@RequestBody @Valid AddressRegisterRequest request
+	) {
+		return wrap(
+			memberProfileService.registerAddress(
+				request.zipCode(),
+				request.baseAddress(),
+				request.detailAddress(),
 				memberId
 			)
 		);
