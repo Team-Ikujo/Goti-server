@@ -2,7 +2,9 @@ package com.goti.resale.infra;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.goti.resale.dto.response.ResaleTicketResponse;
 
@@ -28,13 +30,20 @@ public class TicketApiClient extends BaseRestClient implements TicketClient {
 	}
 
 	@Override
-	public ResaleTicketPurchaseInfo getPurchaseInfo(UUID ticketId) {
-		String uri = String.format("%s/%s/purchase-info", TICKET_API, ticketId);
+	public List<ResaleTicketPurchaseInfo> getPurchaseInfos(List<UUID> ticketIds) {
+		String uri = String.format("%s/purchase-infos", TICKET_API);
+		Map<String, String> queryParams = Map.of(
+			"ticketIds",
+			ticketIds.stream()
+				.map(UUID::toString)
+				.collect(Collectors.joining(","))
+		);
+
 		var response = getGotiResponse(
 			uri,
 			null,
-			null,
-			new ParameterizedTypeReference<ApiSuccessResponse<ResaleTicketPurchaseInfo>>() {}
+			queryParams,
+			new ParameterizedTypeReference<ApiSuccessResponse<List<ResaleTicketPurchaseInfo>>>() {}
 		);
 
 		if (response == null) {

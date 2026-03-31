@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -224,11 +225,22 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 		List<ResaleTransactionEntity> transactions
 	) {
 		UUID gameId = transactions.getFirst().getListing().getGameId();
-		List<ResaleTicketPurchaseInfo> ticketInfos = transactions.stream()
-			.map(transaction -> ticketApiClient.getPurchaseInfo(transaction.getListing().getTicketId()))
+
+		List<UUID> ticketIds = transactions.stream()
+			.map(transaction -> transaction.getListing().getTicketId())
 			.toList();
-		ResaleTicketPurchaseInfo representativeTicket = ticketInfos.getFirst();
-		List<String> seatInfos = ticketInfos.stream()
+
+		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap = ticketApiClient.getPurchaseInfos(ticketIds).stream()
+			.collect(Collectors.toMap(
+				ResaleTicketPurchaseInfo::ticketId,
+				ticketInfo -> ticketInfo
+			));
+
+		ResaleTicketPurchaseInfo representativeTicket = ticketInfoMap.get(ticketIds.getFirst());
+
+		List<String> seatInfos = ticketIds.stream()
+			.map(ticketInfoMap::get)
+			.filter(Objects::nonNull)
 			.map(ResaleTicketPurchaseInfo::seatInfo)
 			.toList();
 

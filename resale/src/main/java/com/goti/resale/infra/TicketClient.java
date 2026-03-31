@@ -22,5 +22,5 @@ public interface TicketClient {
 
 	void transferOwnership(UUID ticketId, UUID buyerId);
 
-	ResaleTicketPurchaseInfo getPurchaseInfo(UUID ticketId);
+	List<ResaleTicketPurchaseInfo> getPurchaseInfos(List<UUID> ticketIds);
 }
