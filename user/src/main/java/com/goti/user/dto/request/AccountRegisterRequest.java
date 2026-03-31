@@ -3,7 +3,7 @@ package com.goti.user.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
-@Schema(description = "계좌 생성 요청")
+@Schema(description = "계좌 등록 요청")
 public record AccountRegisterRequest(
 
 	@Schema(description = "계좌 번호", example = "1002-876-543219")

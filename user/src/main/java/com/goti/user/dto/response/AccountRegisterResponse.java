@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.UUID;
 
-@Schema(description = "계좌 생성 응답")
+@Schema(description = "계좌 등록 응답")
 public record AccountRegisterResponse(
 
 	@Schema(description = "계좌번호 Id", example = "5a484000-e39b-4a44-a716-41265c400000")
