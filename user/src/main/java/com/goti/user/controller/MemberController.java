@@ -29,7 +29,7 @@ public class MemberController {
 	private final MemberProfileService memberProfileService;
 
 	@PostMapping("/accounts")
-	public ResponseEntity<ApiSuccessResponse<AccountCreateResponse>> createAccounts(
+	public ResponseEntity<ApiSuccessResponse<AccountCreateResponse>> createAccount(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@RequestBody @Valid AccountCreateRequest request
 	) {
