@@ -4,7 +4,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +42,7 @@ public class TicketCreateService {
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_HISTORY_NOT_FOUND));
 
 		List<OrderItemEntity> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
-		String ticketNumberPrefix = generateTicketNumberPrefix(order.getCreatedAt(), order.getOrderNumber());
+		String ticketNumberPrefix = createPrefix(order.getCreatedAt(), order.getOrderNumber());
 
 		return IntStream.range(0, orderItems.size())
 			.mapToObj(index -> createTicket(order, orderHistory, orderItems.get(index), ticketNumberPrefix, index + 1))
@@ -70,11 +73,19 @@ public class TicketCreateService {
 		);
 	}
 
-	private String generateTicketNumberPrefix(Instant createdAt, String orderNumber) {
-		String monthDay = TICKET_NUMBER_DATE_FORMATTER.format(createdAt);
-		String orderSuffix = orderNumber.substring(ORDER_SUFFIX_START_INDEX);
+	public String createPrefix(Instant createdAt, String orderNumber) {
+		return String.join("",
+			TICKET_NUMBER_PREFIX,
+			TICKET_NUMBER_DATE_FORMATTER.format(createdAt.atZone(ZoneId.of("Asia/Seoul"))),
+			extractSuffix(orderNumber)
+		);
+	}
 
-		return TICKET_NUMBER_PREFIX + monthDay + orderSuffix;
+	private String extractSuffix(String orderNumber) {
+		return Optional.ofNullable(orderNumber)
+			.filter(s -> s.length() >= ORDER_SUFFIX_START_INDEX)
+			.map(s -> s.substring(ORDER_SUFFIX_START_INDEX))
+			.orElse("");
 	}
 
 	private String generateTicketNumber(String ticketNumberPrefix, int ticketSequence) {
