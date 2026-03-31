@@ -49,10 +49,10 @@ public class AddressServiceTest {
 	@Test
 	void 주소_생성_성공() {
 		AddressRegisterResponse response = addressService.register(
+			member,
 			"06111",
 			"서울특별시 강남구 학동로 343",
-			"(논현동, 포바강남타워) 4층, 15층",
-			member
+			"(논현동, 포바강남타워) 4층, 15층"
 		);
 		assertNotNull(response);
 		assertNotNull(response.addressId());
@@ -74,10 +74,10 @@ public class AddressServiceTest {
 		addressRepository.save(address);
 
 		AddressRegisterResponse response = addressService.register(
+			member,
 			"123123",
 			"서울특별시 관악구 낙성대역 8길 50-4",
-			"104호",
-			member
+			"104호"
 		);
 		assertNotNull(response);
 		assertEquals(address.getId(), response.addressId());
