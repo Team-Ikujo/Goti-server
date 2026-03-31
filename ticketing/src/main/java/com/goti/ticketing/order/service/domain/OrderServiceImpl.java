@@ -3,14 +3,21 @@ package com.goti.ticketing.order.service.domain;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
+import com.goti.ticketing.domain.entity.order.OrderItemEntity;
+import com.goti.ticketing.domain.entity.ticket.TicketEntity;
+import com.goti.ticketing.infra.api.StadiumClient;
+import com.goti.ticketing.infra.api.dto.response.StadiumLocationResponse;
 import com.goti.ticketing.order.dto.response.OrderListResponse;
 import com.goti.ticketing.order.dto.response.OrderPaymentInfoResponse;
 import com.goti.ticketing.session.service.application.ReservationSessionService;
+import com.goti.ticketing.ticket.service.domain.TicketService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +36,9 @@ public class OrderServiceImpl implements OrderService {
 	private static final List<Integer> ALLOWED_MONTHS = List.of(1, 3, 6);
 
 	private final OrderRepository orderRepository;
+	private final OrderItemService orderItemService;
+	private final TicketService ticketService;
+	private final StadiumClient stadiumClient;
 	private final ReservationSessionService reservationSessionService;
 
 	@Override
@@ -76,8 +86,20 @@ public class OrderServiceImpl implements OrderService {
 		);
 		validatePeriodFilter(months, startDate, endDate);
 
-		return orderRepository.findMyOrders(memberId, months, startDate, endDate).stream()
-			.map(OrderListResponse::from)
+		List<OrderEntity> orders = orderRepository.findMyOrders(memberId, months, startDate, endDate);
+
+		List<UUID> stadiumIds = orders.stream()
+			.map(order -> order.getGameSchedule().getStadiumId())
+			.distinct()
+			.toList();
+
+		Map<UUID, String> stadiumLocations = getStadiumLocationsMap(stadiumIds);
+
+		return orders.stream()
+			.map(order -> toOrderListResponse(
+				order,
+				stadiumLocations.get(order.getGameSchedule().getStadiumId())
+			))
 			.toList();
 	}
 
@@ -154,6 +176,50 @@ public class OrderServiceImpl implements OrderService {
 				ErrorCode.ORDER_HISTORY_PERIOD_INVALID_RANGE
 			);
 		}
+	}
+
+	private OrderListResponse toOrderListResponse(
+		OrderEntity order,
+		String stadiumLocation
+	) {
+		List<OrderItemEntity> orderItems = orderItemService.get(order.getId());
+		List<UUID> orderItemIds = orderItems.stream()
+			.map(OrderItemEntity::getId)
+			.toList();
+
+		Map<UUID, TicketEntity> ticketsByOrderItemId = ticketService.getByOrderItemIds(orderItemIds);
+		List<TicketEntity> tickets = orderItemIds.stream()
+			.map(ticketsByOrderItemId::get)
+			.toList();
+
+		TicketEntity representativeTicket = tickets.getFirst();
+		List<String> seatInfos = tickets.stream()
+			.map(TicketEntity::getSeatInfo)
+			.toList();
+
+		return new OrderListResponse(
+			order.getId(),
+			order.getOrderNumber(),
+			order.getOrderStatus(),
+			order.getTotalQuantity(),
+			order.getTotalAmount(),
+			order.getCreatedAt(),
+			order.getGameSchedule().getId(),
+			order.getGameSchedule().getStadiumId(),
+			representativeTicket.getGameTitle(),
+			representativeTicket.getGameDate(),
+			stadiumLocation,
+			seatInfos
+		);
+	}
+
+	private Map<UUID, String> getStadiumLocationsMap(List<UUID> stadiumIds) {
+		return stadiumClient
+			.getStadiumLocations(stadiumIds).stream()
+			.collect(Collectors.toMap(
+				StadiumLocationResponse::stadiumId,
+				StadiumLocationResponse::stadiumLocation
+			));
 	}
 
 }
