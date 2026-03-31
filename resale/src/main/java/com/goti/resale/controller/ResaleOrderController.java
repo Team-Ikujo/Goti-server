@@ -101,7 +101,8 @@ public class ResaleOrderController {
 		@RequestParam UUID buyerId,
 		@ParameterObject ResaleOrderPeriodFilterRequest request
 	) {
-		return wrap(resaleOrderProcessService.getMyPurchaseOrders(
+		return wrap(
+			resaleOrderProcessService.getMyPurchaseOrders(
 			buyerId,
 			request.months(),
 			request.startDate(),

@@ -111,7 +111,7 @@ public class ResaleOrderProcessService {
 		LocalDate startDate,
 		LocalDate endDate
 	) {
-		return resaleOrderService.getMyPurchaseOrders(buyerId, months, startDate, endDate);
+		return resaleOrderService.getPurchasesByMember(buyerId, months, startDate, endDate);
 	}
 
 	private List<ResaleHoldEntity> validateAndGetHolds(UUID buyerId, List<UUID> holdIds) {

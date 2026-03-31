@@ -10,20 +10,20 @@ import org.springframework.data.repository.query.Param;
 import com.goti.resale.constants.ResaleTransactionStatus;
 import com.goti.resale.domain.entity.resale.ResaleTransactionEntity;
 
-public interface ResaleTransactionRepository extends JpaRepository<ResaleTransactionEntity, UUID> {
+public interface ResaleTransactionRepository extends JpaRepository<ResaleTransactionEntity, UUID>, ResaleTransactionRepositoryCustom {
 
 	List<ResaleTransactionEntity> findAllByResaleOrderId(UUID resaleOrderId);
 
 	@Query("""
-		select transaction
-		from ResaleTransactionEntity transaction
-		join fetch transaction.resaleOrder resaleOrder
-		join fetch transaction.listing listing
-		where resaleOrder.id in :orderIds
-		order by resaleOrder.createdAt desc, transaction.createdAt asc
+		SELECT count(transaction)
+			FROM ResaleTransactionEntity transaction
+		WHERE transaction.buyerId = :buyerId
+			AND transaction.listing.gameId = :gameId
+			AND transaction.transactionStatus = :status
 		""")
-	List<ResaleTransactionEntity> findByOrderIdsWithListing(@Param("orderIds") List<UUID> orderIds);
-
-	int countByBuyerIdAndListing_GameIdAndTransactionStatus(UUID buyerId, UUID gameId, ResaleTransactionStatus status);
-
+	int countTransactions(
+		@Param("buyerId") UUID buyerId,
+		@Param("gameId") UUID gameId,
+		@Param("status") ResaleTransactionStatus status
+	);
 }
