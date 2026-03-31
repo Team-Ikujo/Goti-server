@@ -1,7 +1,9 @@
 package com.goti.ticketing.ticket.service.application;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TicketCreateService {
 	private static final String TICKET_NUMBER_PREFIX = "TKT-";
+	private static final DateTimeFormatter TICKET_NUMBER_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMdd")
+		.withZone(ZoneId.of("Asia/Seoul"));
 	private static final int ORDER_SUFFIX_START_INDEX = 12;
 
 	private final OrderHistoryRepository orderHistoryRepository;
@@ -35,8 +39,7 @@ public class TicketCreateService {
 			.orElseThrow(() -> new CustomException(ErrorCode.ORDER_HISTORY_NOT_FOUND));
 
 		List<OrderItemEntity> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
-		List<TicketResponse> responses = new ArrayList<>();
-		String ticketNumberPrefix = generateTicketNumberPrefix(order.getOrderNumber());
+		String ticketNumberPrefix = generateTicketNumberPrefix(order.getCreatedAt(), order.getOrderNumber());
 
 		return IntStream.range(0, orderItems.size())
 			.mapToObj(index -> createTicket(order, orderHistory, orderItems.get(index), ticketNumberPrefix, index + 1))
@@ -67,9 +70,8 @@ public class TicketCreateService {
 		);
 	}
 
-	private String generateTicketNumberPrefix(String orderNumber) {
-		String orderDate = orderNumber.substring(4, 12);
-		String monthDay = orderDate.substring(4);
+	private String generateTicketNumberPrefix(Instant createdAt, String orderNumber) {
+		String monthDay = TICKET_NUMBER_DATE_FORMATTER.format(createdAt);
 		String orderSuffix = orderNumber.substring(ORDER_SUFFIX_START_INDEX);
 
 		return TICKET_NUMBER_PREFIX + monthDay + orderSuffix;
