@@ -2,6 +2,7 @@ package com.goti.ticketing.ticket.service.application;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,12 +38,9 @@ public class TicketCreateService {
 		List<TicketResponse> responses = new ArrayList<>();
 		String ticketNumberPrefix = generateTicketNumberPrefix(order.getOrderNumber());
 
-		for (int index = 0; index < orderItems.size(); index++) {
-			OrderItemEntity orderItem = orderItems.get(index);
-			responses.add(createTicket(order, orderHistory, orderItem, ticketNumberPrefix, index + 1));
-		}
-
-		return responses;
+		return IntStream.range(0, orderItems.size())
+			.mapToObj(index -> createTicket(order, orderHistory, orderItems.get(index), ticketNumberPrefix, index + 1))
+			.toList();
 	}
 
 	private TicketResponse createTicket(
