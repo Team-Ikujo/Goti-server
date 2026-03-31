@@ -22,7 +22,7 @@ public interface ResaleOrderService {
 
 	ResaleOrderCreateResponse initOrder(UUID buyerId, List<ResaleHoldEntity> holds, UUID gameId);
 
-	List<ResalePurchaseListResponse> getMyPurchaseOrders(
+	List<ResalePurchaseListResponse> getPurchasesByMember(
 		UUID buyerId,
 		Integer months,
 		LocalDate startDate,

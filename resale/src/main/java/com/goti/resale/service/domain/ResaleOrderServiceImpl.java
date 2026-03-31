@@ -139,7 +139,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ResalePurchaseListResponse> getMyPurchaseOrders(
+	public List<ResalePurchaseListResponse> getPurchasesByMember(
 		UUID buyerId,
 		Integer months,
 		LocalDate startDate,
