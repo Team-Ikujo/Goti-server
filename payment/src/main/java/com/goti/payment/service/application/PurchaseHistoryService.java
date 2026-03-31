@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +31,13 @@ public class PurchaseHistoryService {
 	private final ResaleOrderClient resaleOrderClient;
 
 	@Transactional(readOnly = true)
-	public List<PurchaseHistoryResponse> getAll(
+	public Page<PurchaseHistoryResponse> getAll(
 		UUID memberId,
 		PurchaseHistoryType type,
 		Integer months,
 		LocalDate startDate,
-		LocalDate endDate
+		LocalDate endDate,
+		Pageable pageable
 	) {
 		Preconditions.validate(
 			memberId != null,
@@ -58,9 +62,11 @@ public class PurchaseHistoryService {
 			endDate
 		);
 
-		return Stream.concat(normalOrders.stream(), resaleOrders.stream())
+		List<PurchaseHistoryResponse> merged = Stream.concat(normalOrders.stream(), resaleOrders.stream())
 			.sorted(Comparator.comparing(PurchaseHistoryResponse::orderedAt).reversed())
 			.toList();
+
+		return toPage(merged, pageable);
 	}
 
 	private List<PurchaseHistoryResponse> getNormalOrders(
@@ -119,5 +125,15 @@ public class PurchaseHistoryService {
 				order.seatInfos()
 			))
 			.toList();
+	}
+
+	private Page<PurchaseHistoryResponse> toPage(List<PurchaseHistoryResponse> merged, Pageable pageable) {
+		int start = (int) pageable.getOffset();
+		if (start >= merged.size()) {
+			return new PageImpl<>(List.of(), pageable, merged.size());
+		}
+
+		int end = Math.min(start + pageable.getPageSize(), merged.size());
+		return new PageImpl<>(merged.subList(start, end), pageable, merged.size());
 	}
 }

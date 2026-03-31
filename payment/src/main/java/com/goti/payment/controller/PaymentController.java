@@ -3,8 +3,9 @@ package com.goti.payment.controller;
 import static com.goti.global.api.ApiSuccessResponse.*;
 
 import java.util.UUID;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.payment.dto.request.PaymentCancelRequest;
 import com.goti.global.api.ApiSuccessResponse;
+import com.goti.global.api.PageResponse;
 import com.goti.payment.dto.request.PaymentRequest;
 import com.goti.payment.dto.request.PurchaseHistorySearchRequest;
 import com.goti.payment.dto.response.PaymentResponse;
@@ -76,18 +78,21 @@ public class PaymentController {
 		description = "일반 주문 내역 및 리셀 구매 내역 통합 조회 API"
 	)
 	@GetMapping("/purchases")
-	public ResponseEntity<ApiSuccessResponse<List<PurchaseHistoryResponse>>> getPurchases(
+	public ResponseEntity<ApiSuccessResponse<PageResponse<PurchaseHistoryResponse>>> getPurchases(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
-		@ParameterObject PurchaseHistorySearchRequest request
+		@ParameterObject PurchaseHistorySearchRequest request,
+		Pageable pageable
 	) {
-		return wrap(
+		return page(
 			purchaseHistoryService.getAll(
-			memberId,
-			request.type(),
-			request.months(),
-			request.startDate(),
-			request.endDate()
-		));
+				memberId,
+				request.type(),
+				request.months(),
+				request.startDate(),
+				request.endDate(),
+				pageable
+			)
+		);
 	}
 
 
