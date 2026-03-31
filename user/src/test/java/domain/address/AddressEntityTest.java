@@ -5,8 +5,6 @@ import com.goti.exception.FieldValidationException;
 import com.goti.user.domain.entity.user.AddressEntity;
 import com.goti.user.domain.entity.user.MemberEntity;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +16,6 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @ActiveProfiles("test")
 public class AddressEntityTest {
 	MemberEntity member;
@@ -47,9 +44,6 @@ public class AddressEntityTest {
 		assertEquals("서울특별시 강남구 학동로 343", address.getBaseAddress());
 		assertEquals("(논현동, 포바강남타워) 4층, 15층", address.getDetailAddress());
 		assertEquals(member, address.getMember());
-		log.info("address zipCode : {}", address.getZipCode());
-		log.info("address baseAddress : {}", address.getBaseAddress());
-		log.info("address detailAddress : {}", address.getDetailAddress());
 	}
 
 	@ParameterizedTest
