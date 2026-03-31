@@ -2,7 +2,7 @@ package com.goti.user.controller;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.user.dto.request.AccountCreateRequest;
-import com.goti.user.dto.response.AccountCreateResponse;
+import com.goti.user.dto.response.AccountRegisterResponse;
 import com.goti.user.service.auth.application.member.MemberProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public class MemberController {
 		description = "회원 계좌 등록 API"
 	)
 	@PostMapping("/accounts")
-	public ResponseEntity<ApiSuccessResponse<AccountCreateResponse>> registerAccount(
+	public ResponseEntity<ApiSuccessResponse<AccountRegisterResponse>> registerAccount(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@RequestBody @Valid AccountCreateRequest request
 	) {

@@ -1,7 +1,7 @@
 package com.goti.user.service.auth.application.member;
 
 import com.goti.user.domain.entity.user.MemberEntity;
-import com.goti.user.dto.response.AccountCreateResponse;
+import com.goti.user.dto.response.AccountRegisterResponse;
 import com.goti.user.service.domain.account.AccountService;
 import com.goti.user.service.domain.user.MemberService;
 
@@ -19,7 +19,7 @@ public class MemberProfileService {
 	private final AccountService accountService;
 
 	@Transactional
-	public AccountCreateResponse registerAccount(
+	public AccountRegisterResponse registerAccount(
 		String accountNumber, String bankName, String accountHolder, UUID memberId
 	) {
 		MemberEntity member = memberService.getMember(memberId);
