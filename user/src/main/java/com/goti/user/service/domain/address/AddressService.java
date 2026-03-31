@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AddressService {
 
-	AddressCreateResponse create(
+	AddressCreateResponse register(
 		String zipCode, String baseAddress, String detailAddress, MemberEntity member
 	);
 

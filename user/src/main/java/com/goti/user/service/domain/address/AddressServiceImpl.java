@@ -21,7 +21,7 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	@Transactional
-	public AddressCreateResponse create(
+	public AddressCreateResponse register(
 		String zipCode, String baseAddress, String detailAddress, MemberEntity member
 	) {
 		AddressEntity address = findAddress(member).map(
