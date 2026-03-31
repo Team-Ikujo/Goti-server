@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.goti.payment.dto.response.ResalePurchaseListItemResponse;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -44,5 +46,17 @@ public class ResaleOrderApiClient extends BaseRestClient implements ResaleOrderC
 	public void completeSettlement(UUID orderId) {
 		String uri = RESALE_ORDER_API + PATH_SEPARATOR + orderId + "/settled";
 		patchVoid(uri, null);
+	}
+
+	@Override
+	public List<ResalePurchaseListItemResponse> getPurchases(UUID buyerId) {
+		List<ResalePurchaseListItemResponse> response = getGotiResponse(
+			RESALE_ORDER_API + "/purchases",
+			null,
+			Map.of("buyerId", buyerId),
+			new ParameterizedTypeReference<>() {
+			}
+		);
+		return response != null ? response : List.of();
 	}
 }

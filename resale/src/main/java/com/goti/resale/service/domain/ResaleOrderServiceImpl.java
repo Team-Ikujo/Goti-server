@@ -170,7 +170,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			.map(ResaleOrderEntity::getId)
 			.toList();
 
-		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findByOrderIdsWithListing(orderIds);
+		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findAllWithListingByResaleOrderIds(orderIds);
 		Map<UUID, List<ResaleTransactionEntity>> transactionsByOrderId = transactions.stream()
 			.collect(Collectors.groupingBy(
 				transaction -> transaction.getResaleOrder().getId(),
