@@ -64,7 +64,7 @@ public class StadiumSeatController {
 		@PathVariable UUID gameId,
 		@RequestParam(defaultValue = "false") boolean forceNewSession
 	) {
-		return wrap(seatGradeService.get(gameId, userId, forceNewSession));
+		return wrap(seatGradeService.findSeatGrades(gameId, userId, forceNewSession));
 	}
 
 	@Operation(

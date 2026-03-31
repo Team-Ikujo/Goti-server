@@ -48,7 +48,7 @@ public class SeatGradeServiceImpl implements SeatGradeService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public SeatGradeSearchResultResponse get(UUID gameId, UUID userId, boolean forceNewSession) {
+	public SeatGradeSearchResultResponse findSeatGrades(UUID gameId, UUID userId, boolean forceNewSession) {
 		Preconditions.validate(
 			userId != null,
 			ErrorCode.AUTH_INVALID

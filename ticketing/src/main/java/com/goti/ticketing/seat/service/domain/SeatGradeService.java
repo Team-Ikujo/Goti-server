@@ -8,5 +8,5 @@ import com.goti.ticketing.seat.dto.response.SeatGradeSearchResultResponse;
 public interface SeatGradeService {
 	SeatGradeRegisterResponse create(UUID stadiumId, String name, String displayColorHex);
 
-	SeatGradeSearchResultResponse get(UUID stadiumId, UUID gameId, UUID userId, boolean forceNewSession);
+	SeatGradeSearchResultResponse findSeatGrades(UUID gameId, UUID userId, boolean forceNewSession);
 }
