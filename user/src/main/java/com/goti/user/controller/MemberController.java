@@ -30,8 +30,8 @@ public class MemberController {
 	private final MemberProfileService memberProfileService;
 
 	@Operation(
-		summary = "계좌 생성",
-		description = "회원 계좌 생성 API"
+		summary = "계좌 등록",
+		description = "회원 계좌 등록 API"
 	)
 	@PostMapping("/accounts")
 	public ResponseEntity<ApiSuccessResponse<AccountCreateResponse>> registerAccount(
