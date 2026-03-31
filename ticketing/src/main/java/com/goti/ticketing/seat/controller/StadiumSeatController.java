@@ -5,8 +5,6 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.ticketing.seat.dto.response.SeatGradeRegisterResponse;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.ticketing.seat.dto.request.CreateSeatGradeRequest;
 import com.goti.ticketing.seat.dto.request.CreateSeatSectionRequest;
-import com.goti.ticketing.seat.dto.response.SeatGradeSearchResponse;
+import com.goti.ticketing.seat.dto.response.SeatGradeRegisterResponse;
 import com.goti.ticketing.seat.dto.response.SeatGradeSearchResultResponse;
 import com.goti.ticketing.seat.dto.response.SeatSectionResponse;
 import com.goti.ticketing.seat.service.domain.SeatGradeService;
@@ -63,9 +61,10 @@ public class StadiumSeatController {
 	@GetMapping("/games/{gameId}/seat-grades")
 	public ResponseEntity<ApiSuccessResponse<SeatGradeSearchResultResponse>> getSeatGrades(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
-		@PathVariable UUID gameId
+		@PathVariable UUID gameId,
+		@RequestParam(defaultValue = "false") boolean forceNewSession
 	) {
-		return wrap(seatGradeService.get(gameId, userId));
+		return wrap(seatGradeService.get(gameId, userId, forceNewSession));
 	}
 
 	@Operation(

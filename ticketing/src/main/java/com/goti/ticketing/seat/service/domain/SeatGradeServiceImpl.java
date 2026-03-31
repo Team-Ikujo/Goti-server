@@ -48,14 +48,14 @@ public class SeatGradeServiceImpl implements SeatGradeService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public SeatGradeSearchResultResponse get(UUID gameId, UUID userId) {
+	public SeatGradeSearchResultResponse get(UUID gameId, UUID userId, boolean forceNewSession) {
 		Preconditions.validate(
 			userId != null,
 			ErrorCode.AUTH_INVALID
 		);
 
 		GameScheduleEntity gameSchedule = gameScheduleService.get(gameId);
-		ReservationSessionCache reservationSession = reservationSessionService.getOrCreate(userId, gameId);
+		ReservationSessionCache reservationSession = reservationSessionService.getOrCreate(userId, gameId, forceNewSession);
 
 		List<SeatGradeEntity> seatGrades = seatGradeRepository.findAllByStadiumId(gameSchedule.getStadiumId());
 		List<UUID> seatGradeIds = seatGrades.stream()
