@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface AddressService {
 
 	AddressRegisterResponse register(
-		String zipCode, String baseAddress, String detailAddress, MemberEntity member
+		MemberEntity member, String zipCode, String baseAddress, String detailAddress
 	);
 
 	Optional<AddressEntity> findAddress(MemberEntity member);

@@ -33,11 +33,11 @@ public class MemberProfileService {
 
 	@Transactional
 	public AddressRegisterResponse registerAddress(
-		String zipCode, String baseAddress, String detailAddress, UUID memberId
+		UUID memberId, String zipCode, String baseAddress, String detailAddress
 	) {
 		MemberEntity member = memberService.getMember(memberId);
 		return addressService.register(
-			zipCode, baseAddress, detailAddress, member
+			member, zipCode, baseAddress, detailAddress
 		);
 	}
 

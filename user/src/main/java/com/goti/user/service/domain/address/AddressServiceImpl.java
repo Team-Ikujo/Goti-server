@@ -22,7 +22,7 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	@Transactional
 	public AddressRegisterResponse register(
-		String zipCode, String baseAddress, String detailAddress, MemberEntity member
+		MemberEntity member, String zipCode, String baseAddress, String detailAddress
 	) {
 		AddressEntity address = findAddress(member).map(
 			entity -> {

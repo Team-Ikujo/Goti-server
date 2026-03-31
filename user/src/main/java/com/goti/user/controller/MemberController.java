@@ -54,17 +54,17 @@ public class MemberController {
 		summary = "주소 등록",
 		description = "회원 주소 등록 API"
 	)
-	@PostMapping("/address")
+	@PostMapping("/addresses")
 	public ResponseEntity<ApiSuccessResponse<AddressRegisterResponse>> registerAddress(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@RequestBody @Valid AddressRegisterRequest request
 	) {
 		return wrap(
 			memberProfileService.registerAddress(
+				memberId,
 				request.zipCode(),
 				request.baseAddress(),
-				request.detailAddress(),
-				memberId
+				request.detailAddress()
 			)
 		);
 	}
