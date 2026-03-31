@@ -1,7 +1,7 @@
 package com.goti.user.controller;
 
 import com.goti.global.api.ApiSuccessResponse;
-import com.goti.user.dto.request.AccountCreateRequest;
+import com.goti.user.dto.request.AccountRegisterRequest;
 import com.goti.user.dto.response.AccountRegisterResponse;
 import com.goti.user.service.auth.application.member.MemberProfileService;
 
@@ -36,7 +36,7 @@ public class MemberController {
 	@PostMapping("/accounts")
 	public ResponseEntity<ApiSuccessResponse<AccountRegisterResponse>> registerAccount(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
-		@RequestBody @Valid AccountCreateRequest request
+		@RequestBody @Valid AccountRegisterRequest request
 	) {
 		return wrap(
 			memberProfileService.registerAccount(

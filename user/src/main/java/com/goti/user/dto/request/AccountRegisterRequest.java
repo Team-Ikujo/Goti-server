@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 @Schema(description = "계좌 생성 요청")
-public record AccountCreateRequest(
+public record AccountRegisterRequest(
 
 	@Schema(description = "계좌 번호", example = "1002-876-543219")
 	@NotBlank(message = "계좌 번호는 필수 항목입니다.")
