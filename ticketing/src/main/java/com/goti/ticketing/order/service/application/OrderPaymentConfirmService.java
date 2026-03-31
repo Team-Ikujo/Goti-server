@@ -65,7 +65,7 @@ public class OrderPaymentConfirmService {
 
 		List<OrderItemEntity> orderItems = orderItemRepository.findOrderItemsByOrderId(orderId);
 		for (OrderItemEntity orderItem : orderItems) {
-			SeatHoldEntity seatHold = validateActiveHold(order, orderItem);
+			SeatHoldEntity seatHold = getActiveHoldOrThrow(order, orderItem);
 
 			SeatStatusEntity seatStatus = seatStatusRepository.findByGameAndSeat(
 				order.getGameSchedule(), orderItem.getSeat()
@@ -95,7 +95,7 @@ public class OrderPaymentConfirmService {
 		);
 	}
 
-	private SeatHoldEntity validateActiveHold(OrderEntity order, OrderItemEntity orderItem) {
+	private SeatHoldEntity getActiveHoldOrThrow(OrderEntity order, OrderItemEntity orderItem) {
 		return seatHoldRepository
 			.findLatestActiveHold(
 				order.getGameSchedule(),
