@@ -22,7 +22,7 @@ public interface ResaleTransactionRepository extends JpaRepository<ResaleTransac
 		where resaleOrder.id in :orderIds
 		order by resaleOrder.createdAt desc, transaction.createdAt asc
 		""")
-	List<ResaleTransactionEntity> findAllWithListingByResaleOrderIds(@Param("orderIds") List<UUID> orderIds);
+	List<ResaleTransactionEntity> findByOrderIdsWithListing(@Param("orderIds") List<UUID> orderIds);
 
 	int countByBuyerIdAndListing_GameIdAndTransactionStatus(UUID buyerId, UUID gameId, ResaleTransactionStatus status);
 
