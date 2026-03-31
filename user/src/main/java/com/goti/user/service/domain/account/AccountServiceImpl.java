@@ -18,7 +18,7 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional
-	public AccountCreateResponse create(
+	public AccountCreateResponse register(
 		String accountNumber, String bankName, String accountHolder, MemberEntity member
 	) {
 		AccountEntity account = accountRepository.findByMember(member)

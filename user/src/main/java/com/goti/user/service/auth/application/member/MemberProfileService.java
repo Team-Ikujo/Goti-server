@@ -19,11 +19,11 @@ public class MemberProfileService {
 	private final AccountService accountService;
 
 	@Transactional
-	public AccountCreateResponse createAccount(
+	public AccountCreateResponse registerAccount(
 		String accountNumber, String bankName, String accountHolder, UUID memberId
 	) {
 		MemberEntity member = memberService.getMember(memberId);
-		return accountService.create(
+		return accountService.register(
 			accountNumber, bankName, accountHolder, member
 		);
 	}

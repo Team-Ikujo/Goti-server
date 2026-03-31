@@ -5,6 +5,7 @@ import com.goti.user.dto.request.AccountCreateRequest;
 import com.goti.user.dto.response.AccountCreateResponse;
 import com.goti.user.service.auth.application.member.MemberProfileService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,17 @@ public class MemberController {
 
 	private final MemberProfileService memberProfileService;
 
+	@Operation(
+		summary = "계좌 생성",
+		description = "회원 계좌 생성 API"
+	)
 	@PostMapping("/accounts")
-	public ResponseEntity<ApiSuccessResponse<AccountCreateResponse>> createAccount(
+	public ResponseEntity<ApiSuccessResponse<AccountCreateResponse>> registerAccount(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@RequestBody @Valid AccountCreateRequest request
 	) {
 		return wrap(
-			memberProfileService.createAccount(
+			memberProfileService.registerAccount(
 				request.accountNumber(),
 				request.bankName(),
 				request.accountHolder(),

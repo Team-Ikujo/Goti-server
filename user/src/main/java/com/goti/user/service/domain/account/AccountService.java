@@ -5,7 +5,7 @@ import com.goti.user.dto.response.AccountCreateResponse;
 
 public interface AccountService {
 
-	AccountCreateResponse create(
+	AccountCreateResponse register(
 		String accountNumber, String bankName, String accountHolder, MemberEntity member
 	);
 }
