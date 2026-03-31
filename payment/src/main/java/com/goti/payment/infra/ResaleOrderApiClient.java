@@ -23,7 +23,7 @@ public class ResaleOrderApiClient extends BaseRestClient implements ResaleOrderC
 
 	@Override
 	public void completeOrder(UUID orderId, UUID paymentId) {
-		String uri = RESALE_ORDER_API + PATH_SEPARATOR + orderId + "/complete";
+		String uri = RESALE_ORDER_API + PATH_SEPARATOR + orderId + PATH_SEPARATOR + "complete";
 		patchVoid(uri, Map.of("paymentId", paymentId));
 	}
 
