@@ -32,20 +32,12 @@ public class SocialProviderServiceImpl implements SocialProviderService {
 	}
 
 	@Override
-	public Optional<SocialProviderEntity> findSocialProvider(
-		String providerId, OAuthProvider provider
-	) {
-		return socialProviderRepository.findSocialProvider(
-			providerId, provider
-		);
+	public Optional<SocialProviderEntity> findSocialProvider(String providerId) {
+		return socialProviderRepository.findByProviderId(providerId);
 	}
 
 	@Override
-	public SocialProviderEntity getSocialProvider(
-		String providerId, OAuthProvider provider
-	) {
-		return socialProviderRepository.findSocialProviderOrThrow(
-			providerId, provider
-		);
+	public SocialProviderEntity getSocialProvider(String providerId) {
+		return socialProviderRepository.findSocialProviderOrThrow(providerId);
 	}
 }

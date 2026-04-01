@@ -68,9 +68,8 @@ public class SocialAuthService {
 		SocialUserInfoResponse socialUserInfo = apiClient.getSocialUserInfo(socialAccessToken);
 		String email = socialUserInfo.email();
 		String providerId = socialUserInfo.providerId();
-		boolean isRegistered = socialProviderService.findSocialProvider(
-			providerId, provider
-		).isPresent();
+		boolean isRegistered =
+			socialProviderService.findSocialProvider(providerId).isPresent();
 
 		String socialVerifyToken = jwtTokenProvider.createSocialVerifyToken(
 			provider, providerId, email
@@ -81,9 +80,8 @@ public class SocialAuthService {
 	@Transactional
 	public Pair<String, String> login(String socialVerifyToken) {
 		SocialInfo verifiedSocialInfo = getSocialInfo(socialVerifyToken);
-		SocialProviderEntity socialProvider = socialProviderService.getSocialProvider(
-			verifiedSocialInfo.providerId(), verifiedSocialInfo.provider()
-		);
+		SocialProviderEntity socialProvider =
+			socialProviderService.getSocialProvider(verifiedSocialInfo.providerId());
 		MemberEntity member = socialProvider.getMember();
 		return authService.issueTokens(member, verifiedSocialInfo.providerId());
 	}
@@ -165,8 +163,7 @@ public class SocialAuthService {
 		MemberEntity member, SocialInfo socialInfo
 	) {
 		socialProviderService.findSocialProvider(
-			socialInfo.providerId(),
-			socialInfo.provider
+			socialInfo.providerId()
 		).ifPresentOrElse(
 			existingProvider -> {
 				if (!existingProvider.getMember().getId().equals(member.getId())) {
