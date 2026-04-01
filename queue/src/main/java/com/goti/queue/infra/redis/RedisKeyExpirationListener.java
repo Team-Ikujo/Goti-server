@@ -25,6 +25,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 		ApplicationEventPublisher eventPublisher,
 		com.goti.queue.repository.WaitingQueueRepository waitingQueueRepository, RedisKeyProvider keyProvider) {
 		super(listenerContainer);
+		// ElastiCache는 CONFIG 명령을 차단하므로 init() 시 CONFIG GET 호출을 skip
+		// notify-keyspace-events는 ElastiCache 파라미터 그룹에서 직접 설정
+		setKeyspaceNotificationsConfigParameter("");
 		this.eventPublisher = eventPublisher;
 		this.waitingQueueRepository = waitingQueueRepository;
 		this.keyProvider = keyProvider;
