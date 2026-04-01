@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @ParameterObject
 @Schema(description = "구매 내역 통합 조회 요청")
-public record PurchaseHistorySearchRequest(
+public record PurchaseSearchRequest(
 	@Schema(description = "구매 내역 조회 타입", example = "ALL")
     PurchaseSearchType type,
 

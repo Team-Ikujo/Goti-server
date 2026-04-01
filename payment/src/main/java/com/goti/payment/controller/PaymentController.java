@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.payment.dto.request.PaymentCancelRequest;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.payment.dto.request.PaymentRequest;
-import com.goti.payment.dto.request.PurchaseHistorySearchRequest;
+import com.goti.payment.dto.request.PurchaseSearchRequest;
 import com.goti.payment.dto.response.PaymentResponse;
 import com.goti.payment.dto.response.PurchaseSearchResponse;
 import com.goti.payment.service.application.OrderPaymentService;
@@ -78,7 +78,7 @@ public class PaymentController {
 	@GetMapping("/purchases")
 	public ResponseEntity<ApiSuccessResponse<List<PurchaseSearchResponse>>> getPurchases(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
-		@ParameterObject PurchaseHistorySearchRequest request
+		@ParameterObject PurchaseSearchRequest request
 	) {
 		return wrap(
 			purchaseSearchService.getAll(
