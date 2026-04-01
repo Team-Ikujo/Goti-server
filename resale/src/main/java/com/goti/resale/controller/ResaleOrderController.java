@@ -97,7 +97,7 @@ public class ResaleOrderController {
 		description = "payment 모듈에서 리셀 구매 내역 목록 조회 API"
 	)
 	@GetMapping("/orders/purchases")
-	public ResponseEntity<ApiSuccessResponse<List<ResalePurchaseListResponse>>> getMyPurchaseOrders(
+	public ResponseEntity<ApiSuccessResponse<List<ResalePurchaseListResponse>>> getPurchasesByMember(
 		@RequestParam UUID buyerId,
 		@ParameterObject ResaleOrderPeriodFilterRequest request
 	) {
