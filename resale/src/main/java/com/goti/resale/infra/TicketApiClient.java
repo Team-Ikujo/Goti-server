@@ -6,20 +6,18 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.goti.resale.dto.response.ResaleTicketResponse;
-
-import com.goti.resale.infra.dto.TicketGameInfo;
-
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import com.goti.constants.messages.ErrorCode;
 import com.goti.config.properties.ApiEndpointProperties;
+import com.goti.constants.messages.ErrorCode;
 import com.goti.exception.CustomException;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.infra.api.base.BaseRestClient;
+import com.goti.resale.dto.response.ResaleTicketResponse;
 import com.goti.resale.infra.dto.ResaleTicketPurchaseInfo;
+import com.goti.resale.infra.dto.TicketGameInfo;
 
 @Component
 public class TicketApiClient extends BaseRestClient implements TicketClient {

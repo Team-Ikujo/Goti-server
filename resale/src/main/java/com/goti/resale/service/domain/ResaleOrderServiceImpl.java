@@ -47,7 +47,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 	private final ResaleOrderRepository resaleOrderRepository;
 	private final ResaleTransactionRepository resaleTransactionRepository;
-	private final ResaleRestrictionService restrictionDomainService;
+	private final ResaleRestrictionService restrictionService;
 	private final ResaleRestrictionHandler resaleRestrictionHandler;
 	private final ResalePricePolicy resalePricePolicy;
 	private final TicketClient ticketClient;
@@ -101,7 +101,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 		validatePossessionLimit(ownedCount, pendingCount, holds.size());
 
-		ResaleRestrictionEntity restriction = restrictionDomainService.getOrCreateRestriction(buyerId);
+		ResaleRestrictionEntity restriction = restrictionService.getOrCreateRestriction(buyerId);
 		List<TransactionItemVO> itemVOs = calculateOrderItems(buyerId, holds, restriction);
 
 		int totalBuyerAmount = itemVOs.stream()
@@ -170,7 +170,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			.map(ResaleOrderEntity::getId)
 			.toList();
 
-		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findAllWithListingByResaleOrderIds(orderIds);
+		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findListings(orderIds);
 		Map<UUID, List<ResaleTransactionEntity>> transactionsByOrderId = transactions.stream()
 			.collect(Collectors.groupingBy(
 				transaction -> transaction.getResaleOrder().getId(),

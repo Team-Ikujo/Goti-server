@@ -6,5 +6,5 @@ import java.util.UUID;
 import com.goti.resale.domain.entity.resale.ResaleTransactionEntity;
 
 public interface ResaleTransactionRepositoryCustom {
-	List<ResaleTransactionEntity> findAllWithListingByResaleOrderIds(List<UUID> orderIds);
+	List<ResaleTransactionEntity> findListings(List<UUID> orderIds);
 }

@@ -19,7 +19,7 @@ public class ResaleTransactionRepositoryImpl implements ResaleTransactionReposit
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<ResaleTransactionEntity> findAllWithListingByResaleOrderIds(List<UUID> orderIds) {
+	public List<ResaleTransactionEntity> findListings(List<UUID> orderIds) {
 		QResaleTransactionEntity transaction = QResaleTransactionEntity.resaleTransactionEntity;
 		QResaleOrderEntity resaleOrder = QResaleOrderEntity.resaleOrderEntity;
 		QResaleListingEntity listing = QResaleListingEntity.resaleListingEntity;
