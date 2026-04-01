@@ -88,6 +88,7 @@ public class WaitingQueueEventListener {
 
 				Long waitingSize = waitingQueueRepository.getWaitingSize(gameId);
 				meterRegistry.gauge("queue.waiting.size", Tags.of("gameId", gameId.toString()), waitingSize);
+				meterRegistry.gauge("queue.max.entry", Tags.of("gameId", gameId.toString()), maxCapacity);
 				log.info("action=SLOT_PROCESSED gameId={} activeCount={} waitingCount={} availableSlots={}",
 					gameId, currentUsers, waitingSize, availableSlots);
 				return null;
