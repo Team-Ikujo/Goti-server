@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
@@ -116,16 +117,25 @@ public class QueueScheduler {
 	private void promoteToPassed(UUID gameId, String memberIdStr) {
 		String pendingKey = RedisKey.QUEUE_PENDING.getKey(gameId);
 		String passedKey = RedisKey.QUEUE_PASSED.getKey(gameId, memberIdStr);
-		String token = UUID.randomUUID().toString();
 
+		// wait duration 계산 (score = 진입 시 System.currentTimeMillis())
+		Double enteredAt = redisCache.zScore(pendingKey, memberIdStr);
+		long waitMs = 0;
+		if (enteredAt != null) {
+			waitMs = System.currentTimeMillis() - enteredAt.longValue();
+			meterRegistry.timer("queue.wait.duration", "match_id", gameId.toString())
+				.record(waitMs, TimeUnit.MILLISECONDS);
+		}
+
+		String token = UUID.randomUUID().toString();
 		redisCache.zRemove(pendingKey, memberIdStr);
 		redisCache.set(passedKey, token, RedisKey.QUEUE_PASSED.getTtl());
 		redisCache.incrementActiveCount(gameId);
 
 		// 승격 로그 및 메트릭
 		log.info(
-			"action=ADMIT gameId={} userId={}",
-			gameId, memberIdStr
+			"action=ADMIT gameId={} userId={} waitDurationMs={}",
+			gameId, memberIdStr, waitMs
 		);
 		meterRegistry.counter(
 			"queue.admit.total", "match_id", gameId.toString()
