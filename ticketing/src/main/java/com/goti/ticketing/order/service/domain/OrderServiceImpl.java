@@ -197,15 +197,8 @@ public class OrderServiceImpl implements OrderService {
 			.map(TicketEntity::getSeatInfo)
 			.toList();
 
-		return new OrderListResponse(
-			order.getId(),
-			order.getOrderNumber(),
-			order.getOrderStatus(),
-			order.getTotalQuantity(),
-			order.getTotalAmount(),
-			order.getCreatedAt(),
-			order.getGameSchedule().getId(),
-			order.getGameSchedule().getStadiumId(),
+		return OrderListResponse.of(
+			order,
 			representativeTicket.getGameTitle(),
 			representativeTicket.getGameDate(),
 			stadiumLocation,

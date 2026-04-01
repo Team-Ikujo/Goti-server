@@ -40,7 +40,13 @@ public record OrderListResponse(
 	@Schema(description = "좌석 정보 목록", example = "[\"1루 K8석(3)\", \"109구역 1열 8번\"]")
 	List<String> seatInfos
 ) {
-	public static OrderListResponse from(OrderEntity order) {
+	public static OrderListResponse of(
+		OrderEntity order,
+		String gameTitle,
+		LocalDateTime gameDate,
+		String stadiumLocation,
+		List<String> seatInfos
+	) {
 		return new OrderListResponse(
 			order.getId(),
 			order.getOrderNumber(),
@@ -50,10 +56,10 @@ public record OrderListResponse(
 			order.getCreatedAt(),
 			order.getGameSchedule().getId(),
 			order.getGameSchedule().getStadiumId(),
-			null,
-			null,
-			null,
-			List.of()
+			gameTitle,
+			gameDate,
+			stadiumLocation,
+			seatInfos
 		);
 	}
 }
