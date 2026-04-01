@@ -92,6 +92,11 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<TicketPurchaseInfoResponse> getPurchaseInfos(List<UUID> ticketIds) {
+		Preconditions.validate(
+			ticketIds != null && !ticketIds.isEmpty(),
+			ErrorCode.TICKET_IDS_REQUIRED
+		);
+
 		return ticketRepository.findAllByIdIn(ticketIds).stream()
 			.map(TicketPurchaseInfoResponse::from)
 			.toList();
