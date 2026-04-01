@@ -170,6 +170,48 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			.map(ResaleOrderEntity::getId)
 			.toList();
 
+		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findListings(orderIds);
+		Map<UUID, List<ResaleTransactionEntity>> transactionsByOrderId = transactions.stream()
+			.collect(Collectors.groupingBy(
+				transaction -> transaction.getResaleOrder().getId(),
+				LinkedHashMap::new,
+				Collectors.toList()
+			));
+
+		return orders.stream()
+			.map(order -> toPurchaseListResponse(order, transactionsByOrderId.getOrDefault(order.getId(), List.of())))
+			.toList();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ResalePurchaseListResponse> getPurchasesByMember(
+		UUID buyerId,
+		Integer months,
+		LocalDate startDate,
+		LocalDate endDate
+	) {
+		Preconditions.validate(
+			buyerId != null,
+			ErrorCode.AUTH_INVALID
+		);
+		validatePeriodFilter(months, startDate, endDate);
+
+		List<ResaleOrderEntity> orders = resaleOrderRepository.findCompletedPurchaseOrders(
+			buyerId,
+			months,
+			startDate,
+			endDate
+		);
+
+		if (orders.isEmpty()) {
+			return List.of();
+		}
+
+		List<UUID> orderIds = orders.stream()
+			.map(ResaleOrderEntity::getId)
+			.toList();
+
 		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findAllWithListingByResaleOrderIds(orderIds);
 		Map<UUID, List<ResaleTransactionEntity>> transactionsByOrderId = transactions.stream()
 			.collect(Collectors.groupingBy(
