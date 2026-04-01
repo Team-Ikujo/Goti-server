@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.goti.constants.messages.ErrorCode;
 import com.goti.global.validation.Preconditions;
@@ -34,6 +35,7 @@ public class PurchaseHistoryService {
 	public Page<PurchaseHistoryResponse> getAll(
 		UUID memberId,
 		PurchaseHistoryType type,
+		String keyword,
 		Integer months,
 		LocalDate startDate,
 		LocalDate endDate,
@@ -63,6 +65,7 @@ public class PurchaseHistoryService {
 		);
 
 		List<PurchaseHistoryResponse> merged = Stream.concat(normalOrders.stream(), resaleOrders.stream())
+			.filter(order -> matchesKeyword(order, keyword))
 			.sorted(Comparator.comparing(PurchaseHistoryResponse::orderedAt).reversed())
 			.toList();
 
@@ -135,5 +138,21 @@ public class PurchaseHistoryService {
 
 		int end = Math.min(start + pageable.getPageSize(), merged.size());
 		return new PageImpl<>(merged.subList(start, end), pageable, merged.size());
+	}
+
+	private boolean matchesKeyword(PurchaseHistoryResponse order, String keyword) {
+		if (!StringUtils.hasText(keyword)) {
+			return true;
+		}
+
+		String normalizedKeyword = keyword.trim().toLowerCase();
+
+		return contains(order.orderNumber(), normalizedKeyword)
+			|| contains(order.gameTitle(), normalizedKeyword)
+			|| order.seatInfos().stream().anyMatch(seatInfo -> contains(seatInfo, normalizedKeyword));
+	}
+
+	private boolean contains(String value, String keyword) {
+		return value != null && value.toLowerCase().contains(keyword);
 	}
 }

@@ -87,6 +87,7 @@ public class PaymentController {
 			purchaseHistoryService.getAll(
 				memberId,
 				request.type(),
+				request.keyword(),
 				request.months(),
 				request.startDate(),
 				request.endDate(),
