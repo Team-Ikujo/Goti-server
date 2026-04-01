@@ -19,9 +19,9 @@ import com.goti.global.api.ApiSuccessResponse;
 import com.goti.payment.dto.request.PaymentRequest;
 import com.goti.payment.dto.request.PurchaseHistorySearchRequest;
 import com.goti.payment.dto.response.PaymentResponse;
-import com.goti.payment.dto.response.PurchaseHistoryResponse;
+import com.goti.payment.dto.response.PurchaseSearchResponse;
 import com.goti.payment.service.application.OrderPaymentService;
-import com.goti.payment.service.application.PurchaseHistoryService;
+import com.goti.payment.service.application.PurchaseSearchService;
 import com.goti.payment.service.domain.PaymentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +36,7 @@ import org.springdoc.core.annotations.ParameterObject;
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
 	private final OrderPaymentService orderPaymentService;
-	private final PurchaseHistoryService purchaseHistoryService;
+	private final PurchaseSearchService purchaseSearchService;
 	private final PaymentService paymentService;
 
 	@Operation(
@@ -76,12 +76,12 @@ public class PaymentController {
 		description = "일반 주문 내역 및 리셀 구매 내역 통합 조회 API"
 	)
 	@GetMapping("/purchases")
-	public ResponseEntity<ApiSuccessResponse<List<PurchaseHistoryResponse>>> getPurchases(
+	public ResponseEntity<ApiSuccessResponse<List<PurchaseSearchResponse>>> getPurchases(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@ParameterObject PurchaseHistorySearchRequest request
 	) {
 		return wrap(
-			purchaseHistoryService.getAll(
+			purchaseSearchService.getAll(
 			memberId,
 			request.type(),
 			request.months(),

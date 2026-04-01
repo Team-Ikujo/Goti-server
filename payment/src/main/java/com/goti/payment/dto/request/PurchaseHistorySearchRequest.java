@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.springdoc.core.annotations.ParameterObject;
 
-import com.goti.payment.dto.request.enums.PurchaseHistoryType;
+import com.goti.payment.dto.request.enums.PurchaseSearchType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "구매 내역 통합 조회 요청")
 public record PurchaseHistorySearchRequest(
 	@Schema(description = "구매 내역 조회 타입", example = "ALL")
-	PurchaseHistoryType type,
+    PurchaseSearchType type,
 
 	@Schema(description = "기간 조회 (개월)", example = "3")
 	Integer months,

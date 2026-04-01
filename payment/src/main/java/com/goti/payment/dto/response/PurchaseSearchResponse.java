@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public record PurchaseHistoryResponse(
+public record PurchaseSearchResponse(
 	String purchaseType,
 	UUID orderId,
 	String orderNumber,

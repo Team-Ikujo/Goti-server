@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.goti.constants.messages.ErrorCode;
 import com.goti.global.validation.Preconditions;
-import com.goti.payment.dto.request.enums.PurchaseHistoryType;
-import com.goti.payment.dto.response.PurchaseHistoryResponse;
+import com.goti.payment.dto.request.enums.PurchaseSearchType;
+import com.goti.payment.dto.response.PurchaseSearchResponse;
 import com.goti.payment.infra.ResaleOrderClient;
 import com.goti.payment.infra.TicketingOrderClient;
 
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PurchaseHistoryService {
+public class PurchaseSearchService {
 	private static final String NORMAL = "NORMAL";
 	private static final String RESALE = "RESALE";
 
@@ -28,9 +28,9 @@ public class PurchaseHistoryService {
 	private final ResaleOrderClient resaleOrderClient;
 
 	@Transactional(readOnly = true)
-	public List<PurchaseHistoryResponse> getAll(
+	public List<PurchaseSearchResponse> getAll(
 		UUID memberId,
-		PurchaseHistoryType type,
+		PurchaseSearchType type,
 		Integer months,
 		LocalDate startDate,
 		LocalDate endDate
@@ -40,42 +40,42 @@ public class PurchaseHistoryService {
 			ErrorCode.AUTH_INVALID
 		);
 
-		PurchaseHistoryType purchaseHistoryType = type != null ? type : PurchaseHistoryType.ALL;
+		PurchaseSearchType purchaseSearchType = type != null ? type : PurchaseSearchType.ALL;
 
-		List<PurchaseHistoryResponse> normalOrders = getNormalOrders(
+		List<PurchaseSearchResponse> normalOrders = getNormalOrders(
 			memberId,
-			purchaseHistoryType,
+			purchaseSearchType,
 			months,
 			startDate,
 			endDate
 		);
 
-		List<PurchaseHistoryResponse> resaleOrders = getResaleOrders(
+		List<PurchaseSearchResponse> resaleOrders = getResaleOrders(
 			memberId,
-			purchaseHistoryType,
+			purchaseSearchType,
 			months,
 			startDate,
 			endDate
 		);
 
 		return Stream.concat(normalOrders.stream(), resaleOrders.stream())
-			.sorted(Comparator.comparing(PurchaseHistoryResponse::orderedAt).reversed())
+			.sorted(Comparator.comparing(PurchaseSearchResponse::orderedAt).reversed())
 			.toList();
 	}
 
-	private List<PurchaseHistoryResponse> getNormalOrders(
+	private List<PurchaseSearchResponse> getNormalOrders(
 		UUID memberId,
-		PurchaseHistoryType type,
+		PurchaseSearchType type,
 		Integer months,
 		LocalDate startDate,
 		LocalDate endDate
 	) {
-		if (type == PurchaseHistoryType.RESALE) {
+		if (type == PurchaseSearchType.RESALE) {
 			return List.of();
 		}
 
 		return ticketingOrderClient.getOrders(memberId, months, startDate, endDate).stream()
-			.map(order -> new PurchaseHistoryResponse(
+			.map(order -> new PurchaseSearchResponse(
 				NORMAL,
 				order.orderId(),
 				order.orderNumber(),
@@ -92,19 +92,19 @@ public class PurchaseHistoryService {
 			.toList();
 	}
 
-	private List<PurchaseHistoryResponse> getResaleOrders(
+	private List<PurchaseSearchResponse> getResaleOrders(
 		UUID memberId,
-		PurchaseHistoryType type,
+		PurchaseSearchType type,
 		Integer months,
 		LocalDate startDate,
 		LocalDate endDate
 	) {
-		if (type == PurchaseHistoryType.NORMAL) {
+		if (type == PurchaseSearchType.NORMAL) {
 			return List.of();
 		}
 
 		return resaleOrderClient.getPurchases(memberId, months, startDate, endDate).stream()
-			.map(order -> new PurchaseHistoryResponse(
+			.map(order -> new PurchaseSearchResponse(
 				RESALE,
 				order.orderId(),
 				order.orderNumber(),
