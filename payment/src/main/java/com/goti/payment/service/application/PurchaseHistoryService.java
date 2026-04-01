@@ -91,9 +91,9 @@ public class PurchaseHistoryService {
 				order.orderedAt(),
 				order.gameId(),
 				order.stadiumId(),
-				null,
-				null,
-				List.of()
+				order.gameTitle(),
+				order.gameDate(),
+				order.seatInfos()
 			))
 			.toList();
 	}
