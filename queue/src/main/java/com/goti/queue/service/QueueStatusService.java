@@ -47,6 +47,8 @@ public class QueueStatusService {
 			queueMeta.maxCapacity() - queueMeta.activeCount());
 		meterRegistry.gauge("queue.active.size", Tags.of("gameId", gameId.toString()),
 			queueMeta.activeCount());
+		meterRegistry.gauge("queue.max.entry", Tags.of("gameId", gameId.toString()),
+			queueMeta.maxCapacity());
 		log.debug(
 			"action=STATUS gameId={} waitingCount={} activeCount={} availableSlots={} publishedRank={}",
 			gameId,
