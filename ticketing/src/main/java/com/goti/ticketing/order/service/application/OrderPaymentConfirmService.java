@@ -85,7 +85,7 @@ public class OrderPaymentConfirmService {
 		}
 
 		List<TicketResponse> tickets = ticketCreateService.create(order);
-		updateTicketingStatusIfExhausted(order);
+		processSoldOut(order);
 
 		log.info(
 			"action=PAYMENT_CONFIRM gameId={} userId={} orderId={} ticketCount={}",
@@ -136,13 +136,13 @@ public class OrderPaymentConfirmService {
 		return seatHold;
 	}
 
-	private void updateTicketingStatusIfExhausted(OrderEntity order) {
+	private void processSoldOut(OrderEntity order) {
 
 		GameTicketingStatusEntity ticketingStatus = gameTicketingStatusRepository.findByGameSchedule_Id(
 			order.getGameSchedule().getId()
 		).orElse(null);
 
-		if (ticketingStatus == null || ticketingStatus.getStatus() != TicketingStatus.AVAILABLE) {
+		if (ticketingStatus.isExhausted()) {
 			return;
 		}
 
