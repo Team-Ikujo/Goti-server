@@ -61,7 +61,7 @@ public class AccountServiceTest {
 			member
 		);
 		assertNotNull(response);
-		AccountEntity account = accountRepository.findByMember(member).orElse(null);
+		AccountEntity account = accountRepository.findAccount(member).orElse(null);
 		assertNotNull(account);
 		log.info("AccountRegisterResponse: accountId :: {}", response.accountId());
 		log.info("account: accountId :: {}", account.getId());
