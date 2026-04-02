@@ -19,17 +19,14 @@ import com.goti.ticketing.constants.GameResult;
 import com.goti.ticketing.constants.GameStatus;
 import com.goti.ticketing.constants.OrderCancellationRequestType;
 import com.goti.ticketing.constants.OrderItemStatus;
-import com.goti.ticketing.constants.SeatStatus;
-import com.goti.ticketing.constants.TicketingStatus;
 import com.goti.ticketing.constants.TicketStatus;
 import com.goti.ticketing.infra.api.dto.response.PaymentCancelResponse;
-import com.goti.ticketing.domain.entity.game.GameTicketingStatusEntity;
 import com.goti.ticketing.domain.entity.order.OrderCancellationEntity;
 import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.ticket.TicketEntity;
 import com.goti.ticketing.game.repository.GameStatusRepository;
-import com.goti.ticketing.game.repository.GameTicketingStatusRepository;
+import com.goti.ticketing.game.service.domain.TicketingStatusUpdateService;
 import com.goti.ticketing.infra.api.TicketPaymentApiClient;
 import com.goti.ticketing.order.dto.request.OrderCancelRequest;
 import com.goti.ticketing.order.dto.response.OrderCancelResponse;
@@ -37,7 +34,6 @@ import com.goti.ticketing.order.service.domain.OrderCancellationItemService;
 import com.goti.ticketing.order.service.domain.OrderCancellationRefundPolicy;
 import com.goti.ticketing.order.service.domain.OrderItemService;
 import com.goti.ticketing.order.service.domain.OrderService;
-import com.goti.ticketing.seat.repository.SeatStatusRepository;
 import com.goti.ticketing.seat.service.domain.SeatStatusService;
 import com.goti.ticketing.ticket.service.domain.TicketFreezeInfo;
 import com.goti.ticketing.ticket.service.domain.TicketFreezeService;
@@ -60,10 +56,9 @@ public class OrderCancelService {
 	private final TicketService ticketService;
 	private final TicketFreezeService ticketFreezeService;
 	private final SeatStatusService seatStatusService;
-	private final SeatStatusRepository seatStatusRepository;
 	private final TicketPaymentApiClient ticketPaymentApiClient;
 	private final GameStatusRepository gameStatusRepository;
-	private final GameTicketingStatusRepository gameTicketingStatusRepository;
+	private final TicketingStatusUpdateService ticketingStatusUpdateService;
 
 	@Transactional
 	public OrderCancelResponse cancel(
@@ -138,7 +133,7 @@ public class OrderCancelService {
 			orderItemService.cancel(targetItem);
 		}
 
-		updateTicketingStatusIfAvailable(order);
+		ticketingStatusUpdateService.processRestoreAvailable(order.getGameSchedule());
 		updateOrderStatus(order, orderItems);
 		PaymentCancelResponse paymentData = ticketPaymentApiClient.cancelPayment(orderId, cancellation.getId());
 		orderCancellationService.complete(cancellation);
@@ -250,24 +245,5 @@ public class OrderCancelService {
 		}
 
 		orderService.cancel(order);
-	}
-
-	private void updateTicketingStatusIfAvailable(OrderEntity order) {
-		GameTicketingStatusEntity ticketingStatus = gameTicketingStatusRepository.findByGameSchedule_Id(
-			order.getGameSchedule().getId()
-		).orElse(null);
-
-		if (ticketingStatus == null || !ticketingStatus.isExhausted()) {
-			return;
-		}
-
-		long remainingSeatCount = seatStatusRepository.countByGameAndStatus(
-			order.getGameSchedule(),
-			SeatStatus.AVAILABLE
-		);
-
-		if (remainingSeatCount > 0) {
-			ticketingStatus.updateStatus(TicketingStatus.AVAILABLE);
-		}
 	}
 }

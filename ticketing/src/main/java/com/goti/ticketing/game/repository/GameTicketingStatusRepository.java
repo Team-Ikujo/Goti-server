@@ -1,6 +1,7 @@
 package com.goti.ticketing.game.repository;
 
 import com.goti.ticketing.constants.TicketingStatus;
+import com.goti.ticketing.domain.entity.game.GameScheduleEntity;
 import com.goti.ticketing.domain.entity.game.GameTicketingStatusEntity;
 
 import jakarta.persistence.LockModeType;
@@ -20,7 +21,7 @@ import java.util.UUID;
 public interface GameTicketingStatusRepository extends JpaRepository<GameTicketingStatusEntity, UUID> {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	Optional<GameTicketingStatusEntity> findByGameSchedule_Id(UUID gameScheduleId);
+	Optional<GameTicketingStatusEntity> findByGameSchedule(GameScheduleEntity gameSchedule);
 
 	@Query(
 		"SELECT ticketing_status " +

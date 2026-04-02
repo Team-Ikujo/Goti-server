@@ -4,10 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.ticketing.domain.entity.game.GameTicketingStatusEntity;
 import com.goti.ticketing.domain.entity.seat.SeatStatusEntity;
-
-import com.goti.ticketing.game.repository.GameTicketingStatusRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.goti.constants.OrderStatus;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.ticketing.constants.SeatHoldStatus;
-import com.goti.ticketing.constants.SeatStatus;
-import com.goti.ticketing.constants.TicketingStatus;
 import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.seat.SeatHoldEntity;
 import com.goti.exception.CustomException;
 import com.goti.global.validation.Preconditions;
+import com.goti.ticketing.game.service.domain.TicketingStatusUpdateService;
 import com.goti.ticketing.order.dto.response.OrderPaymentConfirmResponse;
 import com.goti.ticketing.order.repository.OrderItemRepository;
 import com.goti.ticketing.order.repository.OrderRepository;
@@ -40,9 +36,9 @@ public class OrderPaymentConfirmService {
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final SeatStatusRepository seatStatusRepository;
-	private final GameTicketingStatusRepository gameTicketingStatusRepository;
 	private final SeatHoldService seatHoldService;
 	private final TicketCreateService ticketCreateService;
+	private final TicketingStatusUpdateService ticketingStatusUpdateService;
 
 	@Transactional
 	public OrderPaymentConfirmResponse confirm(
@@ -85,7 +81,7 @@ public class OrderPaymentConfirmService {
 		}
 
 		List<TicketResponse> tickets = ticketCreateService.create(order);
-		processSoldOut(order);
+		ticketingStatusUpdateService.processSoldout(order.getGameSchedule());
 
 		log.info(
 			"action=PAYMENT_CONFIRM gameId={} userId={} orderId={} ticketCount={}",
@@ -134,25 +130,5 @@ public class OrderPaymentConfirmService {
 		}
 
 		return seatHold;
-	}
-
-	private void processSoldOut(OrderEntity order) {
-
-		GameTicketingStatusEntity ticketingStatus = gameTicketingStatusRepository.findByGameSchedule_Id(
-			order.getGameSchedule().getId()
-		).orElse(null);
-
-		if (ticketingStatus.isExhausted()) {
-			return;
-		}
-
-		long remainingSeatCount = seatStatusRepository.countByGameAndStatus(
-			order.getGameSchedule(),
-			SeatStatus.AVAILABLE
-		);
-
-		if (remainingSeatCount == 0) {
-			ticketingStatus.updateStatus(TicketingStatus.EXHAUSTED);
-		}
 	}
 }
