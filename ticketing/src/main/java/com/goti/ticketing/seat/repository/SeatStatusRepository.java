@@ -33,7 +33,7 @@ public interface SeatStatusRepository extends JpaRepository<SeatStatusEntity, UU
 
 	Optional<SeatStatusEntity> findByGameAndSeat(GameScheduleEntity game, SeatEntity seat);
 
-	long countByGame_IdAndStatus(UUID gameId, SeatStatus status);
+	long countByGameIdAndStatus(UUID gameId, SeatStatus status);
 
 	@Query("""
 		SELECT new com.goti.ticketing.seat.repository.dto.SeatGradeAvailableSeatCount(

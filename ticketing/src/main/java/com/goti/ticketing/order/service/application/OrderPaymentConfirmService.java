@@ -133,7 +133,7 @@ public class OrderPaymentConfirmService {
 	}
 
 	private void updateTicketingStatusIfExhausted(OrderEntity order) {
-		long remainingSeatCount = seatStatusRepository.countByGame_IdAndStatus(
+		long remainingSeatCount = seatStatusRepository.countByGameIdAndStatus(
 			order.getGameSchedule().getId(),
 			SeatStatus.AVAILABLE
 		);
