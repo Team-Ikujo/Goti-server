@@ -5,6 +5,7 @@ import com.goti.user.dto.request.AccountRegisterRequest;
 import com.goti.user.dto.request.AddressRegisterRequest;
 import com.goti.user.dto.response.AccountRegisterResponse;
 import com.goti.user.dto.response.AddressRegisterResponse;
+import com.goti.user.dto.response.MemberDetailResponse;
 import com.goti.user.service.application.member.MemberProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,8 +13,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +27,7 @@ import java.util.UUID;
 
 import static com.goti.global.api.ApiSuccessResponse.wrap;
 
+@Slf4j
 @Tag(name = "Member", description = "회원 관련 API")
 @RestController
 @RequestMapping("/api/v1/members")
@@ -30,6 +35,15 @@ import static com.goti.global.api.ApiSuccessResponse.wrap;
 public class MemberController {
 
 	private final MemberProfileService memberProfileService;
+
+	@GetMapping("/me")
+	public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> detail(
+		@AuthenticationPrincipal(expression = "providerId") String providerId
+	) {
+		return wrap(
+			memberProfileService.getProfileDetail(providerId)
+		);
+	}
 
 	@Operation(
 		summary = "계좌 등록",
