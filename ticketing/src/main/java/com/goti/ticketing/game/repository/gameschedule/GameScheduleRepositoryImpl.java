@@ -97,6 +97,38 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 			.fetch();
 	}
 
+	@Override
+	public java.util.Optional<GameScheduleSearchResponse> findScheduleByGameId(UUID gameId) {
+		return java.util.Optional.ofNullable(
+			jpaQueryFactory
+				.select(
+					new QGameScheduleSearchResponse(
+						gameSchedule.id,
+						gameSchedule.startAt,
+						gameSchedule.leagueType,
+						gameSchedule.homeTeamId,
+						gameSchedule.awayTeamId,
+						gameSchedule.stadiumId,
+						Expressions.nullExpression(String.class), // homeTeam DisplayName
+						Expressions.nullExpression(String.class), // awayTeamName DisplayName
+						Expressions.nullExpression(String.class), // stadiumLocation
+						gameStatus.gameStatus,
+						gameStatus.homeTeamScore,
+						gameStatus.awayTeamScore,
+						gameStatus.gameResult,
+						ticketingStatus.status,
+						ticketingStatus.ticketingOpenedAt,
+						ticketingStatus.ticketingEndAt
+					)
+				)
+				.from(gameSchedule)
+				.leftJoin(gameStatus).on(gameStatus.gameSchedule.eq(gameSchedule))
+				.leftJoin(ticketingStatus).on(ticketingStatus.gameSchedule.eq(gameSchedule))
+				.where(gameSchedule.id.eq(gameId))
+				.fetchOne()
+		);
+	}
+
 	private BooleanExpression teamIdEq(QGameScheduleEntity game, UUID teamId) {
 		if (teamId == null) return null;
 		return game.homeTeamId.eq(teamId).or(game.awayTeamId.eq(teamId));
