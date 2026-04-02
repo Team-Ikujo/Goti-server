@@ -1,16 +1,26 @@
 package com.goti.user.dto.response;
 
+import com.goti.constants.OAuthProvider;
 import com.goti.user.domain.entity.user.AccountEntity;
 import com.goti.user.domain.entity.user.AddressEntity;
 import com.goti.user.domain.entity.user.MemberEntity;
 
+import com.goti.user.domain.entity.user.SocialProviderEntity;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Schema(description = "회원 본인 상세조회 응답")
 public record MemberDetailResponse(
 
 	@Schema(description = "이메일", example = "email@google.com")
 	String email,
+
+	@Schema(description = "소셜 제공자 타입", example = "GOOGLE")
+	OAuthProvider oAuthProvider,
 
 	@Schema(description = "이름", example = "홍길동")
 	String name,
@@ -60,29 +70,48 @@ public record MemberDetailResponse(
 		@Schema(description = "네이버 연결 여부", example = "false")
 		boolean isNaverConnected
 	) {
+		public static SocialConnection of(List<SocialProviderEntity> connections, OAuthProvider currentProvider) {
+
+			Set<OAuthProvider> connectedProviders = connections.stream()
+				.map(SocialProviderEntity::getProvider)
+				.collect(Collectors.toSet());
+
+			return new SocialConnection(
+				currentProvider == OAuthProvider.GOOGLE || connectedProviders.contains(OAuthProvider.GOOGLE),
+				currentProvider == OAuthProvider.KAKAO || connectedProviders.contains(OAuthProvider.KAKAO),
+				currentProvider == OAuthProvider.NAVER || connectedProviders.contains(OAuthProvider.NAVER)
+			);
+		}
 	}
 
 	public static MemberDetailResponse from(
 		String email,
+		OAuthProvider provider,
 		MemberEntity member,
 		AccountEntity account,
-		AddressEntity address
+		AddressEntity address,
+		SocialConnection socialConnection
 	) {
 		return new MemberDetailResponse(
 			email,
+			provider,
 			member.getName(),
 			member.getMobile(),
-			new BankAccount(
-				account.getBankName(),
-				account.getAccountNumber(),
-				account.getAccountHolder()
-			),
-			new Address(
-				address.getZipCode(),
-				address.getBaseAddress(),
-				address.getDetailAddress()
-			),
-			null
+			account != null ?
+				new BankAccount(
+					account.getBankName(),
+					account.getAccountNumber(),
+					account.getAccountHolder()
+				) :
+				null,
+			address != null ?
+				new Address(
+					address.getZipCode(),
+					address.getBaseAddress(),
+					address.getDetailAddress()
+				) :
+				null,
+			socialConnection
 		);
 	}
 

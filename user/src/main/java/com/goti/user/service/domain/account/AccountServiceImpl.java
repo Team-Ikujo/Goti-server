@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService {
 	public AccountRegisterResponse register(
 		String accountNumber, String bankName, String accountHolder, MemberEntity member
 	) {
-		AccountEntity account = accountRepository.findByMember(member)
+		AccountEntity account = accountRepository.findAccount(member)
 			.map(existingAccount -> {
 				existingAccount.updateDetails(accountNumber, bankName, accountHolder);
 				return existingAccount;
@@ -39,6 +39,6 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Optional<AccountEntity> findAccount(MemberEntity member) {
-		return accountRepository.findByMember(member);
+		return accountRepository.findAccount(member);
 	}
 }
