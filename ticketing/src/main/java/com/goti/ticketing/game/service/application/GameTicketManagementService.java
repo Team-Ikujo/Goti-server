@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TicketingStatusUpdateService {
+public class GameTicketManagementService {
 	private final GameTicketingStatusService gameTicketingStatusService;
 	private final SeatStatusService seatStatusService;
 

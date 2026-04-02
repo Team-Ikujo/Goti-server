@@ -26,7 +26,7 @@ import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.ticket.TicketEntity;
 import com.goti.ticketing.game.repository.GameStatusRepository;
-import com.goti.ticketing.game.service.application.TicketingStatusUpdateService;
+import com.goti.ticketing.game.service.application.GameTicketManagementService;
 import com.goti.ticketing.infra.api.TicketPaymentApiClient;
 import com.goti.ticketing.order.dto.request.OrderCancelRequest;
 import com.goti.ticketing.order.dto.response.OrderCancelResponse;
@@ -58,7 +58,7 @@ public class OrderCancelService {
 	private final SeatStatusService seatStatusService;
 	private final TicketPaymentApiClient ticketPaymentApiClient;
 	private final GameStatusRepository gameStatusRepository;
-	private final TicketingStatusUpdateService ticketingStatusUpdateService;
+	private final GameTicketManagementService gameTicketManagementService;
 
 	@Transactional
 	public OrderCancelResponse cancel(
@@ -133,7 +133,7 @@ public class OrderCancelService {
 			orderItemService.cancel(targetItem);
 		}
 
-		ticketingStatusUpdateService.processRestoreAvailable(order.getGameSchedule());
+		gameTicketManagementService.processRestoreAvailable(order.getGameSchedule());
 		updateOrderStatus(order, orderItems);
 		PaymentCancelResponse paymentData = ticketPaymentApiClient.cancelPayment(orderId, cancellation.getId());
 		orderCancellationService.complete(cancellation);
