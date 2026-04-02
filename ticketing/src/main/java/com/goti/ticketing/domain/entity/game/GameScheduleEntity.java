@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -23,7 +24,14 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
-@Table(name = "game_schedules")
+@Table(
+	name = "game_schedules",
+	indexes = {
+		@Index(name = "idx_game_start_at", columnList = "start_at"),
+		@Index(name = "idx_game_home_team", columnList = "home_team_id"),
+		@Index(name = "idx_game_away_team", columnList = "away_team_id")
+	}
+)
 @NoArgsConstructor(access = PROTECTED)
 public class GameScheduleEntity extends ModificationTimestampEntity {
 	@Column(nullable = false)
