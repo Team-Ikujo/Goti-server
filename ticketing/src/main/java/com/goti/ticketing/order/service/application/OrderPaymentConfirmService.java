@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.goti.ticketing.domain.entity.game.GameTicketingStatusEntity;
 import com.goti.ticketing.domain.entity.seat.SeatStatusEntity;
+
+import com.goti.ticketing.game.repository.GameTicketingStatusRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class OrderPaymentConfirmService {
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final SeatStatusRepository seatStatusRepository;
+	private final GameTicketingStatusRepository gameTicketingStatusRepository;
 	private final SeatHoldService seatHoldService;
 	private final TicketCreateService ticketCreateService;
 
@@ -133,15 +137,22 @@ public class OrderPaymentConfirmService {
 	}
 
 	private void updateTicketingStatusIfExhausted(OrderEntity order) {
-		long remainingSeatCount = seatStatusRepository.countByGameIdAndStatus(
-			order.getGameSchedule().getId(),
+
+		GameTicketingStatusEntity ticketingStatus = gameTicketingStatusRepository.findByGameSchedule_Id(
+			order.getGameSchedule().getId()
+		).orElse(null);
+
+		if (ticketingStatus == null || ticketingStatus.getStatus() != TicketingStatus.AVAILABLE) {
+			return;
+		}
+
+		long remainingSeatCount = seatStatusRepository.countByGameAndStatus(
+			order.getGameSchedule(),
 			SeatStatus.AVAILABLE
 		);
 
-		if (remainingSeatCount == 0
-			&& order.getGameSchedule().getTicketingStatus() != null
-			&& order.getGameSchedule().getTicketingStatus().getStatus() == TicketingStatus.AVAILABLE) {
-			order.getGameSchedule().getTicketingStatus().updateStatus(TicketingStatus.EXHAUSTED);
+		if (remainingSeatCount == 0) {
+			ticketingStatus.updateStatus(TicketingStatus.EXHAUSTED);
 		}
 	}
 }
