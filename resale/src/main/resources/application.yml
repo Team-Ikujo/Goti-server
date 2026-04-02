@@ -68,3 +68,8 @@ logging:
 internal:
   ticketing:
     base-url: ${INTERNAL_TICKETING_BASE_URL:http://localhost:8080}
+
+cloudflare:
+  turnstile:
+    secret: ${server_cloudflare_backend}
+    verify-url: https://challenges.cloudflare.com/turnstile/v0/siteverify

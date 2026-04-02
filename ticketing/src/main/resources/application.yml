@@ -70,3 +70,8 @@ infra:
     endpoints:
       stadium: ${STADIUM_API_URL:http://localhost:8080}
       payment: ${PAYMENT_BASE_URL:http://localhost:8080}
+
+cloudflare:
+  turnstile:
+    secret: ${server_cloudflare_backend}
+    verify-url: https://challenges.cloudflare.com/turnstile/v0/siteverify
