@@ -26,7 +26,7 @@ import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.ticket.TicketEntity;
 import com.goti.ticketing.game.repository.GameStatusRepository;
-import com.goti.ticketing.game.service.domain.TicketingStatusUpdateService;
+import com.goti.ticketing.game.service.application.TicketingStatusUpdateService;
 import com.goti.ticketing.infra.api.TicketPaymentApiClient;
 import com.goti.ticketing.order.dto.request.OrderCancelRequest;
 import com.goti.ticketing.order.dto.response.OrderCancelResponse;
