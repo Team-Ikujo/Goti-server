@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.goti.constants.OrderStatus;
 import com.goti.constants.messages.ErrorCode;
 import com.goti.ticketing.constants.SeatHoldStatus;
+import com.goti.ticketing.constants.SeatStatus;
+import com.goti.ticketing.constants.TicketingStatus;
 import com.goti.ticketing.domain.entity.order.OrderEntity;
 import com.goti.ticketing.domain.entity.order.OrderItemEntity;
 import com.goti.ticketing.domain.entity.seat.SeatHoldEntity;
@@ -79,6 +81,7 @@ public class OrderPaymentConfirmService {
 		}
 
 		List<TicketResponse> tickets = ticketCreateService.create(order);
+		updateTicketingStatusIfExhausted(order);
 
 		log.info(
 			"action=PAYMENT_CONFIRM gameId={} userId={} orderId={} ticketCount={}",
@@ -127,5 +130,18 @@ public class OrderPaymentConfirmService {
 		}
 
 		return seatHold;
+	}
+
+	private void updateTicketingStatusIfExhausted(OrderEntity order) {
+		long remainingSeatCount = seatStatusRepository.countByGame_IdAndStatus(
+			order.getGameSchedule().getId(),
+			SeatStatus.AVAILABLE
+		);
+
+		if (remainingSeatCount == 0
+			&& order.getGameSchedule().getTicketingStatus() != null
+			&& order.getGameSchedule().getTicketingStatus().getStatus() == TicketingStatus.AVAILABLE) {
+			order.getGameSchedule().getTicketingStatus().updateStatus(TicketingStatus.EXHAUSTED);
+		}
 	}
 }
