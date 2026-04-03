@@ -30,6 +30,7 @@ public class MemberProfileService {
 	private final AddressService addressService;
 	private final SocialProviderService socialProviderService;
 
+	@Transactional(readOnly = true)
 	public MemberDetailResponse getProfileDetail(String providerId) {
 		SocialProviderEntity socialProvider = socialProviderService.getSocialProvider(providerId);
 		MemberEntity member = socialProvider.getMember();
