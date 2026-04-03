@@ -23,6 +23,10 @@ import com.goti.payment.service.dto.PaymentOrderInfo;
 public class TicketingOrderApiClient extends BaseRestClient implements TicketingOrderClient {
 
 	private static final String ORDER_API = "/api/v1/orders";
+	private static final String PATH_SEPARATOR = "/";
+	private static final String PAYMENT_CONFIRMATIONS_PATH = "/payment-confirmations";
+	private static final String PAYMENT_ORDER_PATH = "/payment-order";
+	private static final String INTERNAL_ORDER_PATH = "/internal";
 
 	public TicketingOrderApiClient(RestClient.Builder builder, ApiEndpointProperties properties) {
 		super(builder, properties.ticketing());
@@ -33,13 +37,13 @@ public class TicketingOrderApiClient extends BaseRestClient implements Ticketing
 		UUID orderId,
 		OrderPaymentConfirmApiRequest request
 	) {
-		String uri = String.format("%s/%s/payment-confirmations", ORDER_API, orderId);
+		String uri = ORDER_API + PATH_SEPARATOR + orderId + PAYMENT_CONFIRMATIONS_PATH;
 		postVoid(uri, request);
 	}
 
 	@Override
 	public PaymentOrderInfo getPaymentOrder(UUID orderId, UUID memberId) {
-		String uri = String.format("%s/%s/payment-order", ORDER_API, orderId);
+		String uri = ORDER_API + PATH_SEPARATOR + orderId + PAYMENT_ORDER_PATH;
 		var response = getGotiResponse(
 			uri,
 			null,
@@ -62,7 +66,7 @@ public class TicketingOrderApiClient extends BaseRestClient implements Ticketing
 		LocalDate endDate
 	) {
 		var response = getGotiResponse(
-			ORDER_API + "/internal",
+			ORDER_API + INTERNAL_ORDER_PATH,
 			null,
 			createOrderQueryParams(memberId, months, startDate, endDate),
 			new ParameterizedTypeReference<ApiSuccessResponse<List<TicketingOrderListItemResponse>>>() {}
@@ -89,4 +93,3 @@ public class TicketingOrderApiClient extends BaseRestClient implements Ticketing
 		return queryParams;
 	}
 }
-
