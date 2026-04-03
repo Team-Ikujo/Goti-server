@@ -1,8 +1,8 @@
 package com.goti.payment.infra;
 
-import com.goti.config.properties.ApiEndpointProperties;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.infra.api.base.BaseRestClient;
+import com.goti.payment.config.properties.TicketingApiProperties;
 
 import com.goti.payment.dto.response.GameIdResponse;
 
@@ -18,8 +18,8 @@ public class OrderClient extends BaseRestClient {
 	private final static String ORDER_DETAIL_API = "/api/v1/orders";
 	private final static String PATH_SEPARATOR = "/";
 
-	public OrderClient(RestClient.Builder builder, ApiEndpointProperties properties) {
-		super(builder, properties.stadium());
+	public OrderClient(RestClient.Builder builder, TicketingApiProperties properties) {
+		super(builder, properties.baseUrl());
 	}
 
 	public GameIdResponse orderDetail(UUID orderId) {
