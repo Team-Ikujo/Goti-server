@@ -10,7 +10,6 @@ import com.goti.user.dto.response.MemberDetailResponse;
 import com.goti.user.service.application.member.MemberProfileService;
 import com.goti.user.service.domain.account.AccountService;
 import com.goti.user.service.domain.address.AddressService;
-import com.goti.user.service.domain.user.MemberService;
 
 import com.goti.user.service.domain.user.SocialProviderService;
 
@@ -37,9 +36,6 @@ public class MemberProfileServiceTest {
 	private MemberProfileService memberProfileService;
 
 	@Mock
-	private MemberService memberService;
-
-	@Mock
 	private SocialProviderService socialProviderService;
 
 	@Mock
@@ -52,17 +48,19 @@ public class MemberProfileServiceTest {
 	@DisplayName("회원 상세 프로필 조회 성공 테스트 (마이페이지)")
 	void 회원_본인_상세_프로필_조회_성공() {
 		String providerId = "google_12345";
+		OAuthProvider provider = OAuthProvider.GOOGLE;
 
-		MemberEntity mockMember = MemberEntity.create(
+		MemberEntity mockMember = spy(MemberEntity.create(
 			"010-1234-5678", "김고티", Gender.MALE, LocalDate.of(2000, 10, 21)
-		);
+		));
 
 		SocialProviderEntity mockSocial = mock(SocialProviderEntity.class);
 		given(mockSocial.getMember()).willReturn(mockMember);
-		given(mockSocial.getProvider()).willReturn(OAuthProvider.GOOGLE);
 		given(mockSocial.getEmail()).willReturn("goti1234@google.com");
 
-		given(socialProviderService.getSocialProvider(providerId)).willReturn(mockSocial);
+		given(socialProviderService.getSocialProvider(
+			providerId, provider
+		)).willReturn(mockSocial);
 
 		AccountEntity mockAccount = mock(AccountEntity.class);
 		given(mockAccount.getBankName()).willReturn("카카오뱅크");
@@ -77,7 +75,8 @@ public class MemberProfileServiceTest {
 		given(accountService.findAccount(mockMember)).willReturn(Optional.of(mockAccount));
 		given(addressService.findAddress(mockMember)).willReturn(Optional.of(mockAddress));
 
-		MemberDetailResponse response = memberProfileService.getProfileDetail(providerId);
+		MemberDetailResponse response =
+			memberProfileService.getProfileDetail(providerId, provider);
 
 		assertThat(response.name()).isEqualTo("김고티");
 		assertThat(response.oAuthProvider()).isEqualTo(OAuthProvider.GOOGLE);
@@ -86,10 +85,9 @@ public class MemberProfileServiceTest {
 		assertThat(response.address().zipCode()).isEqualTo("12345");
 		assertThat(response.address().baseAddress()).isEqualTo("서울특별시 강남구 학동로 343");
 
-
 		assertThat(response.socialConnection().isGoogleConnected()).isTrue();
 		log.info("response :: {}", response);
-		verify(socialProviderService, times(1)).getSocialProvider(anyString());
+		verify(socialProviderService, times(1)).getSocialProvider(anyString() , any());
 	}
 
 }

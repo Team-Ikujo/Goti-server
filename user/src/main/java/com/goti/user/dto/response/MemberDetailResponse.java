@@ -76,6 +76,8 @@ public record MemberDetailResponse(
 				.map(SocialProviderEntity::getProvider)
 				.collect(Collectors.toSet());
 
+			connectedProviders.add(currentProvider);
+
 			return new SocialConnection(
 				connectedProviders.contains(OAuthProvider.GOOGLE),
 				connectedProviders.contains(OAuthProvider.KAKAO),
