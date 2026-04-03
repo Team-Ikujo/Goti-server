@@ -73,5 +73,5 @@ infra:
 
 cloudflare:
   turnstile:
-    secret: ${server_cloudflare_backend}
+    secret: ${CLOUDFLARE_TURNSTILE_SECRET}
     verify-url: https://challenges.cloudflare.com/turnstile/v0/siteverify

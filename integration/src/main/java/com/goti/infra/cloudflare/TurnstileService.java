@@ -16,7 +16,7 @@ public class TurnstileService {
 
 	public boolean verify(String token) {
 		if (token == null || token.isBlank()) {
-			log.warn("action=TURNSTILE_VERIFY result=FAIL reason=TOKEN_MISSING");
+			log.info("action=TURNSTILE_VERIFY result=FAIL reason=TOKEN_MISSING");
 			return false;
 		}
 
@@ -24,7 +24,7 @@ public class TurnstileService {
 			TurnstileVerifyResponse response = turnstileApiClient.verify(token);
 			boolean success = response != null && response.success();
 			if (!success) {
-				log.warn(
+				log.info(
 					"action=TURNSTILE_VERIFY result=FAIL reason=VERIFICATION_REJECTED errorCodes={}",
 					response != null ? response.errorCodes() : null
 				);
