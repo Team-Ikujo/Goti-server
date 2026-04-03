@@ -7,7 +7,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TurnstileVerifyResponse(
-	boolean success,
+	boolean isSucceed,
 	@JsonProperty("error-codes") List<String> errorCodes
 ) {
 }

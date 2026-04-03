@@ -22,14 +22,14 @@ public class TurnstileService {
 
 		try {
 			TurnstileVerifyResponse response = turnstileApiClient.verify(token);
-			boolean success = response != null && response.success();
-			if (!success) {
+			boolean isSucceed = response != null && response.isSucceed();
+			if (!isSucceed) {
 				log.info(
 					"action=TURNSTILE_VERIFY result=FAIL reason=VERIFICATION_REJECTED errorCodes={}",
 					response != null ? response.errorCodes() : null
 				);
 			}
-			return success;
+			return isSucceed;
 		} catch (RuntimeException e) {
 			log.warn(
 				"action=TURNSTILE_VERIFY result=FAIL reason=VERIFY_API_ERROR error={}",
