@@ -1,6 +1,11 @@
 package com.goti.user.service.domain.user;
 
 import com.goti.constants.Gender;
+import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
+import com.goti.global.validation.Preconditions;
+import com.goti.infra.cache.RedisCache;
+import com.goti.infra.constants.redis.RedisKey;
 import com.goti.user.domain.entity.user.MemberEntity;
 import com.goti.user.repository.MemberRepository;
 
@@ -18,6 +23,7 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
+	private final RedisCache redisCache;
 
 	@Override
 	@Transactional
@@ -37,5 +43,57 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public MemberEntity getMember(UUID memberId) {
 		return memberRepository.findByIdOrThrow(memberId);
+	}
+
+	@Override
+	@Transactional
+	public MemberEntity update(
+		UUID memberId,
+		String mobile,
+		String name,
+		Gender gender,
+		LocalDate birthDate,
+		String authCode
+	) {
+		verifySmsCode(String.valueOf(memberId), authCode);
+
+		MemberEntity member = getMember(memberId);
+		Preconditions.validate(
+			member.verifyIdentity(gender, birthDate),
+			ErrorCode.AUTH_IDENTITY_VERIFY_FAILED
+		);
+		verifyDuplicatedMobile(member, mobile);
+		member.updateIdentity(mobile, name);
+		return member;
+	}
+
+	private void verifyDuplicatedMobile(MemberEntity member, String mobile) {
+		memberRepository.findByMobile(mobile).ifPresent(
+			existingMember -> {
+				if (!existingMember.getId().equals(member.getId())) {
+					throw new CustomException(ErrorCode.AUTH_MOBILE_ALREADY_REGISTERED);
+				}
+			});
+	}
+
+	private void verifySmsCode(String memberId, String authCode) {
+		String redisKey = RedisKey.MEMBER_IDENTITY_VERIFY.getKey(memberId);
+
+		String cachedAuthCode = getCachedAuthCode(redisKey);
+
+		if (!cachedAuthCode.equals(authCode))
+			throw new CustomException(ErrorCode.AUTH_CODE_INVALID);
+
+		if (!redisCache.consume(redisKey))
+			throw new CustomException(ErrorCode.AUTH_CODE_NOT_FOUND);
+	}
+
+	private String getCachedAuthCode(String key) {
+		String cachedCode = redisCache.get(
+			key, String.class
+		);
+		if (cachedCode == null)
+			throw new CustomException(ErrorCode.AUTH_CODE_NOT_FOUND);
+		return cachedCode;
 	}
 }
