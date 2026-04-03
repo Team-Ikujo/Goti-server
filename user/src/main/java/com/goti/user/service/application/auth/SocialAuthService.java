@@ -69,7 +69,7 @@ public class SocialAuthService {
 		String email = socialUserInfo.email();
 		String providerId = socialUserInfo.providerId();
 		boolean isRegistered =
-			socialProviderService.findSocialProvider(providerId).isPresent();
+			socialProviderService.findSocialProvider(providerId, provider).isPresent();
 
 		String socialVerifyToken = jwtTokenProvider.createSocialVerifyToken(
 			provider, providerId, email
@@ -79,11 +79,17 @@ public class SocialAuthService {
 
 	@Transactional
 	public Pair<String, String> login(String socialVerifyToken) {
-		SocialInfo verifiedSocialInfo = getSocialInfo(socialVerifyToken);
+		SocialInfo socialInfo = getSocialInfo(socialVerifyToken);
+
 		SocialProviderEntity socialProvider =
-			socialProviderService.getSocialProvider(verifiedSocialInfo.providerId());
+			socialProviderService.getSocialProvider(
+				socialInfo.providerId(), socialInfo.provider()
+			);
+
 		MemberEntity member = socialProvider.getMember();
-		return authService.issueTokens(member, verifiedSocialInfo.providerId());
+		return authService.issueTokens(
+			member, socialProvider.getProviderId(), socialProvider.getProvider()
+		);
 	}
 
 	@Transactional
@@ -95,13 +101,15 @@ public class SocialAuthService {
 		LocalDate birthDate,
 		String authCode
 	) {
-		SocialInfo verifiedSocialInfo = getSocialInfo(socialVerifyToken);
+		SocialInfo socialInfo = getSocialInfo(socialVerifyToken);
 
 		authService.verifySmsCode(mobile, authCode);
 		MemberEntity member = getOrCreateMember(name, mobile, gender, birthDate);
 
-		createSocialProvider(member, verifiedSocialInfo);
-		return authService.issueTokens(member, verifiedSocialInfo.providerId());
+		createSocialProvider(member, socialInfo);
+		return authService.issueTokens(
+			member, socialInfo.providerId(), socialInfo.provider()
+		);
 	}
 
 	public void sendSignupSmsCode(String socialVerifyToken, String mobile) {
@@ -112,8 +120,12 @@ public class SocialAuthService {
 	public Pair<String, String> reissueToken(String refreshToken) {
 		UUID memberId = authService.validateTokenAndGetMemberId(refreshToken);
 		MemberEntity member = memberService.getMember(memberId);
-		String providerId = jwtTokenProvider.extractProviderId(refreshToken);
-		return authService.issueTokens(member, providerId);
+		Claims claims = jwtTokenProvider.getClaims(refreshToken);
+		String providerId = claims.get(PROVIDER_ID_KEY, String.class);
+		OAuthProvider provider = claims.get(PROVIDER_TYPE_KEY, OAuthProvider.class);
+		return authService.issueTokens(
+			member, providerId, provider
+		);
 	}
 
 	private void validateState(OAuthProvider provider, String state) {
@@ -163,7 +175,7 @@ public class SocialAuthService {
 		MemberEntity member, SocialInfo socialInfo
 	) {
 		socialProviderService.findSocialProvider(
-			socialInfo.providerId()
+			socialInfo.providerId(), socialInfo.provider
 		).ifPresentOrElse(
 			existingProvider -> {
 				if (!existingProvider.getMember().getId().equals(member.getId())) {

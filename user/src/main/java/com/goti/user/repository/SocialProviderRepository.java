@@ -16,12 +16,14 @@ import java.util.UUID;
 @Repository
 public interface SocialProviderRepository extends JpaRepository<SocialProviderEntity, UUID> {
 
-	default SocialProviderEntity findSocialProviderOrThrow(String providerId) {
-		return findByProviderId(providerId).orElseThrow(
+	default SocialProviderEntity findSocialProviderOrThrow(String providerId, OAuthProvider provider) {
+		return findByProviderIdAndProvider(
+			providerId, provider
+		).orElseThrow(
 			() -> new CustomException(ErrorCode.SOCIAL_PROVIDER_NOT_FOUND)
 		);
 	}
 
-	Optional<SocialProviderEntity> findByProviderId(String providerId);
+	Optional<SocialProviderEntity> findByProviderIdAndProvider(String providerId, OAuthProvider provider);
 
 }

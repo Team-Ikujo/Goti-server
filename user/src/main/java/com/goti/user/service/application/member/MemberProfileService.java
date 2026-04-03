@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,10 +30,9 @@ public class MemberProfileService {
 	private final SocialProviderService socialProviderService;
 
 	@Transactional(readOnly = true)
-	public MemberDetailResponse getProfileDetail(String providerId) {
-		SocialProviderEntity socialProvider = socialProviderService.getSocialProvider(providerId);
+	public MemberDetailResponse getProfileDetail(String providerId, OAuthProvider provider) {
+		SocialProviderEntity socialProvider = socialProviderService.getSocialProvider(providerId, provider);
 		MemberEntity member = socialProvider.getMember();
-		OAuthProvider provider = socialProvider.getProvider();
 		AccountEntity account = accountService.findAccount(member).orElse(null);
 		AddressEntity address = addressService.findAddress(member).orElse(null);
 		var socialConnection = MemberDetailResponse.SocialConnection.of(
