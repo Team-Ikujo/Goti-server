@@ -77,9 +77,9 @@ public record MemberDetailResponse(
 				.collect(Collectors.toSet());
 
 			return new SocialConnection(
-				currentProvider == OAuthProvider.GOOGLE || connectedProviders.contains(OAuthProvider.GOOGLE),
-				currentProvider == OAuthProvider.KAKAO || connectedProviders.contains(OAuthProvider.KAKAO),
-				currentProvider == OAuthProvider.NAVER || connectedProviders.contains(OAuthProvider.NAVER)
+				connectedProviders.contains(OAuthProvider.GOOGLE),
+				connectedProviders.contains(OAuthProvider.KAKAO),
+				connectedProviders.contains(OAuthProvider.NAVER)
 			);
 		}
 	}
