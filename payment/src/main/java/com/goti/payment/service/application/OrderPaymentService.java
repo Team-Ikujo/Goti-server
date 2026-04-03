@@ -20,7 +20,9 @@ import com.goti.payment.service.domain.PaymentService;
 import com.goti.payment.service.dto.OrderPaymentConfirmApiRequest;
 import com.goti.payment.service.dto.PaymentOrderInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderPaymentService {
@@ -60,11 +62,16 @@ public class OrderPaymentService {
 					payment.pgTid()
 				)
 			);
-			GameIdResponse gameIdResponse = orderClient.orderDetail(orderId);
-			UUID gameId = gameIdResponse.gameId();
-			eventPublisher.publishEvent(
-				new BookingCompletedEvent(gameId, memberId)
-			);
+			try {
+				GameIdResponse gameIdResponse = orderClient.orderDetail(orderId);
+				UUID gameId = gameIdResponse.gameId();
+				eventPublisher.publishEvent(
+					new BookingCompletedEvent(gameId, memberId)
+				);
+			} catch (Exception e) {
+				// orderDetail 실패 시 결제 자체는 성공 처리 — 이벤트는 best-effort
+				log.warn("BookingCompletedEvent 발행 실패 (결제는 정상): orderId={}, error={}", orderId, e.getMessage());
+			}
 		}
 
 		return payment;
