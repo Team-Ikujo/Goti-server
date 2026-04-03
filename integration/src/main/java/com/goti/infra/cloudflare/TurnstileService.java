@@ -1,7 +1,10 @@
 package com.goti.infra.cloudflare;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 
+import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
 import com.goti.infra.api.client.cloudflare.TurnstileApiClient;
 import com.goti.infra.api.dto.response.cloudflare.TurnstileVerifyResponse;
 
@@ -30,13 +33,13 @@ public class TurnstileService {
 				);
 			}
 			return isSucceed;
-		} catch (RuntimeException e) {
+		} catch (RestClientException e) {
 			log.warn(
 				"action=TURNSTILE_VERIFY result=FAIL reason=VERIFY_API_ERROR error={}",
 				e.getClass().getSimpleName(),
 				e
 			);
-			return false;
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, e);
 		}
 	}
 }
