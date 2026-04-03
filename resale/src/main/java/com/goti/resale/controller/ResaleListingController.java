@@ -5,6 +5,8 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.goti.constants.messages.ErrorCode;
+import com.goti.exception.CustomException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
+import com.goti.infra.cloudflare.TurnstileService;
 import com.goti.resale.constants.ResaleGraphRange;
 import com.goti.resale.dto.request.ResaleListingCancelRequest;
 import com.goti.resale.dto.request.ResaleListingOrderCreateRequest;
@@ -39,9 +43,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/resales")
 @RequiredArgsConstructor
 public class ResaleListingController {
+	private static final String TURNSTILE_TOKEN_HEADER = "X-Turnstile-Token";
 
 	private final ResaleListingProcessService listingService;
 	private final ResalePriceProcessService priceService;
+	private final TurnstileService turnstileService;
 
 	@Operation(
 		summary = "리셀 등록 (일괄 포함)",
@@ -90,8 +96,13 @@ public class ResaleListingController {
 	)
 	@GetMapping("/listings")
 	public ResponseEntity<ApiSuccessResponse<List<ResaleListingResponse>>> getListingsBySellerId(
-		@AuthenticationPrincipal(expression = "id") UUID sellerId
+		@AuthenticationPrincipal(expression = "id") UUID sellerId,
+		@RequestHeader(name = TURNSTILE_TOKEN_HEADER, required = false) String turnstileToken
 	) {
+		if (!turnstileService.verify(turnstileToken)) {
+			throw new CustomException(ErrorCode.TURNSTILE_VERIFICATION_FAILED);
+		}
+
 		List<ResaleListingResponse> responses = listingService.getListingsBySellerId(sellerId);
 		return wrap(responses);
 	}
