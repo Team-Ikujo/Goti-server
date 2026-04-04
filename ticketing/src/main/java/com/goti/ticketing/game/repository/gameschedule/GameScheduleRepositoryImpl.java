@@ -1,5 +1,16 @@
 package com.goti.ticketing.game.repository.gameschedule;
 
+import static com.goti.ticketing.domain.entity.game.QGameScheduleEntity.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Repository;
+
 import com.goti.ticketing.domain.entity.game.QGameScheduleEntity;
 import com.goti.ticketing.domain.entity.game.QGameStatusEntity;
 import com.goti.ticketing.domain.entity.game.QGameTicketingStatusEntity;
@@ -16,16 +27,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.stereotype.Repository;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.UUID;
-
-import static com.goti.ticketing.domain.entity.game.QGameScheduleEntity.gameScheduleEntity;
-
 @Repository
 @RequiredArgsConstructor
 public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom {
@@ -35,7 +36,6 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 	private final QGameStatusEntity gameStatus = QGameStatusEntity.gameStatusEntity;
 	private final QGameTicketingStatusEntity ticketingStatus = QGameTicketingStatusEntity.gameTicketingStatusEntity;
 	private final QSeatStatusEntity seatStatus = QSeatStatusEntity.seatStatusEntity;
-
 
 	@Override
 	public boolean existsDuplicateSchedule(
@@ -98,8 +98,8 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 	}
 
 	@Override
-	public java.util.Optional<GameScheduleSearchResponse> findScheduleByGameId(UUID gameId) {
-		return java.util.Optional.ofNullable(
+	public Optional<GameScheduleSearchResponse> findScheduleByGameId(UUID gameId) {
+		return Optional.ofNullable(
 			jpaQueryFactory
 				.select(
 					new QGameScheduleSearchResponse(
@@ -130,7 +130,8 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 	}
 
 	private BooleanExpression teamIdEq(QGameScheduleEntity game, UUID teamId) {
-		if (teamId == null) return null;
+		if (teamId == null)
+			return null;
 		return game.homeTeamId.eq(teamId).or(game.awayTeamId.eq(teamId));
 	}
 
