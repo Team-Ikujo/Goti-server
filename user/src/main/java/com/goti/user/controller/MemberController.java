@@ -36,6 +36,10 @@ public class MemberController {
 
 	private final MemberProfileService memberProfileService;
 
+	@Operation(
+		summary = "회원 상세 조회(본인)",
+		description = "회원 상세 조회(본인) API"
+	)
 	@GetMapping("/me")
 	public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> detail(
 		@AuthenticationPrincipal(expression = "providerId") String providerId
