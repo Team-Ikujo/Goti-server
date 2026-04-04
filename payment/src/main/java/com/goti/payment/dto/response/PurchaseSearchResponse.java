@@ -14,7 +14,7 @@ public record PurchaseSearchResponse(
 	String orderStatus,
 	Integer totalQuantity,
 	Integer totalAmount,
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	Instant orderedAt,
 	UUID gameId,
 	UUID stadiumId,
