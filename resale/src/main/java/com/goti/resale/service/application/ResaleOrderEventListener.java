@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -25,9 +24,9 @@ import com.goti.resale.infra.dto.ResaleOrderCreatedEvent;
 import com.goti.resale.infra.dto.ResaleOrderPaymentCompletedEvent;
 import com.goti.resale.infra.dto.SettlementCompletedEvent;
 import com.goti.resale.repository.ResaleRestrictionRepository;
-import com.goti.resale.repository.ResaleTransactionRepository;
 import com.goti.resale.repository.history.ResalePriceHistoryRepository;
 import com.goti.resale.repository.listing.ResaleListingRepository;
+import com.goti.resale.repository.transaction.ResaleTransactionRepository;
 import com.goti.resale.service.domain.ResaleRestrictionService;
 import com.goti.resale.service.infra.PaymentService;
 import com.goti.resale.utils.ResaleRestrictionHandler;
@@ -106,7 +105,7 @@ public class ResaleOrderEventListener {
 		restrictionRepository.save(restriction);
 
 		for (ResaleListingEntity listing : resaleListings) {
-			transferOwnershipAsync(listing.getTicketId(), event.buyerId());
+			transferOwnership(listing.getTicketId(), event.buyerId());
 		}
 
 		paymentService.releaseEscrow(event.resaleOrderId());
@@ -120,19 +119,17 @@ public class ResaleOrderEventListener {
 		List<ResaleTransactionEntity> transactions = transactionRepository.findAllByResaleOrderId(event.resaleOrderId());
 
 		List<ResaleListingEntity> listings = transactions.stream()
-			.map(transaction -> {
-				ResaleListingEntity listing = transaction.getListing();
-				listing.settle();
-				return listing;
-			})
-			.collect(Collectors.toList());
+			.map(ResaleTransactionEntity::getListing)
+			.toList();
+
+		listings.forEach(ResaleListingEntity::settle);
 
 		listingRepository.saveAll(listings);
 	}
 
 	// TODO: 티켓이 나오면 구현
 	@Async
-	public void transferOwnershipAsync(UUID ticketId, UUID buyerId) {
+	public void transferOwnership(UUID ticketId, UUID buyerId) {
 		try {
 			log.info("비동기 티켓 소유권 이전 시작 - 티켓ID: {}, 구매자: {}", ticketId, buyerId);
 			ticketClient.transferOwnership(ticketId, buyerId);

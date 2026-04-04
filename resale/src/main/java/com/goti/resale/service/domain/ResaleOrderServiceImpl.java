@@ -1,9 +1,9 @@
 package com.goti.resale.service.domain;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,12 +27,11 @@ import com.goti.resale.domain.entity.resale.ResaleTransactionEntity;
 import com.goti.resale.dto.request.ResaleTransactionItemRequest;
 import com.goti.resale.dto.response.ResaleOrderCreateResponse;
 import com.goti.resale.dto.response.ResalePurchaseListResponse;
-import com.goti.resale.infra.dto.ResaleTicketPurchaseInfo;
-import com.goti.resale.infra.TicketApiClient;
 import com.goti.resale.infra.TicketClient;
 import com.goti.resale.infra.dto.ResaleOrderCreatedEvent;
-import com.goti.resale.repository.ResaleOrderRepository;
-import com.goti.resale.repository.ResaleTransactionRepository;
+import com.goti.resale.infra.dto.ResaleTicketPurchaseInfo;
+import com.goti.resale.repository.order.ResaleOrderRepository;
+import com.goti.resale.repository.transaction.ResaleTransactionRepository;
 import com.goti.resale.utils.ResalePricePolicy;
 import com.goti.resale.utils.ResaleRestrictionHandler;
 
@@ -47,11 +46,10 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 	private final ResaleOrderRepository resaleOrderRepository;
 	private final ResaleTransactionRepository resaleTransactionRepository;
-	private final ResaleRestrictionService restrictionDomainService;
+	private final ResaleRestrictionService restrictionService;
 	private final ResaleRestrictionHandler resaleRestrictionHandler;
 	private final ResalePricePolicy resalePricePolicy;
 	private final TicketClient ticketClient;
-	private final TicketApiClient ticketApiClient;
 	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
@@ -101,7 +99,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 		validatePossessionLimit(ownedCount, pendingCount, holds.size());
 
-		ResaleRestrictionEntity restriction = restrictionDomainService.getOrCreateRestriction(buyerId);
+		ResaleRestrictionEntity restriction = restrictionService.getOrCreateRestriction(buyerId);
 		List<TransactionItemVO> itemVOs = calculateOrderItems(buyerId, holds, restriction);
 
 		int totalBuyerAmount = itemVOs.stream()
@@ -170,7 +168,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			.map(ResaleOrderEntity::getId)
 			.toList();
 
-		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findAllWithListingByResaleOrderIds(orderIds);
+		List<ResaleTransactionEntity> transactions = resaleTransactionRepository.findListings(orderIds);
 		Map<UUID, List<ResaleTransactionEntity>> transactionsByOrderId = transactions.stream()
 			.collect(Collectors.groupingBy(
 				transaction -> transaction.getResaleOrder().getId(),
@@ -230,7 +228,7 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			.map(transaction -> transaction.getListing().getTicketId())
 			.toList();
 
-		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap = ticketApiClient.getPurchaseInfos(ticketIds).stream()
+		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap = ticketClient.getPurchaseInfos(ticketIds).stream()
 			.collect(Collectors.toMap(
 				ResaleTicketPurchaseInfo::ticketId,
 				ticketInfo -> ticketInfo

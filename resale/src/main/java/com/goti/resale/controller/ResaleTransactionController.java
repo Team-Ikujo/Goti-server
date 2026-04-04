@@ -5,6 +5,7 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.resale.dto.request.ResaleHoldRequest;
+import com.goti.resale.dto.request.ResaleOrderPeriodFilterRequest;
 import com.goti.resale.dto.request.ResaleOrderRequest;
 import com.goti.resale.dto.request.ResaleOrderPeriodFilterRequest;
 import com.goti.resale.dto.response.ResaleHoldResponse;
@@ -39,7 +41,7 @@ import org.springdoc.core.annotations.ParameterObject;
 @RestController
 @RequestMapping("/api/v1/resales")
 @RequiredArgsConstructor
-public class ResaleOrderController {
+public class ResaleTransactionController {
 	private final ResaleOrderProcessService resaleOrderProcessService;
 	private final ResaleHoldProcessService resaleHoldProcessService;
 
@@ -78,7 +80,7 @@ public class ResaleOrderController {
 		@PathVariable UUID resaleOrderId
 	) {
 		resaleOrderProcessService.completeSettlement(resaleOrderId);
-		return wrap(null);
+		return empty();
 	}
 
 	@Operation(
@@ -97,17 +99,17 @@ public class ResaleOrderController {
 		description = "payment 모듈에서 리셀 구매 내역 목록 조회 API"
 	)
 	@GetMapping("/orders/purchases")
-	public ResponseEntity<ApiSuccessResponse<List<ResalePurchaseListResponse>>> getMyPurchaseOrders(
+	public ResponseEntity<ApiSuccessResponse<List<ResalePurchaseListResponse>>> getPurchasesByMember(
 		@RequestParam UUID buyerId,
 		@ParameterObject ResaleOrderPeriodFilterRequest request
 	) {
 		return wrap(
-			resaleOrderProcessService.getMyPurchaseOrders(
-			buyerId,
-			request.months(),
-			request.startDate(),
-			request.endDate()
-		));
+			resaleOrderProcessService.getPurchasesByMember(
+				buyerId,
+				request.months(),
+				request.startDate(),
+				request.endDate()
+			));
 	}
 
 	@Operation(
