@@ -1,4 +1,4 @@
-package com.goti.kafka.config;
+package com.goti.config.kafka;
 
 import java.util.HashMap;
 import java.util.Map;

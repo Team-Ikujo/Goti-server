@@ -1,4 +1,4 @@
-package com.goti.kafka.config;
+package com.goti.config.kafka;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +29,7 @@ public class KafkaConsumerConfig {
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaProperties.getConsumer().getGroupId());
 
-		// 처음부터 읽을지(earliest), 최신 메시지부터 읽을지(latest) 설정
-		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-
+		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaProperties.getConsumer().getAutoOffsetReset());
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
@@ -44,6 +42,12 @@ public class KafkaConsumerConfig {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory =
 			new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
+
+		// 파티션 개수에 맞춰 컨슈머 스레드 개수 설정 (설정값이 없을 경우 기본 1개)
+		int partitions = kafkaProperties.getTopic().getPartitions();
+		if (partitions > 0) {
+			factory.setConcurrency(partitions);
+		}
 
 		return factory;
 	}
