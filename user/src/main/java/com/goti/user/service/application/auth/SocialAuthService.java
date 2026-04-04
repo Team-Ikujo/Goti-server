@@ -122,7 +122,7 @@ public class SocialAuthService {
 		MemberEntity member = memberService.getMember(memberId);
 		Claims claims = jwtTokenProvider.getClaims(refreshToken);
 		String providerId = claims.get(PROVIDER_ID_KEY, String.class);
-		OAuthProvider provider = claims.get(PROVIDER_TYPE_KEY, OAuthProvider.class);
+		OAuthProvider provider = OAuthProvider.valueOf(claims.get(PROVIDER_TYPE_KEY, String.class));
 		return authService.issueTokens(
 			member, providerId, provider
 		);
