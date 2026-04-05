@@ -47,6 +47,7 @@ public class TicketServiceImpl implements TicketService {
 		String userPhone,
 		String gameTitle,
 		LocalDateTime gameDate,
+		String seatGradeName,
 		String seatInfo,
 		Integer ticketPrice
 	) {
@@ -61,6 +62,7 @@ public class TicketServiceImpl implements TicketService {
 			userPhone,
 			gameTitle,
 			gameDate,
+			seatGradeName,
 			seatInfo,
 			ticketPrice,
 			null

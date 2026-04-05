@@ -22,6 +22,7 @@ public interface TicketService {
 		String userPhone,
 		String gameTitle,
 		LocalDateTime gameDate,
+		String seatGradeName,
 		String seatInfo,
 		Integer ticketPrice
 	);

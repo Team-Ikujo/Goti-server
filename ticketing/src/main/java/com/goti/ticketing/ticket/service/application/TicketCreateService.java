@@ -67,6 +67,7 @@ public class TicketCreateService {
 				orderHistory.getMobile(),
 				null,
 				order.getGameSchedule().getStartAt(),
+				orderItem.getSeat().getSeatSection().getSeatGrade().getName(),
 				buildSeatInfo(orderItem),
 				orderItem.getTicketPrice()
 			)

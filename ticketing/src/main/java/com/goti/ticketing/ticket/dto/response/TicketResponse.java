@@ -36,6 +36,9 @@ public record TicketResponse(
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	LocalDateTime gameDate,
 
+	@Schema(description = "좌석 등급명", example = "1루 K8석")
+	String seatGradeName,
+
 	@Schema(description = "좌석 정보", example = "VIP A구역 3열 15번")
 	String seatInfo,
 
@@ -78,6 +81,7 @@ public record TicketResponse(
 			ticket.getGameId(),
 			ticket.getGameTitle(),
 			ticket.getGameDate(),
+			ticket.getSeatGradeName(),
 			ticket.getSeatInfo(),
 			ticket.getTicketPrice(),
 			ticket.getResalePrice(),

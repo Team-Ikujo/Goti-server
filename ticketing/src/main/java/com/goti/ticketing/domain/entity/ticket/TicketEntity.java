@@ -68,6 +68,9 @@ public class TicketEntity extends ModificationTimestampEntity {
 	private LocalDateTime gameDate;
 
 	@Column(nullable = false)
+	private String seatGradeName;
+
+	@Column(nullable = false)
 	private String seatInfo;
 
 	@Column
@@ -101,6 +104,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 		String userPhone,
 		String gameTitle,
 		LocalDateTime gameDate,
+		String seatGradeName,
 		String seatInfo,
 		Integer ticketPrice,
 		Integer resalePrice
@@ -115,6 +119,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 		this.userPhone = userPhone;
 		this.gameTitle = gameTitle;
 		this.gameDate = gameDate;
+		this.seatGradeName = seatGradeName;
 		this.seatInfo = seatInfo;
 		this.ticketPrice = ticketPrice;
 		this.resalePrice = resalePrice;
@@ -134,6 +139,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 		String userPhone,
 		String gameTitle,
 		LocalDateTime gameDate,
+		String seatGradeName,
 		String seatInfo,
 		Integer ticketPrice,
 		Integer resalePrice
@@ -143,6 +149,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 			orderItemId,
 			gameId,
 			userId,
+			seatGradeName,
 			seatInfo,
 			ticketPrice
 		);
@@ -157,6 +164,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 			userPhone,
 			gameTitle,
 			gameDate,
+			seatGradeName,
 			seatInfo,
 			ticketPrice,
 			resalePrice
@@ -168,6 +176,7 @@ public class TicketEntity extends ModificationTimestampEntity {
 		UUID orderItemId,
 		UUID gameId,
 		UUID userId,
+		String seatGradeName,
 		String seatInfo,
 		Integer ticketPrice
 	) {
@@ -186,6 +195,10 @@ public class TicketEntity extends ModificationTimestampEntity {
 		Preconditions.domainValidate(
 			userId != null,
 			"유저 ID는 필수입니다."
+		);
+		Preconditions.domainValidate(
+			StringUtils.hasText(seatGradeName),
+			"좌석 등급명은 비어 있을 수 없습니다."
 		);
 		Preconditions.domainValidate(
 			StringUtils.hasText(seatInfo),
