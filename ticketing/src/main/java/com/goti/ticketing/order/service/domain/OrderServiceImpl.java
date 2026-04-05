@@ -2,6 +2,7 @@ package com.goti.ticketing.order.service.domain;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import com.goti.ticketing.infra.api.StadiumClient;
 import com.goti.ticketing.infra.api.dto.response.StadiumLocationResponse;
 import com.goti.ticketing.order.dto.response.OrderListResponse;
 import com.goti.ticketing.order.dto.response.OrderPaymentInfoResponse;
+import com.goti.ticketing.order.dto.response.SeatGradeInfoResponse;
 import com.goti.ticketing.session.service.application.ReservationSessionService;
 import com.goti.ticketing.ticket.service.domain.TicketService;
 
@@ -193,8 +195,14 @@ public class OrderServiceImpl implements OrderService {
 			.toList();
 
 		TicketEntity representativeTicket = tickets.getFirst();
-		List<String> seatInfos = tickets.stream()
-			.map(TicketEntity::getSeatInfo)
+		List<SeatGradeInfoResponse> seatGradeGroups = tickets.stream()
+			.collect(Collectors.groupingBy(
+				TicketEntity::getSeatGradeName,
+				LinkedHashMap::new,
+				Collectors.mapping(TicketEntity::getSeatInfo, Collectors.toList())
+			))
+			.entrySet().stream()
+			.map(entry -> new SeatGradeInfoResponse(entry.getKey(), entry.getValue()))
 			.toList();
 
 		return OrderListResponse.of(
@@ -202,7 +210,7 @@ public class OrderServiceImpl implements OrderService {
 			representativeTicket.getGameTitle(),
 			representativeTicket.getGameDate(),
 			stadiumLocation,
-			seatInfos
+			seatGradeGroups
 		);
 	}
 
