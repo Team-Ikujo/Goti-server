@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<OrderListResponse> getMyOrders(
+	public List<OrderListResponse> getOrders(
 		UUID memberId,
 		Integer months,
 		LocalDate startDate,
@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 		);
 		validatePeriodFilter(months, startDate, endDate);
 
-		List<OrderEntity> orders = orderRepository.findMyOrders(memberId, months, startDate, endDate);
+		List<OrderEntity> orders = orderRepository.findOrders(memberId, months, startDate, endDate);
 
 		List<UUID> stadiumIds = orders.stream()
 			.map(order -> order.getGameSchedule().getStadiumId())
