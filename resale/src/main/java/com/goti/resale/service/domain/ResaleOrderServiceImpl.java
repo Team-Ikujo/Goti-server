@@ -175,9 +175,22 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 				LinkedHashMap::new,
 				Collectors.toList()
 			));
+		List<UUID> ticketIds = transactions.stream()
+			.map(transaction -> transaction.getListing().getTicketId())
+			.distinct()
+			.toList();
+		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap = ticketClient.getPurchaseInfos(ticketIds).stream()
+			.collect(Collectors.toMap(
+				ResaleTicketPurchaseInfo::ticketId,
+				ticketInfo -> ticketInfo
+			));
 
 		return orders.stream()
-			.map(order -> toPurchaseListResponse(order, transactionsByOrderId.getOrDefault(order.getId(), List.of())))
+			.map(order -> toPurchaseListResponse(
+				order,
+				transactionsByOrderId.getOrDefault(order.getId(), List.of()),
+				ticketInfoMap
+			))
 			.toList();
 	}
 
@@ -220,19 +233,14 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 
 	private ResalePurchaseListResponse toPurchaseListResponse(
 		ResaleOrderEntity order,
-		List<ResaleTransactionEntity> transactions
+		List<ResaleTransactionEntity> transactions,
+		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap
 	) {
 		UUID gameId = transactions.getFirst().getListing().getGameId();
 
 		List<UUID> ticketIds = transactions.stream()
 			.map(transaction -> transaction.getListing().getTicketId())
 			.toList();
-
-		Map<UUID, ResaleTicketPurchaseInfo> ticketInfoMap = ticketClient.getPurchaseInfos(ticketIds).stream()
-			.collect(Collectors.toMap(
-				ResaleTicketPurchaseInfo::ticketId,
-				ticketInfo -> ticketInfo
-			));
 
 		ResaleTicketPurchaseInfo representativeTicket = ticketInfoMap.get(ticketIds.getFirst());
 
