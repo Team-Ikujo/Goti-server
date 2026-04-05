@@ -58,6 +58,7 @@ public class MemberDetailApiTest {
 	private ExtendedUserDetails authenticator;
 
 	private static final String PROVIDER_ID = "google_test_123";
+	private static final OAuthProvider PROVIDER = OAuthProvider.GOOGLE;
 
 	@BeforeEach
 	void setup() {
@@ -71,7 +72,7 @@ public class MemberDetailApiTest {
 
 		SocialProviderEntity socialProvider = SocialProviderEntity.create(
 			member,
-			OAuthProvider.GOOGLE,
+			PROVIDER,
 			PROVIDER_ID,
 			"goti@google.com"
 		);
@@ -80,7 +81,8 @@ public class MemberDetailApiTest {
 		authenticator = new ExtendedUserDetails(
 			member.getId(),
 			member.getRole(),
-			PROVIDER_ID
+			PROVIDER_ID,
+			PROVIDER
 		);
 	}
 

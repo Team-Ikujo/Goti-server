@@ -1,5 +1,6 @@
 package com.goti.user.controller;
 
+import com.goti.constants.OAuthProvider;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.user.dto.request.AccountRegisterRequest;
 import com.goti.user.dto.request.AddressRegisterRequest;
@@ -42,10 +43,11 @@ public class MemberController {
 	)
 	@GetMapping("/me")
 	public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> detail(
-		@AuthenticationPrincipal(expression = "providerId") String providerId
+		@AuthenticationPrincipal(expression = "providerId") String providerId,
+		@AuthenticationPrincipal(expression = "provider") OAuthProvider provider
 	) {
 		return wrap(
-			memberProfileService.getProfileDetail(providerId)
+			memberProfileService.getProfileDetail(providerId, provider)
 		);
 	}
 
