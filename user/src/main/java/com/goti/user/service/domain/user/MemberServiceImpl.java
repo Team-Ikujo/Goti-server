@@ -55,7 +55,12 @@ public class MemberServiceImpl implements MemberService {
 		LocalDate birthDate,
 		String authCode
 	) {
-		verifySmsCode(String.valueOf(memberId), authCode);
+		String key = RedisKey.MEMBER_IDENTITY_VERIFY.getKey(memberId);
+		String cachedAuthCode = getCachedAuthCode(key);
+		Preconditions.validate(
+			cachedAuthCode.equals(authCode),
+			ErrorCode.AUTH_CODE_INVALID
+		);
 
 		MemberEntity member = getMember(memberId);
 		Preconditions.validate(
@@ -64,6 +69,10 @@ public class MemberServiceImpl implements MemberService {
 		);
 		verifyDuplicatedMobile(member, mobile);
 		member.updateIdentity(mobile, name);
+		Preconditions.validate(
+			redisCache.consume(key),
+			ErrorCode.AUTH_CODE_NOT_FOUND
+		);
 		return member;
 	}
 
@@ -76,24 +85,13 @@ public class MemberServiceImpl implements MemberService {
 			});
 	}
 
-	private void verifySmsCode(String memberId, String authCode) {
-		String redisKey = RedisKey.MEMBER_IDENTITY_VERIFY.getKey(memberId);
-
-		String cachedAuthCode = getCachedAuthCode(redisKey);
-
-		if (!cachedAuthCode.equals(authCode))
-			throw new CustomException(ErrorCode.AUTH_CODE_INVALID);
-
-		if (!redisCache.consume(redisKey))
-			throw new CustomException(ErrorCode.AUTH_CODE_NOT_FOUND);
-	}
-
 	private String getCachedAuthCode(String key) {
 		String cachedCode = redisCache.get(
 			key, String.class
 		);
-		if (cachedCode == null)
+		if (cachedCode == null) {
 			throw new CustomException(ErrorCode.AUTH_CODE_NOT_FOUND);
+		}
 		return cachedCode;
 	}
 }
