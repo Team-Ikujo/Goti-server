@@ -6,10 +6,10 @@ import java.util.UUID;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.payment.dto.request.PaymentCancelRequest;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.global.api.PageResponse;
+import com.goti.global.dto.Paging;
 import com.goti.payment.dto.request.PaymentRequest;
 import com.goti.payment.dto.request.PurchaseSearchRequest;
 import com.goti.payment.dto.response.PaymentResponse;
@@ -82,7 +83,7 @@ public class PaymentController {
 	public ResponseEntity<ApiSuccessResponse<PageResponse<PurchaseSearchResponse>>> getPurchases(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@ParameterObject PurchaseSearchRequest request,
-		Pageable pageable
+		@ParameterObject @Valid @ModelAttribute Paging paging
 	) {
 		return page(
 			purchaseSearchService.getAll(
@@ -92,7 +93,7 @@ public class PaymentController {
 				request.months(),
 				request.startDate(),
 				request.endDate(),
-				pageable
+				paging
 			)
 		);
 	}

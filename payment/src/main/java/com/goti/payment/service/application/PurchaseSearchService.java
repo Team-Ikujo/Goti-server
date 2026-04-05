@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.goti.constants.messages.ErrorCode;
+import com.goti.global.dto.Paging;
 import com.goti.global.validation.Preconditions;
 import com.goti.payment.dto.response.PurchaseSearchResponse;
 import com.goti.payment.infra.ResaleOrderClient;
@@ -41,12 +42,13 @@ public class PurchaseSearchService {
 		Integer months,
 		LocalDate startDate,
 		LocalDate endDate,
-		Pageable pageable
+		Paging paging
 	) {
 		Preconditions.validate(
 			memberId != null,
 			ErrorCode.AUTH_INVALID
 		);
+		Pageable pageable = paging.toPageable();
 
 		PurchaseSearchType purchaseHistoryType = type != null ? type : PurchaseSearchType.ALL;
 
