@@ -50,11 +50,11 @@ public class PurchaseSearchService {
 		);
 		Pageable pageable = paging.toPageable();
 
-		PurchaseSearchType purchaseHistoryType = type != null ? type : PurchaseSearchType.ALL;
+		PurchaseSearchType purchaseSearchType = type != null ? type : PurchaseSearchType.ALL;
 
 		List<PurchaseSearchResponse> normalOrders = getNormalOrders(
 			memberId,
-			purchaseHistoryType,
+			purchaseSearchType,
 			months,
 			startDate,
 			endDate
@@ -62,7 +62,7 @@ public class PurchaseSearchService {
 
 		List<PurchaseSearchResponse> resaleOrders = getResaleOrders(
 			memberId,
-			purchaseHistoryType,
+			purchaseSearchType,
 			months,
 			startDate,
 			endDate
