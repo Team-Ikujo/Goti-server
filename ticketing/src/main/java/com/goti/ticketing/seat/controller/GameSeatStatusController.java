@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.ticketing.seat.dto.response.GameSeatStatusInitResponse;
 import com.goti.ticketing.seat.dto.response.GameSeatStatusResponse;
-import com.goti.ticketing.seat.service.application.GameSeatStatusInitService;
-import com.goti.ticketing.seat.service.domain.SeatStatusService;
+import com.goti.ticketing.seat.service.application.GameSeatStatusService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,8 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/game-seats")
 public class GameSeatStatusController {
-	private final SeatStatusService seatStatusService;
-	private final GameSeatStatusInitService gameSeatStatusInitService;
+	private final GameSeatStatusService gameSeatStatusService;
 
 	@Operation(
 		summary = "경기 좌석 상태 초기화",
@@ -39,7 +37,7 @@ public class GameSeatStatusController {
 	public ResponseEntity<ApiSuccessResponse<GameSeatStatusInitResponse>> init(
 		@PathVariable UUID gameId
 	) {
-		return wrap(gameSeatStatusInitService.init(gameId));
+		return wrap(gameSeatStatusService.init(gameId));
 	}
 
 	@Operation(
@@ -52,6 +50,6 @@ public class GameSeatStatusController {
 		@PathVariable UUID gameId,
 		@PathVariable UUID sectionId
 	) {
-		return wrap(seatStatusService.get(gameId, sectionId, memberId));
+		return wrap(gameSeatStatusService.get(gameId, sectionId, memberId));
 	}
 }

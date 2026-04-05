@@ -103,6 +103,12 @@ public class SeatServiceImpl implements SeatService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public List<UUID> getSeatIdsBySectionId(UUID sectionId) {
+		return seatRepository.findSeatIdsBySectionId(sectionId);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public List<SeatEntity> getByStadiumId(UUID stadiumId) {
 		return seatRepository.findAllByStadiumId(stadiumId);
 	}
