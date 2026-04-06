@@ -2,6 +2,7 @@ package com.goti.ticketing.order.service.domain;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import com.goti.ticketing.infra.api.StadiumClient;
 import com.goti.ticketing.infra.api.dto.response.StadiumLocationResponse;
 import com.goti.ticketing.order.dto.response.OrderListResponse;
 import com.goti.ticketing.order.dto.response.OrderPaymentInfoResponse;
+import com.goti.ticketing.order.dto.response.SeatGradeInfoResponse;
 import com.goti.ticketing.session.service.application.ReservationSessionService;
 import com.goti.ticketing.ticket.service.domain.TicketService;
 
@@ -74,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<OrderListResponse> getMyOrders(
+	public List<OrderListResponse> getOrders(
 		UUID memberId,
 		Integer months,
 		LocalDate startDate,
@@ -86,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 		);
 		validatePeriodFilter(months, startDate, endDate);
 
-		List<OrderEntity> orders = orderRepository.findMyOrders(memberId, months, startDate, endDate);
+		List<OrderEntity> orders = orderRepository.findOrders(memberId, months, startDate, endDate);
 
 		List<UUID> stadiumIds = orders.stream()
 			.map(order -> order.getGameSchedule().getStadiumId())
@@ -183,6 +185,8 @@ public class OrderServiceImpl implements OrderService {
 		String stadiumLocation
 	) {
 		List<OrderItemEntity> orderItems = orderItemService.get(order.getId());
+		Map<UUID, OrderItemEntity> orderItemsById = orderItems.stream()
+			.collect(Collectors.toMap(OrderItemEntity::getId, orderItem -> orderItem));
 		List<UUID> orderItemIds = orderItems.stream()
 			.map(OrderItemEntity::getId)
 			.toList();
@@ -193,8 +197,14 @@ public class OrderServiceImpl implements OrderService {
 			.toList();
 
 		TicketEntity representativeTicket = tickets.getFirst();
-		List<String> seatInfos = tickets.stream()
-			.map(TicketEntity::getSeatInfo)
+		List<SeatGradeInfoResponse> seatGradeGroups = tickets.stream()
+			.collect(Collectors.groupingBy(
+				ticket -> orderItemsById.get(ticket.getOrderItemId()).getSeat().getSeatSection().getSeatGrade().getName(),
+				LinkedHashMap::new,
+				Collectors.mapping(TicketEntity::getSeatInfo, Collectors.toList())
+			))
+			.entrySet().stream()
+			.map(entry -> new SeatGradeInfoResponse(entry.getKey(), entry.getValue()))
 			.toList();
 
 		return OrderListResponse.of(
@@ -202,7 +212,7 @@ public class OrderServiceImpl implements OrderService {
 			representativeTicket.getGameTitle(),
 			representativeTicket.getGameDate(),
 			stadiumLocation,
-			seatInfos
+			seatGradeGroups
 		);
 	}
 
