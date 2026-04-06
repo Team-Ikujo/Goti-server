@@ -11,11 +11,11 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
+import com.goti.ticketing.constants.SeatStatus;
 import com.goti.ticketing.domain.entity.game.QGameScheduleEntity;
 import com.goti.ticketing.domain.entity.game.QGameStatusEntity;
 import com.goti.ticketing.domain.entity.game.QGameTicketingStatusEntity;
 import com.goti.ticketing.domain.entity.seat.QSeatStatusEntity;
-import com.goti.ticketing.constants.SeatStatus;
 import com.goti.ticketing.game.dto.request.GameScheduleSearchCondition;
 import com.goti.ticketing.game.dto.response.GameScheduleSearchResponse;
 import com.goti.ticketing.game.dto.response.QGameScheduleSearchResponse;
@@ -118,7 +118,17 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 						gameStatus.gameResult,
 						ticketingStatus.status,
 						ticketingStatus.ticketingOpenedAt,
-						ticketingStatus.ticketingEndAt
+						ticketingStatus.ticketingEndAt,
+						ExpressionUtils.as(
+							JPAExpressions
+								.select(seatStatus.count())
+								.from(seatStatus)
+								.where(
+									seatStatus.game.eq(gameSchedule),
+									seatStatus.status.eq(SeatStatus.AVAILABLE)
+								),
+							"remainingSeatCount"
+						)
 					)
 				)
 				.from(gameSchedule)
