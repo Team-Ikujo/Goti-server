@@ -189,7 +189,7 @@ public abstract class BaseRestClient {
 			.uri(uriBuilder -> getActualUriBuilder(uri, uriBuilder).build())
 			.headers(header -> {
 				if (headers != null)
-					headers.forEach(header::add); //
+					headers.forEach(header::add);
 			})
 			.body(body)
 			.retrieve()
@@ -228,7 +228,7 @@ public abstract class BaseRestClient {
 			})
 			.headers(header -> {
 				if (headers != null)
-					headers.forEach(header::add); // 👈 헤더 추가 로직
+					headers.forEach(header::add);
 			})
 			.retrieve()
 			.toBodilessEntity();
