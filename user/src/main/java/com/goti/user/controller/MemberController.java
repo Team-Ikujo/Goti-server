@@ -97,10 +97,10 @@ public class MemberController {
 	}
 
 	@Operation(
-		summary = "회원 정보 수정",
-		description = "회원 정보(이름 및 휴대전화번호) 수정 API"
+		summary = "회원 정보 수정(본인)",
+		description = "회원 정보(이름 및 휴대전화번호) 수정(본인) API"
 	)
-	@PatchMapping
+	@PatchMapping("/me")
 	public ResponseEntity<ApiSuccessResponse<MemberUpdateResponse>> update(
 		@AuthenticationPrincipal(expression = "id") UUID memberId,
 		@RequestBody @Valid MemberUpdateRequest request

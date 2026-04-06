@@ -5,7 +5,6 @@ import com.goti.constants.Gender;
 import com.goti.user.domain.entity.user.MemberEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -15,7 +14,7 @@ public record MemberUpdateResponse(
 	@Schema(description = "휴대폰 번호", example = "01099998888")
 	String mobile,
 
-	@Schema(description = "이름", example = "01099998888")
+	@Schema(description = "이름", example = "홍길동")
 	String name,
 
 	@Schema(description = "성별 (MALE, FEMALE)", example = "MALE")
