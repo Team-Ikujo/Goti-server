@@ -185,6 +185,8 @@ public class OrderServiceImpl implements OrderService {
 		String stadiumLocation
 	) {
 		List<OrderItemEntity> orderItems = orderItemService.get(order.getId());
+		Map<UUID, OrderItemEntity> orderItemsById = orderItems.stream()
+			.collect(Collectors.toMap(OrderItemEntity::getId, orderItem -> orderItem));
 		List<UUID> orderItemIds = orderItems.stream()
 			.map(OrderItemEntity::getId)
 			.toList();
@@ -197,7 +199,7 @@ public class OrderServiceImpl implements OrderService {
 		TicketEntity representativeTicket = tickets.getFirst();
 		List<SeatGradeInfoResponse> seatGradeGroups = tickets.stream()
 			.collect(Collectors.groupingBy(
-				TicketEntity::getSeatGradeName,
+				ticket -> orderItemsById.get(ticket.getOrderItemId()).getSeat().getSeatSection().getSeatGrade().getName(),
 				LinkedHashMap::new,
 				Collectors.mapping(TicketEntity::getSeatInfo, Collectors.toList())
 			))

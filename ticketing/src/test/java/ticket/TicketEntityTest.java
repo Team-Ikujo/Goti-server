@@ -65,7 +65,6 @@ class TicketEntityTest {
 			"01012345678",
 			"삼성 vs 두산",
 			LocalDateTime.of(2026, 4, 1, 18, 30),
-			"VIP",
 			"VIP A구역 3열 15번",
 			12000,
 			null
@@ -98,7 +97,6 @@ class TicketEntityTest {
 				null,
 				null,
 				null,
-				"VIP",
 				"VIP A구역 3열 15번",
 				12000,
 				null
@@ -121,7 +119,6 @@ class TicketEntityTest {
 				null,
 				null,
 				null,
-				"VIP",
 				"VIP A구역 3열 15번",
 				12000,
 				null
@@ -144,7 +141,6 @@ class TicketEntityTest {
 				null,
 				null,
 				null,
-				"VIP",
 				" ",
 				12000,
 				null
@@ -167,7 +163,6 @@ class TicketEntityTest {
 				null,
 				null,
 				null,
-				"VIP",
 				"VIP A구역 3열 15번",
 				-1,
 				null

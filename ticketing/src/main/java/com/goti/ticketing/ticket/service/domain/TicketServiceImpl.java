@@ -22,6 +22,7 @@ import com.goti.ticketing.order.repository.OrderItemRepository;
 import com.goti.ticketing.ticket.dto.response.ResaleTicketResponse;
 import com.goti.ticketing.ticket.dto.response.TicketPurchaseInfoResponse;
 import com.goti.ticketing.ticket.dto.response.TicketResponse;
+import com.goti.ticketing.order.repository.OrderItemRepository;
 import com.goti.ticketing.ticket.repository.TicketRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,6 @@ public class TicketServiceImpl implements TicketService {
 		String userPhone,
 		String gameTitle,
 		LocalDateTime gameDate,
-		String seatGradeName,
 		String seatInfo,
 		Integer ticketPrice
 	) {
@@ -62,7 +62,6 @@ public class TicketServiceImpl implements TicketService {
 			userPhone,
 			gameTitle,
 			gameDate,
-			seatGradeName,
 			seatInfo,
 			ticketPrice,
 			null
@@ -98,7 +97,11 @@ public class TicketServiceImpl implements TicketService {
 		TicketEntity ticket = ticketRepository.findByIdAndUserId(ticketId, userId)
 			.orElseThrow(() -> new CustomException(ErrorCode.TICKET_NOT_FOUND));
 
-		return TicketResponse.from(ticket);
+		String seatGradeName = orderItemRepository.findById(ticket.getOrderItemId())
+			.map(orderItem -> orderItem.getSeat().getSeatSection().getSeatGrade().getName())
+			.orElse(null);
+
+		return TicketResponse.from(ticket, seatGradeName);
 	}
 
 	@Override
