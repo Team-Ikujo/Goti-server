@@ -5,29 +5,33 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
-import com.goti.constants.messages.ErrorCode;
-import com.goti.exception.CustomException;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
-import com.goti.infra.cloudflare.TurnstileService;
+import com.goti.global.api.PageResponse;
+import com.goti.global.dto.Paging;
 import com.goti.resale.constants.ResaleGraphRange;
 import com.goti.resale.dto.request.ResaleListingCancelRequest;
 import com.goti.resale.dto.request.ResaleListingOrderCreateRequest;
+import com.goti.resale.dto.request.ResaleSearchSalesRequest;
 import com.goti.resale.dto.response.ResaleListingCountResponse;
-import com.goti.resale.dto.response.ResaleListingMyPageCountResponse;
 import com.goti.resale.dto.response.ResaleListingOrderCreateResponse;
+import com.goti.resale.dto.response.ResaleListingOrderResponse;
 import com.goti.resale.dto.response.ResaleListingResponse;
+import com.goti.resale.dto.response.ResaleListingsCountResponse;
 import com.goti.resale.dto.response.ResalePriceHistoryResponse;
+import com.goti.resale.dto.response.ResaleStatusResponse;
 import com.goti.resale.service.application.ResaleListingProcessService;
 import com.goti.resale.service.application.ResalePriceProcessService;
 
@@ -43,11 +47,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/resales")
 @RequiredArgsConstructor
 public class ResaleListingController {
-	private static final String TURNSTILE_TOKEN_HEADER = "X-Turnstile-Token";
 
 	private final ResaleListingProcessService listingService;
 	private final ResalePriceProcessService priceService;
-	private final TurnstileService turnstileService;
 
 	@Operation(
 		summary = "리셀 등록 (일괄 포함)",
@@ -81,41 +83,71 @@ public class ResaleListingController {
 		summary = "등록 일괄 취소",
 		description = "리셀 등록 그룹에 속한 모든 판매 중인 티켓을 취소 API"
 	)
-	@PatchMapping("/listings/orders/{listingOrderId}/cancel")
+	@PatchMapping("/listings/orders/{orderId}/cancel")
 	public ResponseEntity<ApiSuccessResponse<Void>> cancelListingOrder(
 		@AuthenticationPrincipal(expression = "id") UUID sellerId,
-		@PathVariable UUID listingOrderId
+		@PathVariable UUID orderId
 	) {
-		listingService.cancelListingOrder(sellerId, listingOrderId);
+		listingService.cancelListingOrder(sellerId, orderId);
 		return empty();
 	}
 
 	@Operation(
-		summary = "목록 조회",
-		description = "판매자의 리셀 목록 조회 API"
+		summary = "내 판매 그룹 조회",
+		description = "판매 내역 그룹 상태별, 기간별 페이징 조회 API"
 	)
-	@GetMapping("/listings")
-	public ResponseEntity<ApiSuccessResponse<List<ResaleListingResponse>>> getListingsBySellerId(
+	@GetMapping("/listings/orders")
+	public ResponseEntity<ApiSuccessResponse<PageResponse<ResaleListingOrderResponse>>> getSalesHistory(
 		@AuthenticationPrincipal(expression = "id") UUID sellerId,
-		@RequestHeader(name = TURNSTILE_TOKEN_HEADER, required = false) String turnstileToken
+		@ParameterObject ResaleSearchSalesRequest request,
+		@ParameterObject @Valid @ModelAttribute Paging paging
 	) {
-		if (!turnstileService.verify(turnstileToken)) {
-			throw new CustomException(ErrorCode.TURNSTILE_VERIFICATION_FAILED);
-		}
+		Page<ResaleListingOrderResponse> responses = listingService.getSalesHistory(
+			sellerId,
+			request.months(),
+			request.startDate(),
+			request.endDate(),
+			request.status(),
+			paging
+		);
+		return page(responses);
+	}
 
-		List<ResaleListingResponse> responses = listingService.getListingsBySellerId(sellerId);
+	@Operation(
+		summary = "특정 판매 그룹 내 상세 목록 조회",
+		description = "특정 리셀 주문 그룹에 속한 티켓 상세 목록 조회 API"
+	)
+	@GetMapping("/listings/orders/{orderId}")
+	public ResponseEntity<ApiSuccessResponse<List<ResaleListingResponse>>> getSalesDetails(
+		@AuthenticationPrincipal(expression = "id") UUID sellerId,
+		@PathVariable UUID orderId
+	) {
+		List<ResaleListingResponse> responses = listingService.getSalesDetails(sellerId, orderId);
 		return wrap(responses);
 	}
 
 	@Operation(
-		summary = "마이페이지 판매 조회",
-		description = "마이페이지의 판매중, 판매완료 개수 조회 API"
+		summary = "특정 리셀 조회",
+		description = "판매자의 특정 리셀 상세 조회 API"
 	)
-	@GetMapping("/listings/count/listing")
-	public ResponseEntity<ApiSuccessResponse<ResaleListingMyPageCountResponse>> getCountListings(
+	@GetMapping("/listings/{listingId}")
+	public ResponseEntity<ApiSuccessResponse<ResaleListingResponse>> getListings(
+		@AuthenticationPrincipal(expression = "id") UUID sellerId,
+		@PathVariable UUID listingId
+	) {
+		ResaleListingResponse response = listingService.getListing(sellerId, listingId);
+		return wrap(response);
+	}
+
+	@Operation(
+		summary = "리셀 등록 개수 조회",
+		description = "판매자의 리셀 등록 개수 조회 API"
+	)
+	@GetMapping("/listings/count")
+	public ResponseEntity<ApiSuccessResponse<ResaleListingsCountResponse>> getResaleCount(
 		@AuthenticationPrincipal(expression = "id") UUID sellerId
 	) {
-		ResaleListingMyPageCountResponse count = listingService.getCountListings(sellerId);
+		ResaleListingsCountResponse count = listingService.getResaleCount(sellerId);
 		return wrap(count);
 	}
 
@@ -137,7 +169,7 @@ public class ResaleListingController {
 		summary = "경기의 전체 리셀 좌석 개수 조회",
 		description = "경기의 전체 리셀 좌석 개수 조회 API"
 	)
-	@GetMapping("/listings/games/{gameId}/count")
+	@GetMapping("/games/{gameId}/count")
 	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getTotalListingCount(
 		@PathVariable UUID gameId
 	) {
@@ -149,12 +181,24 @@ public class ResaleListingController {
 		summary = "경기의 등급별 리셀 좌석 개수 조회",
 		description = "경기의 등급별 리셀 좌석 개수 조회 API"
 	)
-	@GetMapping("/listings/games/{gameId}/grade/{gradeId}/count")
+	@GetMapping("/games/{gameId}/grade/{gradeId}/count")
 	public ResponseEntity<ApiSuccessResponse<ResaleListingCountResponse>> getListingCountByGrade(
 		@PathVariable UUID gameId,
 		@PathVariable UUID gradeId
 	) {
 		long count = listingService.getListingCountByGrade(gameId, gradeId);
 		return wrap(new ResaleListingCountResponse(count));
+	}
+
+	@Operation(
+		summary = "경기의 리셀 상태 조회",
+		description = "경기의 리셀 가능 여부 (SCHEDULED, AVAILABLE, UNAVAILABLE) 조회 API"
+	)
+	@GetMapping("/games/{gameId}/status")
+	public ResponseEntity<ApiSuccessResponse<ResaleStatusResponse>> getResaleStatus(
+		@PathVariable UUID gameId
+	) {
+		ResaleStatusResponse response = listingService.getResaleStatus(gameId);
+		return wrap(response);
 	}
 }

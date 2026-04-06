@@ -5,6 +5,7 @@ import static com.goti.global.api.ApiSuccessResponse.*;
 import java.util.List;
 import java.util.UUID;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goti.global.api.ApiSuccessResponse;
 import com.goti.resale.dto.request.ResaleHoldRequest;
+import com.goti.resale.dto.request.ResaleOrderPeriodFilterRequest;
 import com.goti.resale.dto.request.ResaleOrderRequest;
 import com.goti.resale.dto.request.ResaleOrderPeriodFilterRequest;
 import com.goti.resale.dto.response.ResaleHoldResponse;
@@ -39,7 +41,7 @@ import org.springdoc.core.annotations.ParameterObject;
 @RestController
 @RequestMapping("/api/v1/resales")
 @RequiredArgsConstructor
-public class ResaleOrderController {
+public class ResaleTransactionController {
 	private final ResaleOrderProcessService resaleOrderProcessService;
 	private final ResaleHoldProcessService resaleHoldProcessService;
 
@@ -52,7 +54,13 @@ public class ResaleOrderController {
 		@AuthenticationPrincipal(expression = "id") UUID buyerId,
 		@Valid @RequestBody ResaleOrderRequest request
 	) {
-		ResaleOrderCreateResponse response = resaleOrderProcessService.initOrder(buyerId, request);
+		ResaleOrderCreateResponse response = resaleOrderProcessService.initOrder(
+			buyerId,
+			request.holdIds(),
+			request.buyerNickname(),
+			request.buyerEmail(),
+			request.buyerPhone()
+		);
 		return wrap(response);
 	}
 
@@ -103,11 +111,11 @@ public class ResaleOrderController {
 	) {
 		return wrap(
 			resaleOrderProcessService.getPurchasesByMember(
-			buyerId,
-			request.months(),
-			request.startDate(),
-			request.endDate()
-		));
+				buyerId,
+				request.months(),
+				request.startDate(),
+				request.endDate()
+			));
 	}
 
 	@Operation(

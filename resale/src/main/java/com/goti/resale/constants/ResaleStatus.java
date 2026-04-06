@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ResaleSettlementStatus {
-	PENDING("대기상태"),
-	COMPLETED("완료"),
-	FAILED("실패");
+public enum ResaleStatus {
+	SCHEDULED("리셀 예정"),
+	AVAILABLE("리셀 가능"),
+	UNAVAILABLE("리셀 매진");
 
 	private final String description;
 }

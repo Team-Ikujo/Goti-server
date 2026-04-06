@@ -1,8 +1,9 @@
-package com.goti.resale.repository;
+package com.goti.resale.repository.transaction;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,8 +11,10 @@ import org.springframework.data.repository.query.Param;
 import com.goti.resale.constants.ResaleTransactionStatus;
 import com.goti.resale.domain.entity.resale.ResaleTransactionEntity;
 
-public interface ResaleTransactionRepository extends JpaRepository<ResaleTransactionEntity, UUID>, ResaleTransactionRepositoryCustom {
+public interface ResaleTransactionRepository
+	extends JpaRepository<ResaleTransactionEntity, UUID>, ResaleTransactionRepositoryCustom {
 
+	@EntityGraph(attributePaths = {"listing", "listing.listingOrder"})
 	List<ResaleTransactionEntity> findAllByResaleOrderId(UUID resaleOrderId);
 
 	@Query("""
