@@ -74,8 +74,3 @@ infra:
     endpoints:
       ticketing: ${TICKETING_BASE_URL:http://localhost:8080}
       payment: ${PAYMENT_BASE_URL:http://localhost:8080}
-
-cloudflare:
-  turnstile:
-    secret: ${CLOUDFLARE_TURNSTILE_SECRET}
-    verify-url: https://challenges.cloudflare.com/turnstile/v0/siteverify
