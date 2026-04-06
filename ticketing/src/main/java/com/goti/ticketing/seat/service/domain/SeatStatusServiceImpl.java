@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +38,7 @@ public class SeatStatusServiceImpl implements SeatStatusService {
 
 		return seatStatusRepository.findAllByGameAndSeatIds(gameId, seatIds)
 			.stream()
-			.collect(java.util.stream.Collectors.toMap(
+			.collect(Collectors.toMap(
 				seatStatus -> seatStatus.getSeat().getId(),
 				seatStatus -> seatStatus
 			));
