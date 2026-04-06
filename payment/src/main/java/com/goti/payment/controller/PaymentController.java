@@ -93,7 +93,7 @@ public class PaymentController {
 				request.months(),
 				request.startDate(),
 				request.endDate(),
-				paging
+				paging.toPageable()
 			)
 		);
 	}

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.goti.constants.messages.ErrorCode;
-import com.goti.global.dto.Paging;
 import com.goti.global.validation.Preconditions;
 import com.goti.payment.dto.response.PurchaseSearchResponse;
 import com.goti.payment.infra.ResaleOrderClient;
@@ -42,13 +41,12 @@ public class PurchaseSearchService {
 		Integer months,
 		LocalDate startDate,
 		LocalDate endDate,
-		Paging paging
+		Pageable pageable
 	) {
 		Preconditions.validate(
 			memberId != null,
 			ErrorCode.AUTH_INVALID
 		);
-		Pageable pageable = paging.toPageable();
 
 		PurchaseSearchType purchaseSearchType = type != null ? type : PurchaseSearchType.ALL;
 
@@ -68,12 +66,12 @@ public class PurchaseSearchService {
 			endDate
 		);
 
-		List<PurchaseSearchResponse> merged = Stream.concat(normalOrders.stream(), resaleOrders.stream())
+		List<PurchaseSearchResponse> combinedPurchases = Stream.concat(normalOrders.stream(), resaleOrders.stream())
 			.filter(order -> matchesKeyword(order, keyword))
 			.sorted(Comparator.comparing(PurchaseSearchResponse::orderedAt).reversed())
 			.toList();
 
-		return toPage(merged, pageable);
+		return toPage(combinedPurchases, pageable);
 	}
 
 	private List<PurchaseSearchResponse> getNormalOrders(
@@ -135,14 +133,14 @@ public class PurchaseSearchService {
 			.toList();
 	}
 
-	private Page<PurchaseSearchResponse> toPage(List<PurchaseSearchResponse> merged, Pageable pageable) {
+	private Page<PurchaseSearchResponse> toPage(List<PurchaseSearchResponse> combinedPurchases, Pageable pageable) {
 		int start = (int) pageable.getOffset();
-		if (start >= merged.size()) {
-			return new PageImpl<>(List.of(), pageable, merged.size());
+		if (start >= combinedPurchases.size()) {
+			return new PageImpl<>(List.of(), pageable, combinedPurchases.size());
 		}
 
-		int end = Math.min(start + pageable.getPageSize(), merged.size());
-		return new PageImpl<>(merged.subList(start, end), pageable, merged.size());
+		int end = Math.min(start + pageable.getPageSize(), combinedPurchases.size());
+		return new PageImpl<>(combinedPurchases.subList(start, end), pageable, combinedPurchases.size());
 	}
 
 	private boolean matchesKeyword(PurchaseSearchResponse order, String keyword) {
