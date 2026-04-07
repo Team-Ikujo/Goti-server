@@ -6,8 +6,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -55,7 +57,7 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 
 	@Override
 	public List<GameScheduleSearchResponse> searchSchedules(GameScheduleSearchCondition condition) {
-		return jpaQueryFactory
+		List<GameScheduleSearchResponse> schedules = jpaQueryFactory
 			.select(
 				new QGameScheduleSearchResponse(
 					gameSchedule.id,
@@ -74,16 +76,7 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 					ticketingStatus.status,
 					ticketingStatus.ticketingOpenedAt,
 					ticketingStatus.ticketingEndAt,
-					ExpressionUtils.as(
-						JPAExpressions
-							.select(seatStatus.count())
-							.from(seatStatus)
-							.where(
-								seatStatus.game.eq(gameSchedule),
-								seatStatus.status.eq(SeatStatus.AVAILABLE)
-							),
-						"remainingSeatCount"
-					)
+					Expressions.constant(0L)
 				)
 			)
 			.from(gameSchedule)
@@ -95,7 +88,31 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 			)
 			.orderBy(gameSchedule.startAt.asc())
 			.fetch();
+
+		if (schedules.isEmpty()) return List.of();
+
+		return schedules;
 	}
+
+	@Override
+	public Map<UUID, Long> findRemainingSeatCounts(List<UUID> scheduleIds) {
+		return jpaQueryFactory
+			.select(seatStatus.game.id, seatStatus.count())
+			.from(seatStatus)
+			.where(
+				seatStatus.game.id.in(scheduleIds),
+				seatStatus.status.eq(SeatStatus.AVAILABLE)
+			)
+			.groupBy(seatStatus.game.id)
+			.fetch()
+			.stream()
+			.collect(Collectors.toMap(
+				tuple -> tuple.get(seatStatus.game.id),
+				tuple -> tuple.get(seatStatus.count())
+			));
+	}
+
+
 
 	@Override
 	public Optional<GameScheduleSearchResponse> findScheduleByGameId(UUID gameId) {
@@ -162,7 +179,11 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 
 			return game.startAt.between(startOfMonth, startOfMonth.plusMonths(1).minusNanos(1));
 		}
-		return null;
+		int currentYear = LocalDateTime.now().getYear();
+		LocalDateTime startOfYear = LocalDateTime.of(
+			currentYear, 1, 1, 0, 0
+		);
+		return game.startAt.between(startOfYear, startOfYear.plusYears(1).minusNanos(1));
 	}
 
 	private BooleanExpression isAnyTeamInvolved(UUID homeId, UUID awayId) {
