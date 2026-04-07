@@ -43,25 +43,6 @@ public class SeatHoldRepositoryImpl implements SeatHoldRepositoryCustom {
 	}
 
 	@Override
-	public List<SeatHoldEntity> findExpiredHoldsByIds(List<UUID> holdIds) {
-		if (holdIds.isEmpty()) {
-			return List.of();
-		}
-
-		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
-		QGameScheduleEntity gameSchedule = QGameScheduleEntity.gameScheduleEntity;
-		QSeatEntity seat = QSeatEntity.seatEntity;
-
-		return queryFactory
-			.selectFrom(seatHold)
-			.join(seatHold.gameSchedule, gameSchedule).fetchJoin()
-			.join(seatHold.seat, seat).fetchJoin()
-			.where(seatHold.id.in(holdIds))
-			.orderBy(seatHold.expiredAt.asc())
-			.fetch();
-	}
-
-	@Override
 	public Optional<SeatHoldEntity> findHoldWithSeatAndGame(UUID holdId) {
 		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
 		QGameScheduleEntity gameSchedule = QGameScheduleEntity.gameScheduleEntity;

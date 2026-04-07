@@ -16,13 +16,15 @@ import com.goti.ticketing.domain.entity.seat.SeatHoldEntity;
 @Repository
 public interface SeatHoldRepository extends JpaRepository<SeatHoldEntity, UUID>, SeatHoldRepositoryCustom {
 	@Query("""
-		SELECT sh.id
+		SELECT sh
 			FROM SeatHoldEntity sh
+		JOIN FETCH sh.gameSchedule
+		JOIN FETCH sh.seat
 		WHERE sh.status = :status
 		  AND sh.expiredAt < :now
 		ORDER BY sh.expiredAt ASC
 	""")
-	List<UUID> findExpiredHoldIds(
+	List<SeatHoldEntity> findHoldsWithSeatAndGame(
 		@Param("status") SeatHoldStatus status,
 		@Param("now") LocalDateTime now,
 		Pageable pageable
