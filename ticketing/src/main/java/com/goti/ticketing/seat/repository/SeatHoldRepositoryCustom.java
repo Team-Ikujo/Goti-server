@@ -12,12 +12,7 @@ import com.goti.ticketing.domain.entity.seat.SeatHoldEntity;
 public interface SeatHoldRepositoryCustom {
 	List<SeatHoldEntity> findAllWithDetailsByIdIn(List<UUID> holdIds);
 
-	List<SeatHoldEntity> findAllHoldingSeats(UUID gameId, UUID userId);
+	List<SeatHoldEntity> findExpiredHoldsByIds(List<UUID> holdIds);
 
-	Optional<SeatHoldEntity> findLatestActiveHold(
-		GameScheduleEntity gameSchedule,
-		SeatEntity seat,
-		UUID userId,
-		SeatHoldStatus status
-	);
+	List<SeatHoldEntity> findAllHoldingSeats(UUID gameId, UUID userId);
 }

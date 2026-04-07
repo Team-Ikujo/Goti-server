@@ -43,6 +43,25 @@ public class SeatHoldRepositoryImpl implements SeatHoldRepositoryCustom {
 	}
 
 	@Override
+	public List<SeatHoldEntity> findExpiredHoldsByIds(List<UUID> holdIds) {
+		if (holdIds.isEmpty()) {
+			return List.of();
+		}
+
+		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
+		QGameScheduleEntity gameSchedule = QGameScheduleEntity.gameScheduleEntity;
+		QSeatEntity seat = QSeatEntity.seatEntity;
+
+		return queryFactory
+			.selectFrom(seatHold)
+			.join(seatHold.gameSchedule, gameSchedule).fetchJoin()
+			.join(seatHold.seat, seat).fetchJoin()
+			.where(seatHold.id.in(holdIds))
+			.orderBy(seatHold.expiredAt.asc())
+			.fetch();
+	}
+
+	@Override
 	public List<SeatHoldEntity> findAllHoldingSeats(UUID gameId, UUID userId) {
 		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
 		QGameScheduleEntity gameSchedule = QGameScheduleEntity.gameScheduleEntity;
@@ -62,28 +81,5 @@ public class SeatHoldRepositoryImpl implements SeatHoldRepositoryCustom {
 				seatHold.status.eq(SeatHoldStatus.HOLDING)
 			)
 			.fetch();
-	}
-
-	@Override
-	public Optional<SeatHoldEntity> findLatestActiveHold(
-		GameScheduleEntity gameSchedule,
-		SeatEntity seat,
-		UUID userId,
-		SeatHoldStatus status
-	) {
-		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
-
-		return Optional.ofNullable(
-			queryFactory
-				.selectFrom(seatHold)
-				.where(
-					seatHold.gameSchedule.eq(gameSchedule),
-					seatHold.seat.eq(seat),
-					seatHold.userId.eq(userId),
-					seatHold.status.eq(status)
-				)
-				.orderBy(seatHold.createdAt.desc())
-				.fetchFirst()
-		);
 	}
 }
