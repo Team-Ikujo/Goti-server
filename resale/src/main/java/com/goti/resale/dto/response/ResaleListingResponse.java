@@ -44,7 +44,7 @@ public record ResaleListingResponse(
 
 		return new ResaleListingResponse(
 			entity.getId(),
-			entity.getListingOrder().getId(),
+			entity.getListingOrderId(),
 			entity.getTicketId(),
 			entity.getSellerId(),
 			entity.getGameId(),

@@ -37,6 +37,9 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 	@JoinColumn(name = "listing_order_id", nullable = false)
 	private ResaleListingOrderEntity listingOrder;
 
+	@Column(name = "listing_order_id", insertable = false, updatable = false)
+	private UUID listingOrderId;
+
 	@Column(nullable = false)
 	private UUID ticketId;
 
