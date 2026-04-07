@@ -11,7 +11,7 @@ public interface SeatHoldRepositoryCustom {
 
 	List<SeatHoldEntity> findExpiredHoldsByIds(List<UUID> holdIds);
 
-	Optional<SeatHoldEntity> findSeatHoldWithDetails(UUID holdId);
+	Optional<SeatHoldEntity> findHoldWithSeatAndGame(UUID holdId);
 
 	List<SeatHoldEntity> findAllHoldingSeats(UUID gameId, UUID userId);
 }

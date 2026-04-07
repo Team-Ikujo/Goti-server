@@ -25,7 +25,7 @@ public class SeatHoldExpiryTransactionalService {
 
 	@Transactional
 	public void expire(UUID holdId, LocalDateTime now) {
-		SeatHoldEntity seatHold = seatHoldRepository.findSeatHoldWithDetails(holdId)
+		SeatHoldEntity seatHold = seatHoldRepository.findHoldWithSeatAndGame(holdId)
 			.orElseThrow(() -> new CustomException(ErrorCode.SEAT_HOLD_NOT_FOUND));
 
 		SeatStatusEntity seatStatus = seatStatusRepository.findByGameAndSeat(
