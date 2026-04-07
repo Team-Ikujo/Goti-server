@@ -1,5 +1,6 @@
 package com.goti.ticketing.seat.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +40,25 @@ public class SeatHoldRepositoryImpl implements SeatHoldRepositoryCustom {
 			.join(seat.seatSection, seatSection).fetchJoin()
 			.join(seatSection.seatGrade, seatGrade).fetchJoin()
 			.where(seatHold.id.in(holdIds))
+			.fetch();
+	}
+
+	@Override
+	public List<SeatHoldEntity> findHoldsWithSeatAndGame(SeatHoldStatus status, LocalDateTime now, int limit) {
+		QSeatHoldEntity seatHold = QSeatHoldEntity.seatHoldEntity;
+		QGameScheduleEntity gameSchedule = QGameScheduleEntity.gameScheduleEntity;
+		QSeatEntity seat = QSeatEntity.seatEntity;
+
+		return queryFactory
+			.selectFrom(seatHold)
+			.join(seatHold.gameSchedule, gameSchedule).fetchJoin()
+			.join(seatHold.seat, seat).fetchJoin()
+			.where(
+				seatHold.status.eq(status),
+				seatHold.expiredAt.before(now)
+			)
+			.orderBy(seatHold.expiredAt.asc())
+			.limit(limit)
 			.fetch();
 	}
 
