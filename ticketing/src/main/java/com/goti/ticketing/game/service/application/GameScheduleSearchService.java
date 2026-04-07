@@ -99,7 +99,7 @@ public class GameScheduleSearchService {
 			teamNames.get(schedule.homeTeamId()),
 			teamNames.get(schedule.awayTeamId()),
 			stadiumLocations.get(schedule.stadiumId()),
-			seatCountMap.get(schedule.gameId())
+			seatCountMap.getOrDefault(schedule.gameId(), 0L)
 		);
 	}
 }

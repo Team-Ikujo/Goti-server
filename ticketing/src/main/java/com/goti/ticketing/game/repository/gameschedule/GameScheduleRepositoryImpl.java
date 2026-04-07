@@ -21,10 +21,8 @@ import com.goti.ticketing.domain.entity.seat.QSeatStatusEntity;
 import com.goti.ticketing.game.dto.request.GameScheduleSearchCondition;
 import com.goti.ticketing.game.dto.response.GameScheduleSearchResponse;
 import com.goti.ticketing.game.dto.response.QGameScheduleSearchResponse;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -57,7 +55,8 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 
 	@Override
 	public List<GameScheduleSearchResponse> searchSchedules(GameScheduleSearchCondition condition) {
-		List<GameScheduleSearchResponse> schedules = jpaQueryFactory
+		LocalDateTime now = LocalDateTime.now();
+		return jpaQueryFactory
 			.select(
 				new QGameScheduleSearchResponse(
 					gameSchedule.id,
@@ -84,14 +83,10 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 			.leftJoin(ticketingStatus).on(ticketingStatus.gameSchedule.eq(gameSchedule))
 			.where(
 				teamIdEq(gameSchedule, condition.teamId()),
-				dateFilter(gameSchedule, condition)
+				dateFilter(gameSchedule, condition, now)
 			)
 			.orderBy(gameSchedule.startAt.asc())
 			.fetch();
-
-		if (schedules.isEmpty()) return List.of();
-
-		return schedules;
 	}
 
 	@Override
@@ -136,16 +131,7 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 						ticketingStatus.status,
 						ticketingStatus.ticketingOpenedAt,
 						ticketingStatus.ticketingEndAt,
-						ExpressionUtils.as(
-							JPAExpressions
-								.select(seatStatus.count())
-								.from(seatStatus)
-								.where(
-									seatStatus.game.eq(gameSchedule),
-									seatStatus.status.eq(SeatStatus.AVAILABLE)
-								),
-							"remainingSeatCount"
-						)
+						Expressions.constant(0L)
 					)
 				)
 				.from(gameSchedule)
@@ -162,7 +148,9 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 		return game.homeTeamId.eq(teamId).or(game.awayTeamId.eq(teamId));
 	}
 
-	private BooleanExpression dateFilter(QGameScheduleEntity game, GameScheduleSearchCondition condition) {
+	private BooleanExpression dateFilter(
+		QGameScheduleEntity game, GameScheduleSearchCondition condition, LocalDateTime now
+	) {
 		if (condition.today()) {
 			LocalDate today = LocalDate.now();
 			return game.startAt.between(today.atStartOfDay(), today.atTime(LocalTime.MAX));
@@ -179,7 +167,7 @@ public class GameScheduleRepositoryImpl implements GameScheduleRepositoryCustom 
 
 			return game.startAt.between(startOfMonth, startOfMonth.plusMonths(1).minusNanos(1));
 		}
-		int currentYear = LocalDateTime.now().getYear();
+		int currentYear = now.getYear();
 		LocalDateTime startOfYear = LocalDateTime.of(
 			currentYear, 1, 1, 0, 0
 		);
