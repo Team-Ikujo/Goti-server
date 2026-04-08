@@ -11,8 +11,6 @@ import java.util.stream.Stream;
 
 import com.goti.ticketing.game.dto.response.repository.GameScheduleQueryModel;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +25,6 @@ import com.goti.ticketing.infra.api.dto.response.StadiumLocationResponse;
 
 import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GameScheduleSearchService {
@@ -37,10 +34,8 @@ public class GameScheduleSearchService {
 	@Transactional(readOnly = true)
 	public List<GameScheduleSearchResponse> searchSchedules(GameScheduleSearchCondition condition) {
 		List<GameScheduleQueryModel> queryModels = gameScheduleRepository.searchSchedules(condition);
-		log.info("queryModels :: {}", queryModels);
-		if (queryModels.isEmpty()) {
-			return List.of();
-		}
+
+		if (queryModels.isEmpty()) return List.of();
 
 		List<UUID> gameIds = queryModels.stream().map(GameScheduleQueryModel::gameId).toList();
 
