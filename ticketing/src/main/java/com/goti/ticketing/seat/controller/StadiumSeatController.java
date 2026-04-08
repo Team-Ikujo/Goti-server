@@ -73,10 +73,10 @@ public class StadiumSeatController {
 	public ResponseEntity<ApiSuccessResponse<SeatGradeSearchResultResponse>> getSeatGrades(
 		@AuthenticationPrincipal(expression = "id") UUID userId,
 		@PathVariable UUID gameId,
-		@RequestHeader(name = TURNSTILE_TOKEN_HEADER, required = false) String turnstileToken,
+		//@RequestHeader(name = TURNSTILE_TOKEN_HEADER, required = false) String turnstileToken,
 		@RequestParam(defaultValue = "false") boolean forceNewSession
 	) {
-		log.info("StadiumSeatController::turnstileToken::{}", turnstileToken);
+		//log.info("StadiumSeatController::turnstileToken::{}", turnstileToken);
 		// if (!turnstileService.verify(turnstileToken)) {
 		// 	throw new CustomException(ErrorCode.TURNSTILE_VERIFICATION_FAILED);
 		// }
