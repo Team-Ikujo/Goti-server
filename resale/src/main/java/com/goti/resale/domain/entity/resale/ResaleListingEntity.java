@@ -97,6 +97,7 @@ public class ResaleListingEntity extends ModificationTimestampEntity {
 		Integer listingPrice
 	) {
 		this.listingOrder = listingOrder;
+		this.listingOrderId = listingOrder.getId();
 		this.ticketId = ticketId;
 		this.sellerId = sellerId;
 		this.gameId = gameId;
