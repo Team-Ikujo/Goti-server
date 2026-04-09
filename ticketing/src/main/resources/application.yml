@@ -65,6 +65,9 @@ seat:
     fixed-delay-ms: 1000
     batch-size: 200
 
+queue:
+  token-secret: ${QUEUE_TOKEN_SECRET:goti-2026-queue-token-secret-key-minimum-32-chars}
+
 infra:
   api:
     endpoints:
