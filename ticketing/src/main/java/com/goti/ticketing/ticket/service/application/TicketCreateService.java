@@ -47,7 +47,7 @@ public class TicketCreateService {
 
 		List<OrderItemEntity> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
 		String ticketNumberPrefix = createPrefix(order.getCreatedAt(), order.getOrderNumber());
-		String gameTitle = buildGameTitle(order);
+		String gameTitle = createGameTitle(order);
 
 		return IntStream.range(0, orderItems.size())
 			.mapToObj(index -> createTicket(
@@ -106,7 +106,7 @@ public class TicketCreateService {
 		return ticketNumberPrefix + "-" + String.format("%03d", ticketSequence);
 	}
 
-	private String buildGameTitle(OrderEntity order) {
+	private String createGameTitle(OrderEntity order) {
 		UUID homeTeamId = order.getGameSchedule().getHomeTeamId();
 		UUID awayTeamId = order.getGameSchedule().getAwayTeamId();
 
