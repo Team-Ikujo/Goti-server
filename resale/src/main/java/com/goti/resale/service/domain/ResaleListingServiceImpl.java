@@ -376,7 +376,7 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 		Map<UUID, List<ResaleListingEntity>> listingsByOrderId =
 			listingRepository.findAllByListingOrderIdIn(listingOrderIds)
 				.stream()
-				.collect(Collectors.groupingBy(ResaleListingEntity::getListingOrderId));
+				.collect(Collectors.groupingBy(l -> l.getListingOrder().getId()));
 
 		for (ResaleListingOrderEntity order : listingOrders) {
 			List<ResaleListingEntity> allListings = listingsByOrderId.getOrDefault(
