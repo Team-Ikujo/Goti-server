@@ -3,7 +3,6 @@ package com.goti.ticketing.ticket.service.application;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -112,7 +111,7 @@ public class TicketCreateService {
 		UUID awayTeamId = order.getGameSchedule().getAwayTeamId();
 
 		Map<UUID, String> teamDisplayNames = stadiumClient.getBaseballTeamDisplayNames(
-				new ArrayList<>(List.of(homeTeamId, awayTeamId))
+				List.of(homeTeamId, awayTeamId)
 			).stream()
 			.collect(Collectors.toMap(
 				BaseballTeamDisplayNameResponse::teamId,
