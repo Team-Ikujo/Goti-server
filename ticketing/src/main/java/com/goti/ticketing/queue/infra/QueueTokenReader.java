@@ -3,6 +3,7 @@ package com.goti.ticketing.queue.infra;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.crypto.SecretKey;
@@ -44,19 +45,29 @@ public class QueueTokenReader {
 				.decryptWith(secretKey)
 				.build();
 		} catch (GeneralSecurityException e) {
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, e);
 		}
 	}
 
 	public QueueTokenPayload parse(String token) {
 		try {
 			Claims claims = jwtParser.parseEncryptedClaims(token).getPayload();
+			String tokenId = claims.getId();
+			String gameId = claims.get(GAME_ID_CLAIM, String.class);
+			String userId = claims.getSubject();
+			Long queueNumber = claims.get(QUEUE_NUMBER_CLAIM, Long.class);
+			Date issuedAt = claims.getIssuedAt();
+
+			if (tokenId == null || gameId == null || userId == null || queueNumber == null || issuedAt == null) {
+				throw new CustomException(ErrorCode.QUEUE_TOKEN_INVALID);
+			}
+
 			return new QueueTokenPayload(
-				UUID.fromString(claims.getId()),
-				UUID.fromString(claims.get(GAME_ID_CLAIM, String.class)),
-				UUID.fromString(claims.getSubject()),
-				claims.get(QUEUE_NUMBER_CLAIM, Long.class),
-				claims.getIssuedAt().toInstant()
+				UUID.fromString(tokenId),
+				UUID.fromString(gameId),
+				UUID.fromString(userId),
+				queueNumber,
+				issuedAt.toInstant()
 			);
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new CustomException(ErrorCode.QUEUE_TOKEN_INVALID);
