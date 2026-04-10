@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.github.f4b6a3.tsid.TsidCreator;
 import com.goti.constants.messages.ErrorCode;
@@ -212,27 +211,8 @@ public class OrderServiceImpl implements OrderService {
 			representativeTicket.getGameTitle(),
 			representativeTicket.getGameDate(),
 			stadiumLocation,
-			extractSeatInfos(seatGradeGroups)
+			seatGradeGroups
 		);
-	}
-
-	private List<String> extractSeatInfos(List<SeatGradeInfoResponse> seatGradeGroups) {
-		if (seatGradeGroups == null) {
-			return List.of();
-		}
-
-		return seatGradeGroups.stream()
-			.flatMap(group -> group.seatInfos().stream()
-				.map(seatInfo -> combineSeatGradeAndSeatInfo(group.seatGradeName(), seatInfo)))
-			.toList();
-	}
-
-	private String combineSeatGradeAndSeatInfo(String seatGradeName, String seatInfo) {
-		if (!StringUtils.hasText(seatGradeName)) {
-			return seatInfo;
-		}
-
-		return String.format("%s %s", seatGradeName, seatInfo);
 	}
 
 	private Map<UUID, String> getStadiumLocationsMap(List<UUID> stadiumIds) {

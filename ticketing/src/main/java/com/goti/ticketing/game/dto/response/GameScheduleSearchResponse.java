@@ -1,19 +1,16 @@
 package com.goti.ticketing.game.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.goti.ticketing.constants.GameResult;
 import com.goti.ticketing.constants.GameStatus;
-
 import com.goti.ticketing.constants.LeagueType;
 import com.goti.ticketing.constants.TicketingStatus;
-
 import com.goti.ticketing.game.dto.response.repository.GameScheduleQueryModel;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Schema(description = "야구 경기 일정 및 통합 상태 조회 응답")
 public record GameScheduleSearchResponse(
@@ -32,9 +29,6 @@ public record GameScheduleSearchResponse(
 
 	@Schema(description = "원정 팀 표시명", example = "KIA")
 	String awayTeamDisplayName,
-
-	@Schema(description = "구장 ID")
-	UUID stadiumId,
 
 	@Schema(description = "구장 위치", example = "대구")
 	String stadiumLocation,
@@ -78,7 +72,6 @@ public record GameScheduleSearchResponse(
 			model.leagueType(),
 			homeTeamDisplayName,
 			awayTeamDisplayName,
-			model.stadiumId(),
 			stadiumLocation,
 			model.gameStatus(),
 			model.homeTeamScore(),
