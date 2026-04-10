@@ -25,7 +25,10 @@ public interface GameSeatSummaryRepository extends JpaRepository<GameSeatSummary
 				 AND summary.availableCount < summary.totalCount
 		"""
 	)
-	int increaseAvailableCount(@Param("gameScheduleId") UUID gameScheduleId, int count);
+	int increaseAvailableCount(
+		@Param("gameScheduleId") UUID gameScheduleId,
+		@Param("count") int count
+	);
 
 	@Modifying(clearAutomatically = true)
 	@Query(
@@ -36,5 +39,8 @@ public interface GameSeatSummaryRepository extends JpaRepository<GameSeatSummary
        	 AND summary.availableCount > 0
 		"""
 	)
-	int decreaseAvailableCount(UUID gameScheduleId, int count);
+	int decreaseAvailableCount(
+		@Param("gameScheduleId") UUID gameScheduleId,
+		@Param("count") int count
+	);
 }
