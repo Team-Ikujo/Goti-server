@@ -242,7 +242,7 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 			.collect(Collectors.groupingBy(l -> l.getListingOrder().getId()));
 
 		Map<UUID, GameScheduleResponse> gameCache = new HashMap<>();
-		Map<UUID, String> gradeNameCache = new HashMap<>();
+		Map<UUID, ResaleTicketResponse> ticketInfoCache = new HashMap<>();
 
 		return orders.map(order -> {
 			List<ResaleListingEntity> listings = listingsByOrder.getOrDefault(order.getId(), List.of());
@@ -255,8 +255,8 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 			GameScheduleResponse game = gameCache.computeIfAbsent(rep.getGameId(),
 				ticketClient::getGameSchedule);
 
-			String gradeName = gradeNameCache.computeIfAbsent(rep.getTicketId(),
-				ticketId -> ticketClient.getTicketInfo(ticketId, sellerId).gradeName());
+			ResaleTicketResponse ticketInfo = ticketInfoCache.computeIfAbsent(rep.getTicketId(),
+				ticketId -> ticketClient.getTicketInfo(ticketId, sellerId));
 
 			Integer totalAmount = listings.stream()
 				.mapToInt(ResaleListingEntity::getListingPrice)
@@ -264,7 +264,7 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 
 			List<SeatGradeInfoResponse> seatGradeGroups = listings.stream()
 				.collect(Collectors.groupingBy(
-					l -> gradeName,
+					l -> ticketInfo.gradeName(),
 					LinkedHashMap::new,
 					Collectors.mapping(ResaleListingEntity::getSeatInfo, Collectors.toList())
 				))
@@ -284,7 +284,7 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 				totalAmount,
 				LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.of("Asia/Seoul")),
 				rep.getGameId(),
-				game.stadiumId(),
+				ticketInfo.stadiumId(),
 				game.getGameTitle(),
 				game.startAt(),
 				game.stadiumLocation(),
