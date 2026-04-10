@@ -5,13 +5,12 @@ import static lombok.AccessLevel.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.goti.ticketing.constants.TicketStatus;
-
 import org.springframework.util.StringUtils;
 
-import com.goti.ticketing.constants.ResaleEnabledStatus;
 import com.goti.domain.base.ModificationTimestampEntity;
 import com.goti.global.validation.Preconditions;
+import com.goti.ticketing.constants.ResaleEnabledStatus;
+import com.goti.ticketing.constants.TicketStatus;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -225,3 +224,4 @@ public class TicketEntity extends ModificationTimestampEntity {
 		return freeze != null && freeze.isActive();
 	}
 }
+
