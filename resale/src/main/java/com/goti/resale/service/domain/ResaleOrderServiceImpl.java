@@ -289,7 +289,8 @@ public class ResaleOrderServiceImpl implements ResaleOrderService {
 			gameId,
 			representativeTicket.gameTitle(),
 			representativeTicket.gameDate(),
-			seatInfos
+			seatInfos,
+			ticketIds
 		);
 	}
 
