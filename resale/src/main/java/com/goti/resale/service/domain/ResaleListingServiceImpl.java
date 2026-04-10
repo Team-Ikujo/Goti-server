@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -246,8 +245,9 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 
 		return orders.map(order -> {
 			List<ResaleListingEntity> listings = listingsByOrder.getOrDefault(order.getId(), List.of());
-			if (listings.isEmpty()) {
-				return null;
+
+			if (listings == null || listings.isEmpty()) {
+				throw new CustomException(ErrorCode.LISTING_NOT_FOUND);
 			}
 
 			ResaleListingEntity rep = listings.get(0);
@@ -262,15 +262,10 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 				.mapToInt(ResaleListingEntity::getListingPrice)
 				.sum();
 
-			List<SeatGradeInfoResponse> seatGradeGroups = listings.stream()
-				.collect(Collectors.groupingBy(
-					l -> ticketInfo.gradeName(),
-					LinkedHashMap::new,
-					Collectors.mapping(ResaleListingEntity::getSeatInfo, Collectors.toList())
-				))
-				.entrySet().stream()
-				.map(entry -> new SeatGradeInfoResponse(entry.getKey(), entry.getValue()))
-				.toList();
+			List<String> formattedSeatInfos = extractSeatInfos(
+				ticketInfo.gradeName(),
+				listings.stream().map(ResaleListingEntity::getSeatInfo).toList()
+			);
 
 			List<UUID> ticketIds = listings.stream()
 				.map(ResaleListingEntity::getTicketId)
@@ -288,7 +283,7 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 				game.getGameTitle(),
 				game.startAt(),
 				game.stadiumLocation(),
-				extractSeatInfos(seatGradeGroups),
+				formattedSeatInfos,
 				ticketIds
 			);
 		});
@@ -470,8 +465,17 @@ public class ResaleListingServiceImpl implements ResaleListingService {
 		}
 
 		return seatGradeGroups.stream()
-			.flatMap(group -> group.seatInfos().stream()
-				.map(seatInfo -> combineSeatGradeAndSeatInfo(group.seatGradeName(), seatInfo)))
+			.flatMap(group -> extractSeatInfos(group.seatGradeName(), group.seatInfos()).stream())
+			.toList();
+	}
+
+	private List<String> extractSeatInfos(String gradeName, List<String> seatInfos) {
+		if (seatInfos == null) {
+			return List.of();
+		}
+
+		return seatInfos.stream()
+			.map(seatInfo -> combineSeatGradeAndSeatInfo(gradeName, seatInfo))
 			.toList();
 	}
 
