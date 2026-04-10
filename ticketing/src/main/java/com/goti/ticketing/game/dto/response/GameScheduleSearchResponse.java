@@ -33,6 +33,9 @@ public record GameScheduleSearchResponse(
 	@Schema(description = "원정 팀 표시명", example = "KIA")
 	String awayTeamDisplayName,
 
+	@Schema(description = "구장 ID")
+	UUID stadiumId,
+
 	@Schema(description = "구장 위치", example = "대구")
 	String stadiumLocation,
 
@@ -75,6 +78,7 @@ public record GameScheduleSearchResponse(
 			model.leagueType(),
 			homeTeamDisplayName,
 			awayTeamDisplayName,
+			model.stadiumId(),
 			stadiumLocation,
 			model.gameStatus(),
 			model.homeTeamScore(),
