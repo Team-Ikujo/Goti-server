@@ -1,16 +1,19 @@
 package com.goti.ticketing.game.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.goti.ticketing.constants.GameResult;
 import com.goti.ticketing.constants.GameStatus;
+
 import com.goti.ticketing.constants.LeagueType;
 import com.goti.ticketing.constants.TicketingStatus;
+
 import com.goti.ticketing.game.dto.response.repository.GameScheduleQueryModel;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Schema(description = "야구 경기 일정 및 통합 상태 조회 응답")
 public record GameScheduleSearchResponse(
