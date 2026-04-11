@@ -22,7 +22,7 @@ public interface GameSeatSummaryRepository extends JpaRepository<GameSeatSummary
 			UPDATE GameSeatSummaryEntity summary
 				 SET summary.availableCount = summary.availableCount + :count
 			 WHERE summary.gameSchedule.id = :gameScheduleId
-				 AND summary.availableCount < summary.totalCount
+				 AND summary.availableCount + :count <= summary.totalCount
 		"""
 	)
 	int increaseAvailableCount(
@@ -36,7 +36,7 @@ public interface GameSeatSummaryRepository extends JpaRepository<GameSeatSummary
 			UPDATE GameSeatSummaryEntity summary
 				 SET summary.availableCount = summary.availableCount - :count
      	 WHERE summary.gameSchedule.id = :gameScheduleId
-       	 AND summary.availableCount > 0
+       	 AND summary.availableCount >= :count
 		"""
 	)
 	int decreaseAvailableCount(
