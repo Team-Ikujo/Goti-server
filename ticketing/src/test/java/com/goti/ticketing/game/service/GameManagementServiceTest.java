@@ -16,6 +16,8 @@ import com.goti.stadium.repository.StadiumRepository;
 
 import com.goti.ticketing.infra.api.StadiumApiClient;
 
+import com.goti.ticketing.infra.api.dto.response.StadiumTotalSeatsResponse;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
 
 @Slf4j
 @Transactional
@@ -64,9 +68,11 @@ public class GameManagementServiceTest {
 
 	@BeforeEach
 	void setup() {
-		saveHomeTeam();
-		saveAwayTeam();
-		saveStadium();
+		homeTeam = createAndGetHomeTeam();
+		awayTeam = createAndGetAwayTeam();
+		stadium = createAndGetStadium();
+		given(StadiumApiClient.getStadiumTotalSeats(any()))
+			.willReturn(new StadiumTotalSeatsResponse(20500));
 	}
 
 	@Test
@@ -99,8 +105,8 @@ public class GameManagementServiceTest {
 		log.info("response ticketingEndAt :: {}", response.ticketingEndAt());
 	}
 
-	void saveHomeTeam() {
-		homeTeam = BaseballTeamEntity.create(
+	BaseballTeamEntity createAndGetHomeTeam() {
+		BaseballTeamEntity team = BaseballTeamEntity.create(
 			TeamCode.KIA,
 			"KIA",
 			"KIA 타이거즈",
@@ -118,11 +124,11 @@ public class GameManagementServiceTest {
 			"최준영",
 			"https://example.com/logos/kia.png"
 		);
-		baseballTeamRepository.save(homeTeam);
+		return baseballTeamRepository.save(team);
 	}
 
-	void saveAwayTeam() {
-		awayTeam = BaseballTeamEntity.create(
+	BaseballTeamEntity createAndGetAwayTeam() {
+		BaseballTeamEntity team = BaseballTeamEntity.create(
 			TeamCode.SS,
 			"삼성",
 			"삼성 라이온즈",
@@ -140,16 +146,16 @@ public class GameManagementServiceTest {
 			"유정희",
 			"https://example.com/logos/samsung.png"
 		);
-		baseballTeamRepository.save(awayTeam);
+		return baseballTeamRepository.save(team);
 	}
 
-	void saveStadium() {
+	StadiumEntity createAndGetStadium() {
 		Map<String, Object> kiaSeatConfig = Map.of(
 			"rows", 50,
 			"sections", List.of("K3", "K5", "K7", "K9", "챔피언석")
 		);
 
-		stadium = StadiumEntity.create(
+		StadiumEntity stadium = StadiumEntity.create(
 			"광주-기아 챔피언스 필드",
 			"광주광역시 북구 임동",
 			"광주광역시",
@@ -161,6 +167,6 @@ public class GameManagementServiceTest {
 			kiaSeatConfig
 		);
 
-		stadiumRepository.save(stadium);
+		return stadiumRepository.save(stadium);
 	}
 }
